@@ -1,0 +1,70 @@
+/* * {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: sans-serif;
+}
+
+body {
+	padding: 5%;
+}
+
+.menu {
+	display: flex;
+}
+
+.menu p {
+	margin-right: 2rem;
+	cursor: pointer;
+}
+
+.content {
+	margin-top: 2rem;
+}
+
+[data-content] {
+	display: none;
+}
+
+.active[data-content] {
+	display: block;
+} */
+
+
+body {
+    margin: 0;
+    padding: 0;
+    background: url("resources/img/fondo.jpg") no-repeat center top;
+    background-size: cover;
+    font-family: 'Special Elite', cursive;
+
+}
+
+.div-body {
+  	margin: 0;
+	background-color: rgba(0, 0, 0, 0.6);
+	background-size: cover;
+}
+
+.login-card {
+    border: 0;
+    border-radius: 27.5px;
+    box-shadow: 0 10px 30px 0 rgba(172, 168, 168, 0.43);
+}
+
+.card-tools {
+	margin: 20px;
+	border: 0;
+	color: black;
+    border-radius: 27.5px;
+    box-shadow: 0 10px 30px 0 rgba(172, 168, 168, 0.43);
+}
+
+.item {
+	margin: 15px;
+	color: black;
+}
+
+.card-textarea {
+	margin: 20px;
+}
