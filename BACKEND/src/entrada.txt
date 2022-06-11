@@ -1,0 +1,17 @@
+int a = 1;
+if(a == 1) {
+print("");
+} else if(a==1) {
+print("");
+} else {
+print("");
+}
+String b = "";
+boolean c = true;
+c = false;
+boolean d = !c;
+int e = (5+8)*3 + d;
+e = 15;
+if(e == 15) {
+    print("sol");
+}
