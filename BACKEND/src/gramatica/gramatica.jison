@@ -1,3 +1,16 @@
+%{
+
+    //codigo en JS
+    //importaciones y declaraciones
+    const {Declaracion} = require('../instrucciones/declaracion');
+    const {Literal} = require('../expresiones/literal')
+    const {Type} = require('../symbols/type');
+    const {Arithmetic} = require('../expresiones/aritmeticas');
+    const {ArithmeticOption} = require('../expresiones/aritmeticOption');
+
+    var array_erroresLexicos;
+
+%}
 
 %lex
 
@@ -14,6 +27,7 @@
 "boolean"			return 'pr_boolean';
 "string"			return 'pr_string';
 "print"				return 'pr_print';
+"const"				return 'pr_const';
 "if"				return 'pr_if';
 "else"				return 'pr_else';
 "true"				return 'pr_true';
@@ -45,11 +59,11 @@
 "!="				return 'diferente';
 "!"					return 'not';
 
-\"[^\"]*\"	             { return 'cadena'; }
-"'"[^']"'"				 { return 'caracter'; }
-[0-9]+("."[0-9]+)\b  											return 'decimal';
-[0-9]+\b														return 'entero';
-([a-zA-Z])[a-zA-Z0-9_]*	                                        return 'identificador';
+\"[^\"]*\"	                { yytext = yytext.substr(1,yyleng-2); return 'cadena'; }
+"'"[^']"'"				    { yytext = yytext.substr(1,yyleng-2); return 'caracter'; }
+[0-9]+("."[0-9]+)\b  		return 'decimal';
+[0-9]+\b					return 'entero';
+([a-zA-Z])[a-zA-Z0-9_]*	    return 'identificador';
 
 <<EOF>>				return 'EOF';
 
@@ -73,16 +87,19 @@
 %%
 
 INIT
-	: INSTRUCCIONES EOF
+	: INSTRUCCIONES EOF     
+    {
+        return $1;        
+    }
 ;
 
 INSTRUCCIONES
-	: INSTRUCCIONES INSTRUCCION 	
-	| INSTRUCCION					
+	: INSTRUCCIONES INSTRUCCION         { $1.push($2); $$=$1;}	
+	| INSTRUCCION	                    { $$ = [$1] }				
 ;
 
 INSTRUCCION
-	: DECLARACION ptcoma		
+	: DECLARACION ptcoma        { $$=$1;}
 	| ASIGNACION ptcoma		
     | IF						
     | WHILE					
@@ -90,7 +107,10 @@ INSTRUCCION
 ;
 
 DECLARACION
-    : TIPO identificador igual EXPRESION 	    
+    : TIPO_DECLARACION TIPODATO identificador igual EXPRESION
+    {
+        $$= new Declaracion($3,$2,$5,@1.first_line, @1.first_column);
+    }
 ;
 
 ASIGNACION
@@ -111,12 +131,14 @@ WHILE
     : pr_while pabre EXPRESION pcierra BLOQUEINSTRUCCIONES 
 ;
 
-TIPO
-    : pr_int 	
-    | pr_double 	
-    | pr_boolean 	
-    | pr_char 	
-    | pr_string 	
+TIPO_DECLARACION: 'pr_const' | ;
+
+TIPODATO
+    : pr_int 	        {$$=$1;} 
+    | pr_double 	    {$$=$1;} 
+    | pr_boolean 	    {$$=$1;} 
+    | pr_char 	        {$$=$1;} 
+    | pr_string 	    {$$=$1;} 
 ;
 
 BLOQUEINSTRUCCIONES
@@ -125,17 +147,17 @@ BLOQUEINSTRUCCIONES
 ;
 
 EXPRESION
-	: EXPRESION mas EXPRESION               
-    | EXPRESION menos EXPRESION             
-    | EXPRESION por EXPRESION               
-    | EXPRESION div EXPRESION               
+	: EXPRESION mas EXPRESION       {$$= new Arithmetic($1,$3,ArithmeticOption.MAS, @1.first_line, @1.first_column);}         
+    | EXPRESION menos EXPRESION     {$$= new Arithmetic($1,$3,ArithmeticOption.MENOS, @1.first_line, @1.first_column);}      
+    | EXPRESION por EXPRESION       {$$= new Arithmetic($1,$3,ArithmeticOption.POR, @1.first_line, @1.first_column);}
+    | EXPRESION div EXPRESION       {$$= new Arithmetic($1,$3,ArithmeticOption.DIV, @1.first_line, @1.first_column);}        
     | menos EXPRESION %prec UMENOS	        
-    | entero                                
-    | decimal                               
-    | caracter                              
-    | cadena                                
-    | pr_true                                 
-    | pr_false                                
+    | entero                {$$=new Literal($1,Type.INT , @1.first_line, @1.first_column)}                      
+    | decimal               {$$=new Literal($1,Type.DOUBLE , @1.first_line, @1.first_column)}                           
+    | caracter              {$$=new Literal($1,Type.CHAR , @1.first_line, @1.first_column)}              
+    | cadena                {$$=new Literal($1,Type.STRING , @1.first_line, @1.first_column)}                
+    | pr_true               {$$=new Literal($1,Type.BOOLEAN , @1.first_line, @1.first_column)}                 
+    | pr_false              {$$=new Literal($1,Type.BOOLEAN , @1.first_line, @1.first_column)}                  
     | identificador                         
     | EXPRESION igualigual EXPRESION        
     | EXPRESION diferente EXPRESION         
