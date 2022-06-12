@@ -5,36 +5,52 @@ import { Type } from "../symbols/type";
 
 export class Declaracion extends Instruccion {
     constructor(
-        public nombre: string,
-        public tipo: string,
+        public nombre: string[],
+        public tipo: Type,
         public expresion : Expression,
         line: number, 
         column : number
     ) {
         super(line,column);
+        
     }
 
     public executar(env:Environment) {
-        //codigo analisis semantico
-        console.log("Declarando nueva variable: "+ this.nombre);
-        //console.log(this);
+        for (const elemento  of this.nombre) {
+            try {
+                //codigo analisis semantico
+                const expresion= this.expresion.executar(env);
+                // console.log(expresion.type)
+                // console.log(this.tipo)
+
+                if (expresion.type == this.tipo) {
+                    console.log("Declarando nueva variable: "+ elemento);
+                    // console.log(this);
 
 
-        const expresion= this.expresion.executar(env);
-        console.log(expresion);
+                    console.log(expresion);
+                    
+
+                    //preguntar si la variable esta libre
+                    //si los tipos son correctos o hacen match
+
+                    // if(x.type==){
+                    //     //ingreso de la variable a la tabla simbolos
+                    // }
+                    // else{
+                    //     //reporte de error semantico
+                    // }
+
+                    env.guardar_variable(elemento,expresion.value,expresion.type)
+                    
+                }
+                
+            } catch (error) {
+                console.log(error);
+                
+            }
+        }
         
-
-        //preguntar si la variable esta libre
-        //si los tipos son correctos o hacen match
-
-        // if(x.type==){
-        //     //ingreso de la variable a la tabla simbolos
-        // }
-        // else{
-        //     //reporte de error semantico
-        // }
-
-        // env.guardar_variable(this.nombre,expresion.value,expresion.type)
         
 
         

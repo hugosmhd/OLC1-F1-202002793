@@ -1,6 +1,30 @@
-int numeroUno = 2;
-string numeroDos = "Hola";
-boolean numeroTres = true;
-double numeroCuatro = 2.6;
-int numeroCinco = 9 + 12;
-char numeroSeis = '2';
+//A continuacion un archivo de entrada para el curso de "olc1"
+//Este es un comentario de una linea :)
+//INICIANDO--------------------------------------------
+
+
+/*******
+        
+    ****Universidad San Carlos de Guatemala
+        Facultad de Ingenieria /n
+        Escuela de ciencias y sistem
+        Escuela de vacasiones Junio 2022
+        LFScript
+
+****/
+
+
+
+//AREA DE DECLARACIONES DE VARIABLES GLOBALES
+int numero = 12;
+int a,b,c,d = 2022;
+inT numero_dos = 23.32; //error semantico porque tiene decimal_tres
+
+int numero_tres_ = numero;
+
+doublE decimal_uno = -0.235;
+doublE decimal_uno = -0.154; //error ya existe esta variable
+doubLe decimal_dos = -40; //error semantico porque necesita un decimal
+Double decimal_tres= "hola"; //error semantico por la cadena
+doublE decimal_cuatro = decimal_dos_dos; //variable no existe
+double e,f,g,h,i= 20.22+12;

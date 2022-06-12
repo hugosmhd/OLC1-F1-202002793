@@ -7,6 +7,7 @@
     const {Type} = require('../symbols/type');
     const {Arithmetic} = require('../expresiones/aritmeticas');
     const {ArithmeticOption} = require('../expresiones/aritmeticOption');
+    const {Identificador} = require('../expresiones/identificador');
 
     var array_erroresLexicos;
 
@@ -36,6 +37,7 @@
 
 
 
+","					return 'coma';
 ";"					return 'ptcoma';
 "{"					return 'llabre';
 "}"					return 'llcierra';
@@ -80,7 +82,7 @@
 %left 'mayorque' 'menorque' 'menorigual' 'mayorigual'
 %left 'mas' 'menos'
 %left 'por' 'div'
-%right 'UMENOS' 'UNOT'
+%left 'UMENOS' 'UNOT'
 
 %start INIT
 
@@ -107,10 +109,13 @@ INSTRUCCION
 ;
 
 DECLARACION
-    : TIPO_DECLARACION TIPODATO identificador igual EXPRESION
-    {
-        $$= new Declaracion($3,$2,$5,@1.first_line, @1.first_column);
-    }
+    : TIPO_DECLARACION TIPODATO IDS igual EXPRESION
+    {$$= new Declaracion($3,$2,$5,@1.first_line, @1.first_column);}
+;
+
+IDS
+    : IDS coma identificador         {$1.push($3);}
+    | identificador                     {$$ = [$1]}
 ;
 
 ASIGNACION
@@ -134,11 +139,11 @@ WHILE
 TIPO_DECLARACION: 'pr_const' | ;
 
 TIPODATO
-    : pr_int 	        {$$=$1;} 
-    | pr_double 	    {$$=$1;} 
-    | pr_boolean 	    {$$=$1;} 
-    | pr_char 	        {$$=$1;} 
-    | pr_string 	    {$$=$1;} 
+    : pr_int 	        {$$=Type.INT;} 
+    | pr_double 	    {$$=Type.DOUBLE;} 
+    | pr_boolean 	    {$$=Type.BOOLEAN;} 
+    | pr_char 	        {$$=Type.CHAR;} 
+    | pr_string 	    {$$=Type.STRING;} 
 ;
 
 BLOQUEINSTRUCCIONES
@@ -151,14 +156,14 @@ EXPRESION
     | EXPRESION menos EXPRESION     {$$= new Arithmetic($1,$3,ArithmeticOption.MENOS, @1.first_line, @1.first_column);}      
     | EXPRESION por EXPRESION       {$$= new Arithmetic($1,$3,ArithmeticOption.POR, @1.first_line, @1.first_column);}
     | EXPRESION div EXPRESION       {$$= new Arithmetic($1,$3,ArithmeticOption.DIV, @1.first_line, @1.first_column);}        
-    | menos EXPRESION %prec UMENOS	        
+    | menos EXPRESION %prec UMENOS	{$$= new Arithmetic($2,null,ArithmeticOption.MENOSUNARIO, @1.first_line, @1.first_column);}      
     | entero                {$$=new Literal($1,Type.INT , @1.first_line, @1.first_column)}                      
     | decimal               {$$=new Literal($1,Type.DOUBLE , @1.first_line, @1.first_column)}                           
     | caracter              {$$=new Literal($1,Type.CHAR , @1.first_line, @1.first_column)}              
     | cadena                {$$=new Literal($1,Type.STRING , @1.first_line, @1.first_column)}                
     | pr_true               {$$=new Literal($1,Type.BOOLEAN , @1.first_line, @1.first_column)}                 
     | pr_false              {$$=new Literal($1,Type.BOOLEAN , @1.first_line, @1.first_column)}                  
-    | identificador                         
+    | identificador         {$$ = new Identificador($1, @1.first_line, @1.first_column);}               
     | EXPRESION igualigual EXPRESION        
     | EXPRESION diferente EXPRESION         
     | EXPRESION menorque EXPRESION          

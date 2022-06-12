@@ -35,6 +35,13 @@ export class Environment {
     }
     return Type.error
   }
+
+  public get_variable(nombre: string): any {
+    for (let entry of Array.from(this.tablaSimbolos.entries())) {
+        if (entry[0] == nombre) return entry[1];
+    }
+    return Type.error
+  }
   public actualizar_variable(nombre: string, new_valor: any) {
     for (let entry of Array.from(this.tablaSimbolos.entries())) {
       if (entry[0] == nombre) {

@@ -5,5 +5,6 @@ export enum ArithmeticOption {
     DIV,
     MODULO,
     POT,
-    NEGACION
+    NEGACION,
+    MENOSUNARIO
 }

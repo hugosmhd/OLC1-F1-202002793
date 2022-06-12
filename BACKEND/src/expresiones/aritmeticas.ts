@@ -6,13 +6,18 @@ import { ArithmeticOption } from "./aritmeticOption"
 
 export class Arithmetic extends Expression {
 
+    private operandoU:Expression|undefined;
+
     constructor(
         private left: Expression,
-        private right: Expression,
+        private right: Expression | undefined,
         private type: ArithmeticOption,
         line: number,
         column: number) {
         super(line, column)
+        if (!right) {
+            this.operandoU = left;
+        }
     }
 
     public executar(env:Environment): Retorno {
@@ -21,11 +26,12 @@ export class Arithmetic extends Expression {
             value:null,
             type:Type.error
         }
-
+        // console.log(this.left.executar(env))
+        // console.log(this.right.executar(env))
         const nodoIzq = this.left.executar(env)
-        const nodoDer = this.right.executar(env)
+        const nodoDer = this.right != undefined ? this.right.executar(env) : null
 
-        if (this.type == ArithmeticOption.MAS) {
+        if (this.type == ArithmeticOption.MAS && nodoDer != null) {
 
    
             if (nodoDer.type == Type.INT && nodoIzq.type == Type.INT) {
@@ -82,7 +88,19 @@ export class Arithmetic extends Expression {
             
         // }
 
-
+        else if (this.type == ArithmeticOption.MENOSUNARIO && nodoDer == null) {
+            if (nodoIzq.type == Type.INT) {
+                result = { 
+                    value: Number(-1*nodoIzq.value), 
+                    type: Type.INT 
+                }
+            } else if (nodoIzq.type == Type.DOUBLE) {
+                result = { 
+                    value: Number(-1*nodoIzq.value), 
+                    type: Type.DOUBLE 
+                }
+            }
+        }
         return result
     }
 

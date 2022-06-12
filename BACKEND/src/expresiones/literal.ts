@@ -16,16 +16,22 @@ export class Literal extends Expression {
 
     public executar(): Retorno {
         
-        if (this.type == Type.INT)
+        // console.log(this.value)
+        // console.log(Number.isInteger(Number(this.value)))
+        if (this.type == Type.INT && Number.isInteger(Number(this.value))) {
             return { value: Number(this.value), type: Type.INT }
+        }
         else if (this.type == Type.STRING)
             return { value: this.value, type: Type.STRING }        
         else if (this.type == Type.BOOLEAN) {
             if (this.value == "true") return { value: Boolean(true), type: Type.BOOLEAN }
             else return { value: Boolean(false), type: Type.BOOLEAN }
         }
-        else if (this.type == Type.DOUBLE)
+        else if (this.type == Type.DOUBLE) {
+            // console.log("----ENTRO EN EL DOUBLE------")
+            // console.log(this.value)
             return { value: parseFloat(this.value), type: Type.DOUBLE }
+        }
         else return { value: this.value, type: Type.error }
 
     }
