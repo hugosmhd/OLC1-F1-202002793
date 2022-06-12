@@ -45,6 +45,8 @@
 ")"					return 'pcierra';
 
 
+"**"				return 'pot';
+"%"				    return 'modulo';
 "+"					return 'mas';
 "-"					return 'menos';
 "*"					return 'por';
@@ -78,10 +80,11 @@
 
 %left 'or'
 %left 'and'
+%left 'pot'
 %left 'igualigual' 'diferente'
 %left 'mayorque' 'menorque' 'menorigual' 'mayorigual'
 %left 'mas' 'menos'
-%left 'por' 'div'
+%left 'por' 'div' 'modulo'
 %left 'UMENOS' 'UNOT'
 
 %start INIT
@@ -156,6 +159,8 @@ EXPRESION
     | EXPRESION menos EXPRESION     {$$= new Arithmetic($1,$3,ArithmeticOption.MENOS, @1.first_line, @1.first_column);}      
     | EXPRESION por EXPRESION       {$$= new Arithmetic($1,$3,ArithmeticOption.POR, @1.first_line, @1.first_column);}
     | EXPRESION div EXPRESION       {$$= new Arithmetic($1,$3,ArithmeticOption.DIV, @1.first_line, @1.first_column);}        
+    | EXPRESION pot EXPRESION       {$$= new Arithmetic($1,$3,ArithmeticOption.POT, @1.first_line, @1.first_column);}
+    | EXPRESION modulo EXPRESION       {$$= new Arithmetic($1,$3,ArithmeticOption.MODULO, @1.first_line, @1.first_column);}
     | menos EXPRESION %prec UMENOS	{$$= new Arithmetic($2,null,ArithmeticOption.MENOSUNARIO, @1.first_line, @1.first_column);}      
     | entero                {$$=new Literal($1,Type.INT , @1.first_line, @1.first_column)}                      
     | decimal               {$$=new Literal($1,Type.DOUBLE , @1.first_line, @1.first_column)}                           

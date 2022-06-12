@@ -23,6 +23,8 @@ export class Literal extends Expression {
         }
         else if (this.type == Type.STRING)
             return { value: this.value, type: Type.STRING }        
+        else if (this.type == Type.CHAR)
+            return { value: this.value, type: Type.CHAR }        
         else if (this.type == Type.BOOLEAN) {
             if (this.value == "true") return { value: Boolean(true), type: Type.BOOLEAN }
             else return { value: Boolean(false), type: Type.BOOLEAN }

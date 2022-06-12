@@ -22,12 +22,10 @@ export class Arithmetic extends Expression {
 
     public executar(env:Environment): Retorno {
 
-        let result: Retorno ={
+        let result: Retorno = {
             value:null,
             type:Type.error
         }
-        // console.log(this.left.executar(env))
-        // console.log(this.right.executar(env))
         const nodoIzq = this.left.executar(env)
         const nodoDer = this.right != undefined ? this.right.executar(env) : null
 
@@ -39,56 +37,268 @@ export class Arithmetic extends Expression {
                     value: (nodoIzq.value + nodoDer.value), 
                     type: Type.INT 
                 }
-            }// else if (nodoDer.type == Type.NUMBER && nodoIzq.type == Type.STRING
-            //     ||nodoDer.type == Type.STRING && nodoIzq.type == Type.NUMBER) {
-            //     result = { 
-            //         value: (String(nodoIzq.value) + String(nodoDer.value)), 
-            //         type: Type.STRING 
-            //     }
-            // }else if (nodoIzq.type == Type.STRING || nodoDer.type == Type.STRING ) {
-            //     result = { 
-            //         value: (String(nodoIzq.value) + String(nodoDer.value)), 
-            //         type: Type.STRING 
-            //     }
-            // }else if (nodoIzq.type == Type.BOOLEAN && nodoDer.type == Type.NUMBER ) {
-            //     const val:number= nodoIzq.value? 1:0
-            //     result = { 
-            //         value: ( val+nodoDer.value), 
-            //         type: Type.NUMBER 
-            //     }
-            // }
-            // else if (nodoDer.type == Type.BOOLEAN && nodoIzq.type == Type.NUMBER ) {
-            //     const val:number= nodoDer.value? 1:0
-            //     result = { 
-            //         value: ( val+nodoIzq.value), 
-            //         type: Type.NUMBER 
-            //     }
-            // }
-            // else if (nodoIzq.type == Type.BOOLEAN || nodoDer.type == Type.BOOLEAN ) {
-            //     const val1:number= nodoIzq.value? 1:0
-            //     const val2:number= nodoDer.value? 1:0
-            //     result = { 
-            //         value: ( val1+val2), 
-            //         type: Type.NUMBER 
-            //     }
-            // }
+            } else if (nodoDer.type == Type.INT && nodoIzq.type == Type.DOUBLE
+                ||nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.INT) {
+                result = { 
+                    value: (nodoIzq.value + nodoDer.value), 
+                    type: Type.DOUBLE 
+                }
+            } else if (nodoDer.type == Type.INT && nodoIzq.type == Type.CHAR
+                ||nodoDer.type == Type.CHAR && nodoIzq.type == Type.INT) {
+                const valorChar = nodoIzq.type == Type.CHAR ? String(nodoIzq.value).charCodeAt(0): String(nodoDer.value).charCodeAt(0)
+                const valorFinal = nodoDer.type == Type.INT ? valorChar + nodoDer.value: nodoIzq.value + valorChar
+                result = { 
+                    value: valorFinal, 
+                    type: Type.INT 
+                }
+            } else if (nodoDer.type == Type.INT && nodoIzq.type == Type.STRING
+                ||nodoDer.type == Type.STRING && nodoIzq.type == Type.INT) {
+                result = { 
+                    value: (String(nodoIzq.value) + String(nodoDer.value)), 
+                    type: Type.STRING 
+                }
+            } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.DOUBLE) {
+                result = { 
+                    value: (nodoIzq.value + nodoDer.value), 
+                    type: Type.DOUBLE 
+                }
+            } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.CHAR
+                ||nodoDer.type == Type.CHAR && nodoIzq.type == Type.DOUBLE) {
+                const valorChar = nodoIzq.type == Type.CHAR ? String(nodoIzq.value).charCodeAt(0): String(nodoDer.value).charCodeAt(0)
+                const valorFinal = nodoDer.type == Type.DOUBLE ? nodoDer.value + valorChar: nodoIzq.value + valorChar
+                result = { 
+                    value: valorFinal, 
+                    type: Type.DOUBLE 
+                }
+            } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.STRING
+                ||nodoDer.type == Type.STRING && nodoIzq.type == Type.DOUBLE) {
+                result = { 
+                    value: (String(nodoIzq.value) + String(nodoDer.value)), 
+                    type: Type.STRING 
+                }
+            } else if (nodoDer.type == Type.CHAR && nodoIzq.type == Type.CHAR) {
+                result = { 
+                    value: (String(nodoIzq.value).charCodeAt(0) + String(nodoDer.value).charCodeAt(0)), 
+                    type: Type.INT 
+                }
+            } else if (nodoDer.type == Type.CHAR && nodoIzq.type == Type.STRING
+                ||nodoDer.type == Type.STRING && nodoIzq.type == Type.CHAR) {
+                result = { 
+                    value: (String(nodoIzq.value) + String(nodoDer.value)), 
+                    type: Type.STRING 
+                }
+            } else if (nodoDer.type == Type.STRING && nodoIzq.type == Type.STRING) {
+                result = { 
+                    value: (String(nodoIzq.value) + String(nodoDer.value)), 
+                    type: Type.STRING 
+                }
+            }
             
             //demas validadionces para la operaciones aritmeticas
             
-        }// else if (this.type == ArithmeticOption.MENOS) {
-
-   
-        //     if (nodoDer.type == Type.NUMBER && nodoIzq.type == Type.NUMBER) {
-        //         result = { 
-        //             value: (nodoIzq.value - nodoDer.value), 
-        //             type: Type.NUMBER 
-        //         }
-        //     }
-        //     //en la resta unicamente quiero con numeros
+        } else if (this.type == ArithmeticOption.MENOS && nodoDer != null) {   
+            if (nodoIzq.type == Type.INT && nodoDer.type == Type.INT) {
+                result = { 
+                    value: (nodoIzq.value - nodoDer.value), 
+                    type: Type.INT 
+                }
+            } else if (nodoIzq.type == Type.INT && nodoDer.type == Type.DOUBLE
+                || nodoIzq.type == Type.DOUBLE && nodoDer.type == Type.INT) {
+                result = { 
+                    value: (nodoIzq.value - nodoDer.value), 
+                    type: Type.DOUBLE 
+                }
+            } else if (nodoDer.type == Type.INT && nodoIzq.type == Type.CHAR
+                || nodoDer.type == Type.CHAR && nodoIzq.type == Type.INT) {
+                const valorChar = nodoIzq.type == Type.CHAR ? String(nodoIzq.value).charCodeAt(0): String(nodoDer.value).charCodeAt(0)
+                const valorFinal = nodoDer.type == Type.INT ? valorChar - nodoDer.value: nodoIzq.value - valorChar
+                result = { 
+                    value: valorFinal, 
+                    type: Type.INT 
+                }
+            } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.DOUBLE) {
+                result = { 
+                    value: (nodoIzq.value - nodoDer.value), 
+                    type: Type.DOUBLE 
+                }
+            } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.CHAR
+                || nodoDer.type == Type.CHAR && nodoIzq.type == Type.DOUBLE) {
+                const valorChar = nodoIzq.type == Type.CHAR ? String(nodoIzq.value).charCodeAt(0): String(nodoDer.value).charCodeAt(0)
+                const valorFinal = nodoDer.type == Type.DOUBLE ? valorChar - nodoDer.value: nodoIzq.value - valorChar
+                result = { 
+                    value: valorFinal, 
+                    type: Type.DOUBLE 
+                }
+            } else if (nodoDer.type == Type.CHAR && nodoIzq.type == Type.CHAR) {
+                result = { 
+                    value: (String(nodoIzq.value).charCodeAt(0) - String(nodoDer.value).charCodeAt(0)), 
+                    type: Type.INT 
+                }
+            }
             
-        // }
+        } else if (this.type == ArithmeticOption.POR && nodoDer != null) {   
+            if (nodoIzq.type == Type.INT && nodoDer.type == Type.INT) {
+                result = { 
+                    value: (nodoIzq.value * nodoDer.value), 
+                    type: Type.INT 
+                }
+            } else if (nodoIzq.type == Type.INT && nodoDer.type == Type.DOUBLE
+                || nodoIzq.type == Type.DOUBLE && nodoDer.type == Type.INT) {
+                result = { 
+                    value: (nodoIzq.value * nodoDer.value), 
+                    type: Type.DOUBLE 
+                }
+            } else if (nodoDer.type == Type.INT && nodoIzq.type == Type.CHAR
+                || nodoDer.type == Type.CHAR && nodoIzq.type == Type.INT) {
+                const valorChar = nodoIzq.type == Type.CHAR ? String(nodoIzq.value).charCodeAt(0): String(nodoDer.value).charCodeAt(0)
+                const valorFinal = nodoDer.type == Type.INT ? valorChar * nodoDer.value: nodoIzq.value * valorChar
+                result = { 
+                    value: valorFinal, 
+                    type: Type.INT 
+                }
+            } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.DOUBLE) {
+                result = { 
+                    value: (nodoIzq.value * nodoDer.value), 
+                    type: Type.DOUBLE 
+                }
+            } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.CHAR
+                || nodoDer.type == Type.CHAR && nodoIzq.type == Type.DOUBLE) {
+                const valorChar = nodoIzq.type == Type.CHAR ? String(nodoIzq.value).charCodeAt(0): String(nodoDer.value).charCodeAt(0)
+                const valorFinal = nodoDer.type == Type.DOUBLE ? valorChar * nodoDer.value: nodoIzq.value * valorChar
+                result = { 
+                    value: valorFinal, 
+                    type: Type.DOUBLE 
+                }
+            } else if (nodoDer.type == Type.CHAR && nodoIzq.type == Type.CHAR) {
+                result = { 
+                    value: (String(nodoIzq.value).charCodeAt(0) * String(nodoDer.value).charCodeAt(0)), 
+                    type: Type.INT 
+                }
+            }
+            
+        } else if (this.type == ArithmeticOption.DIV && nodoDer != null) {   
+            if (nodoIzq.type == Type.INT && nodoDer.type == Type.INT) {
+                result = { 
+                    value: Math.trunc(nodoIzq.value / nodoDer.value), 
+                    type: Type.INT 
+                }
+            } else if (nodoIzq.type == Type.INT && nodoDer.type == Type.DOUBLE
+                || nodoIzq.type == Type.DOUBLE && nodoDer.type == Type.INT) {
+                result = { 
+                    value: (nodoIzq.value / nodoDer.value), 
+                    type: Type.DOUBLE 
+                }
+            } else if (nodoDer.type == Type.INT && nodoIzq.type == Type.CHAR
+                || nodoDer.type == Type.CHAR && nodoIzq.type == Type.INT) {
+                const valorChar = nodoIzq.type == Type.CHAR ? String(nodoIzq.value).charCodeAt(0): String(nodoDer.value).charCodeAt(0)
+                const valorFinal = nodoDer.type == Type.INT ? Math.trunc(valorChar / nodoDer.value): Math.trunc(nodoIzq.value / valorChar)
+                result = { 
+                    value: valorFinal, 
+                    type: Type.INT 
+                }
+            } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.DOUBLE) {
+                result = { 
+                    value: (nodoIzq.value / nodoDer.value), 
+                    type: Type.DOUBLE 
+                }
+            } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.CHAR
+                || nodoDer.type == Type.CHAR && nodoIzq.type == Type.DOUBLE) {
+                const valorChar = nodoIzq.type == Type.CHAR ? String(nodoIzq.value).charCodeAt(0): String(nodoDer.value).charCodeAt(0)
+                const valorFinal = nodoDer.type == Type.DOUBLE ? valorChar / nodoDer.value: nodoIzq.value / valorChar
+                result = { 
+                    value: valorFinal, 
+                    type: Type.DOUBLE 
+                }
+            } else if (nodoDer.type == Type.CHAR && nodoIzq.type == Type.CHAR) {
+                result = { 
+                    value: Math.trunc(String(nodoIzq.value).charCodeAt(0) / String(nodoDer.value).charCodeAt(0)), 
+                    type: Type.INT 
+                }
+            }
+            
+        } else if (this.type == ArithmeticOption.POT && nodoDer != null) {   
+            if (nodoIzq.type == Type.INT && nodoDer.type == Type.INT) {
+                result = { 
+                    value: (Math.pow(nodoIzq.value, nodoDer.value)), 
+                    type: Type.DOUBLE 
+                }
+            } else if (nodoIzq.type == Type.INT && nodoDer.type == Type.DOUBLE
+                || nodoIzq.type == Type.DOUBLE && nodoDer.type == Type.INT) {
+                result = { 
+                    value: (Math.pow(nodoIzq.value, nodoDer.value)), 
+                    type: Type.DOUBLE 
+                }
+            } else if (nodoDer.type == Type.INT && nodoIzq.type == Type.CHAR
+                || nodoDer.type == Type.CHAR && nodoIzq.type == Type.INT) {
+                const valorChar = nodoIzq.type == Type.CHAR ? String(nodoIzq.value).charCodeAt(0): String(nodoDer.value).charCodeAt(0)
+                const valorFinal = nodoDer.type == Type.INT ? Math.pow(valorChar, nodoDer.value): Math.pow(nodoIzq.value, valorChar)
+                result = { 
+                    value: valorFinal, 
+                    type: Type.DOUBLE 
+                }
+            } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.DOUBLE) {
+                result = { 
+                    value: Math.pow(nodoIzq.value, nodoDer.value), 
+                    type: Type.DOUBLE 
+                }
+            } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.CHAR
+                || nodoDer.type == Type.CHAR && nodoIzq.type == Type.DOUBLE) {
+                const valorChar = nodoIzq.type == Type.CHAR ? String(nodoIzq.value).charCodeAt(0): String(nodoDer.value).charCodeAt(0)
+                const valorFinal = nodoDer.type == Type.DOUBLE ? Math.pow(valorChar, nodoDer.value): Math.pow(nodoIzq.value, valorChar)
+                result = { 
+                    value: valorFinal, 
+                    type: Type.DOUBLE 
+                }
+            } else if (nodoDer.type == Type.CHAR && nodoIzq.type == Type.CHAR) {
+                result = { 
+                    value: Math.pow((nodoIzq.value).charCodeAt(0),(nodoDer.value).charCodeAt(0)), 
+                    type: Type.DOUBLE 
+                }
+            }
+            
+        } else if (this.type == ArithmeticOption.MODULO && nodoDer != null) {   
+            if (nodoIzq.type == Type.INT && nodoDer.type == Type.INT) {
+                result = { 
+                    value: (nodoIzq.value % nodoDer.value), 
+                    type: Type.DOUBLE 
+                }
+            } else if (nodoIzq.type == Type.INT && nodoDer.type == Type.DOUBLE
+                || nodoIzq.type == Type.DOUBLE && nodoDer.type == Type.INT) {
+                result = { 
+                    value: (nodoIzq.value % nodoDer.value), 
+                    type: Type.DOUBLE 
+                }
+            } else if (nodoDer.type == Type.INT && nodoIzq.type == Type.CHAR
+                || nodoDer.type == Type.CHAR && nodoIzq.type == Type.INT) {
+                const valorChar = nodoIzq.type == Type.CHAR ? String(nodoIzq.value).charCodeAt(0): String(nodoDer.value).charCodeAt(0)
+                const valorFinal = nodoDer.type == Type.INT ? (valorChar % nodoDer.value): (nodoIzq.value % valorChar)
+                result = { 
+                    value: valorFinal, 
+                    type: Type.DOUBLE 
+                }
+            } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.DOUBLE) {
+                result = { 
+                    value: (nodoIzq.value % nodoDer.value), 
+                    type: Type.DOUBLE 
+                }
+            } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.CHAR
+                || nodoDer.type == Type.CHAR && nodoIzq.type == Type.DOUBLE) {
+                const valorChar = nodoIzq.type == Type.CHAR ? String(nodoIzq.value).charCodeAt(0): String(nodoDer.value).charCodeAt(0)
+                const valorFinal = nodoDer.type == Type.DOUBLE ? (valorChar % nodoDer.value): (nodoIzq.value % valorChar)
+                result = { 
+                    value: valorFinal, 
+                    type: Type.DOUBLE 
+                }
+            } else if (nodoDer.type == Type.CHAR && nodoIzq.type == Type.CHAR) {
+                result = { 
+                    value: ((nodoIzq.value).charCodeAt(0) % (nodoDer.value).charCodeAt(0)), 
+                    type: Type.DOUBLE 
+                }
+            }
+            
+        }
 
-        else if (this.type == ArithmeticOption.MENOSUNARIO && nodoDer == null) {
+        else if (this.type == ArithmeticOption.MENOSUNARIO && nodoIzq != null && nodoDer != null) {
             if (nodoIzq.type == Type.INT) {
                 result = { 
                     value: Number(-1*nodoIzq.value), 
@@ -99,7 +309,7 @@ export class Arithmetic extends Expression {
                     value: Number(-1*nodoIzq.value), 
                     type: Type.DOUBLE 
                 }
-            }
+            } 
         }
         return result
     }
