@@ -16,6 +16,8 @@
     const {LogicalOption} = require('../expresiones/logicalOptions');
     const {Incremento} = require('../expresiones/incremento');
     const {IncrementOption} = require('../expresiones/incrementOptions');
+    const {Decremento} = require('../expresiones/decremento');
+    const {DecrementOption} = require('../expresiones/decrementOptions');
 
     var array_erroresLexicos;
 
@@ -57,6 +59,7 @@
 "%"				    return 'modulo';
 "++"				return 'masmas';
 "+"					return 'mas';
+"--"				return 'menosmenos';
 "-"					return 'menos';
 "*"					return 'por';
 "/"					return 'div';
@@ -121,6 +124,7 @@ INSTRUCCION
     | WHILE					
     | PRINT ptcoma
     | INCREMENT ptcoma          { $$=$1; }
+    | DECREMENT ptcoma          { $$=$1; }
 ;
 
 DECLARACION
@@ -171,6 +175,11 @@ INCREMENT
     | identificador masmas      {$$ = new Incremento($1, IncrementOption.MASMAS_POST, @1.first_line, @1.first_column);}             
 ;
 
+DECREMENT
+    : menosmenos identificador      {$$ = new Decremento($2, DecrementOption.MENOSMENOS_PRE, @1.first_line, @1.first_column);}             
+    | identificador menosmenos      {$$ = new Decremento($1, DecrementOption.MENOSMENOS_POST, @1.first_line, @1.first_column);}             
+;
+
 EXPRESION
 	: EXPRESION mas EXPRESION       {$$= new Arithmetic($1,$3,ArithmeticOption.MAS, @1.first_line, @1.first_column);}         
     | EXPRESION menos EXPRESION     {$$= new Arithmetic($1,$3,ArithmeticOption.MENOS, @1.first_line, @1.first_column);}      
@@ -197,5 +206,6 @@ EXPRESION
     | EXPRESION xor EXPRESION           {$$ = new Logical($1, $3, LogicalOption.XOR, @1.first_line, @1.first_column);}    
     | not EXPRESION %prec UNOT          {$$ = new Logical($2, null, LogicalOption.NOT, @1.first_line, @1.first_column);}             
     | INCREMENT                         {$$ = $1}
+    | DECREMENT                         {$$ = $1}
     | pabre EXPRESION pcierra 
 ;   
