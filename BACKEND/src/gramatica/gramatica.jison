@@ -3,6 +3,7 @@
     //codigo en JS
     //importaciones y declaraciones
     const {Declaracion} = require('../instrucciones/declaracion');
+    const {If} = require('../instrucciones/if');
     const {Literal} = require('../expresiones/literal')
     const {Type} = require('../symbols/type');
     const {Arithmetic} = require('../expresiones/aritmeticas');
@@ -110,9 +111,9 @@ INSTRUCCIONES
 ;
 
 INSTRUCCION
-	: DECLARACION ptcoma        { $$=$1;}
+	: DECLARACION ptcoma        { $$=$1; }
 	| ASIGNACION ptcoma		
-    | IF						
+    | IF	                    { $$=$1; }					
     | WHILE					
     | PRINT ptcoma
 ;
@@ -132,9 +133,9 @@ ASIGNACION
 ;
 
 IF
-    : pr_if pabre EXPRESION pcierra BLOQUEINSTRUCCIONES							
-    | pr_if pabre EXPRESION pcierra BLOQUEINSTRUCCIONES pr_else BLOQUEINSTRUCCIONES	
-    | pr_if pabre EXPRESION pcierra BLOQUEINSTRUCCIONES pr_else DEFIF				
+    : pr_if pabre EXPRESION pcierra BLOQUEINSTRUCCIONES     {$$ = new If($3, $5, @1.first_line, @1.first_column); }
+    | pr_if pabre EXPRESION pcierra BLOQUEINSTRUCCIONES pr_else BLOQUEINSTRUCCIONES     { $$ = new If($3, $5, @1.first_line, @1.first_column, $7); }    
+    | pr_if pabre EXPRESION pcierra BLOQUEINSTRUCCIONES pr_else IF      { $$ = new If($3, $5, @1.first_line, @1.first_column, $7); }
 ;
 
 PRINT
@@ -156,8 +157,8 @@ TIPODATO
 ;
 
 BLOQUEINSTRUCCIONES
-    : llabre INSTRUCCIONES llcierra
-    | 
+    : llabre INSTRUCCIONES llcierra { $$ = $2; }
+    | llabre llcierra
 ;
 
 EXPRESION
