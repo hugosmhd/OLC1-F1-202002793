@@ -8,6 +8,8 @@
     const {Arithmetic} = require('../expresiones/aritmeticas');
     const {ArithmeticOption} = require('../expresiones/aritmeticOption');
     const {Identificador} = require('../expresiones/identificador');
+    const {Relacional} = require('../expresiones/relacional');
+    const {RelacionalOption} = require('../expresiones/relacionalOption');
 
     var array_erroresLexicos;
 
@@ -169,12 +171,12 @@ EXPRESION
     | pr_true               {$$=new Literal($1,Type.BOOLEAN , @1.first_line, @1.first_column)}                 
     | pr_false              {$$=new Literal($1,Type.BOOLEAN , @1.first_line, @1.first_column)}                  
     | identificador         {$$ = new Identificador($1, @1.first_line, @1.first_column);}               
-    | EXPRESION igualigual EXPRESION        
-    | EXPRESION diferente EXPRESION         
-    | EXPRESION menorque EXPRESION          
-    | EXPRESION mayorque EXPRESION          
-    | EXPRESION menorigual EXPRESION       
-    | EXPRESION mayorigual EXPRESION       
+    | EXPRESION igualigual EXPRESION    {$$ = new Relacional($1, $3, RelacionalOption.IGUALIGUAL, @1.first_line, @1.first_column);}                
+    | EXPRESION diferente EXPRESION     {$$ = new Relacional($1, $3, RelacionalOption.DIFERENTE, @1.first_line, @1.first_column);}              
+    | EXPRESION menorque EXPRESION      {$$ = new Relacional($1, $3, RelacionalOption.MENOR, @1.first_line, @1.first_column);}          
+    | EXPRESION mayorque EXPRESION      {$$ = new Relacional($1, $3, RelacionalOption.MAYOR, @1.first_line, @1.first_column);}          
+    | EXPRESION menorigual EXPRESION    {$$ = new Relacional($1, $3, RelacionalOption.MENORIGUAL, @1.first_line, @1.first_column);}       
+    | EXPRESION mayorigual EXPRESION    {$$ = new Relacional($1, $3, RelacionalOption.MAYORIGUAL, @1.first_line, @1.first_column);}       
     | EXPRESION and EXPRESION               
     | EXPRESION or EXPRESION                
     | not EXPRESION %prec UNOT              
