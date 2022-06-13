@@ -4,6 +4,7 @@
     //importaciones y declaraciones
     const {Declaracion} = require('../instrucciones/declaracion');
     const {If} = require('../instrucciones/if');
+    const {Print} = require('../instrucciones/print');
     const {Literal} = require('../expresiones/literal')
     const {Type} = require('../symbols/type');
     const {Arithmetic} = require('../expresiones/aritmeticas');
@@ -139,7 +140,7 @@ IF
 ;
 
 PRINT
-    : pr_print pabre EXPRESION pcierra 				
+    : pr_print pabre EXPRESION pcierra      {$$ = new Print($3, @1.first_line, @1.first_column);}			
 ;
 
 WHILE

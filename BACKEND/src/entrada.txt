@@ -1,9 +1,2 @@
-
-boolean c = !false;
-if(!c) {
-    int a = 12;
-} else if(c) {
-    string c = "true";
-} else {
-    boolean c = true;
-}
+char c = 'b';
+print(c);

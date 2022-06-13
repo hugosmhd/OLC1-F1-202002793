@@ -115,6 +115,9 @@ break;
 case 14: case 15:
  this.$ = new If($$[$0-4], $$[$0-2], _$[$0-6].first_line, _$[$0-6].first_column, $$[$0]); 
 break;
+case 16:
+this.$ = new Print($$[$0-1], _$[$0-3].first_line, _$[$0-3].first_column);
+break;
 case 20:
 this.$=Type.INT;
 break;
@@ -358,6 +361,7 @@ parse: function parse(input) {
     //importaciones y declaraciones
     const {Declaracion} = require('../instrucciones/declaracion');
     const {If} = require('../instrucciones/if');
+    const {Print} = require('../instrucciones/print');
     const {Literal} = require('../expresiones/literal')
     const {Type} = require('../symbols/type');
     const {Arithmetic} = require('../expresiones/aritmeticas');
