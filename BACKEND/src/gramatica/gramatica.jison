@@ -10,6 +10,8 @@
     const {Identificador} = require('../expresiones/identificador');
     const {Relacional} = require('../expresiones/relacional');
     const {RelacionalOption} = require('../expresiones/relacionalOption');
+    const {Logical} = require('../expresiones/logical');
+    const {LogicalOption} = require('../expresiones/logicalOptions');
 
     var array_erroresLexicos;
 
@@ -56,6 +58,7 @@
 
 "&&"				return 'and';
 "||"				return 'or';
+"^"				    return 'xor';
 "<="				return 'menorigual';
 "<"					return 'menorque';
 ">="				return 'mayorigual';
@@ -82,11 +85,12 @@
 
 %left 'or'
 %left 'and'
-%left 'pot'
+%left 'xor'
 %left 'igualigual' 'diferente'
 %left 'mayorque' 'menorque' 'menorigual' 'mayorigual'
 %left 'mas' 'menos'
 %left 'por' 'div' 'modulo'
+%left 'pot'
 %left 'UMENOS' 'UNOT'
 
 %start INIT
@@ -177,8 +181,9 @@ EXPRESION
     | EXPRESION mayorque EXPRESION      {$$ = new Relacional($1, $3, RelacionalOption.MAYOR, @1.first_line, @1.first_column);}          
     | EXPRESION menorigual EXPRESION    {$$ = new Relacional($1, $3, RelacionalOption.MENORIGUAL, @1.first_line, @1.first_column);}       
     | EXPRESION mayorigual EXPRESION    {$$ = new Relacional($1, $3, RelacionalOption.MAYORIGUAL, @1.first_line, @1.first_column);}       
-    | EXPRESION and EXPRESION               
-    | EXPRESION or EXPRESION                
-    | not EXPRESION %prec UNOT              
+    | EXPRESION and EXPRESION           {$$ = new Logical($1, $3, LogicalOption.AND, @1.first_line, @1.first_column);}                              
+    | EXPRESION or EXPRESION            {$$ = new Logical($1, $3, LogicalOption.OR, @1.first_line, @1.first_column);}    
+    | EXPRESION xor EXPRESION            {$$ = new Logical($1, $3, LogicalOption.XOR, @1.first_line, @1.first_column);}    
+    | not EXPRESION %prec UNOT          {$$ = new Logical($2, null, LogicalOption.NOT, @1.first_line, @1.first_column);}             
     | pabre EXPRESION pcierra 
 ;   

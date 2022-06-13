@@ -1,3 +1,2 @@
 
-boolean c = true != false;
-boolean a = false == false;
+boolean c = !false;
