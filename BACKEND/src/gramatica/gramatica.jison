@@ -14,6 +14,8 @@
     const {RelacionalOption} = require('../expresiones/relacionalOption');
     const {Logical} = require('../expresiones/logical');
     const {LogicalOption} = require('../expresiones/logicalOptions');
+    const {Incremento} = require('../expresiones/incremento');
+    const {IncrementOption} = require('../expresiones/incrementOptions');
 
     var array_erroresLexicos;
 
@@ -53,6 +55,7 @@
 
 "**"				return 'pot';
 "%"				    return 'modulo';
+"++"				return 'masmas';
 "+"					return 'mas';
 "-"					return 'menos';
 "*"					return 'por';
@@ -117,6 +120,7 @@ INSTRUCCION
     | IF	                    { $$=$1; }					
     | WHILE					
     | PRINT ptcoma
+    | INCREMENT ptcoma          { $$=$1; }
 ;
 
 DECLARACION
@@ -162,6 +166,11 @@ BLOQUEINSTRUCCIONES
     | llabre llcierra
 ;
 
+INCREMENT
+    : masmas identificador      {$$ = new Incremento($2, IncrementOption.MASMAS_PRE, @1.first_line, @1.first_column);}             
+    | identificador masmas      {$$ = new Incremento($1, IncrementOption.MASMAS_POST, @1.first_line, @1.first_column);}             
+;
+
 EXPRESION
 	: EXPRESION mas EXPRESION       {$$= new Arithmetic($1,$3,ArithmeticOption.MAS, @1.first_line, @1.first_column);}         
     | EXPRESION menos EXPRESION     {$$= new Arithmetic($1,$3,ArithmeticOption.MENOS, @1.first_line, @1.first_column);}      
@@ -185,7 +194,8 @@ EXPRESION
     | EXPRESION mayorigual EXPRESION    {$$ = new Relacional($1, $3, RelacionalOption.MAYORIGUAL, @1.first_line, @1.first_column);}       
     | EXPRESION and EXPRESION           {$$ = new Logical($1, $3, LogicalOption.AND, @1.first_line, @1.first_column);}                              
     | EXPRESION or EXPRESION            {$$ = new Logical($1, $3, LogicalOption.OR, @1.first_line, @1.first_column);}    
-    | EXPRESION xor EXPRESION            {$$ = new Logical($1, $3, LogicalOption.XOR, @1.first_line, @1.first_column);}    
+    | EXPRESION xor EXPRESION           {$$ = new Logical($1, $3, LogicalOption.XOR, @1.first_line, @1.first_column);}    
     | not EXPRESION %prec UNOT          {$$ = new Logical($2, null, LogicalOption.NOT, @1.first_line, @1.first_column);}             
+    | INCREMENT                         {$$ = $1}
     | pabre EXPRESION pcierra 
 ;   
