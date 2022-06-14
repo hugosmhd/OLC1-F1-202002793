@@ -44,6 +44,10 @@
 "true"				return 'pr_true';
 "false"				return 'pr_false';
 "while"             return 'pr_while';
+"switch"            return 'pr_switch'
+"case"              return 'pr_case'
+"default"           return 'pr_default'
+"break"             return 'pr_break'
 
 
 
@@ -121,6 +125,7 @@ INSTRUCCION
 	: DECLARACION ptcoma        { $$=$1; }
 	| ASIGNACION ptcoma		
     | IF	                    { $$=$1; }					
+    | SWITCH	                    { $$=$1; }					
     | WHILE					
     | PRINT ptcoma
     | INCREMENT ptcoma          { $$=$1; }
@@ -145,6 +150,10 @@ IF
     : pr_if pabre EXPRESION pcierra BLOQUEINSTRUCCIONES     {$$ = new If($3, $5, @1.first_line, @1.first_column); }
     | pr_if pabre EXPRESION pcierra BLOQUEINSTRUCCIONES pr_else BLOQUEINSTRUCCIONES     { $$ = new If($3, $5, @1.first_line, @1.first_column, $7); }    
     | pr_if pabre EXPRESION pcierra BLOQUEINSTRUCCIONES pr_else IF      { $$ = new If($3, $5, @1.first_line, @1.first_column, $7); }
+;
+
+SWITCH
+    : pr_switch pabre EXPRESION pcierra
 ;
 
 PRINT

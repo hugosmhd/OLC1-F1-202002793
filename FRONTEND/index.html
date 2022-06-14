@@ -1,58 +1,26 @@
-<!-- <!DOCTYPE html>
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link rel="stylesheet" type="text/css" href="estilos.css"/>
-    
-    <title></title>
-</head>
-<body>
-    <div class="menu">
-		<p class="pestana">Inicio</p>
-		<p class="pestana">Productos</p>
-		<p class="pestana">Contacto</p>
-	</div>
-
-	<div class="content">
-
-		<div data-content id="inicio" class="active">
-			<h1>Inicio</h1>
-			<p>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis architecto aperiam accusamus vitae possimus. Atque quam quibusdam nobis perferendis voluptate harum, sed aliquam illo! Suscipit!
-			</p>
-		</div>
-
-		<div data-content id="productos">
-			<h1>Productos</h1>
-		</div>
-
-		<div data-content id="contacto">
-			<h1>Contacto</h1>
-		</div>
-
-	</div>
-    <script type="text/javascript" src="cambiarPestanna.js"></script>
-</body>
-</html>
-</pre> -->
 
 <!DOCTYPE html>
 <html lang="es">
     <head>
-        <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
     
-        <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
         <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Yellowtail&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-        
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
         <link rel="stylesheet" href="estilos.css">
+        <link rel="stylesheet" href="codemirror.css">
+		
         <title>Login Bootstrap</title>
+		<!-- <style>
+			.CodeMirror {
+				border-top: 1px solid black;
+				border-bottom: 1px solid black;
+			}
+		</style> -->
       </head>
-    <body>
-        <div class="div-body">
+    <body>		
+        <div class="div-body">			
 			<div class="">
 				<div class="row ">
 					<div class="col card-tools bg-light">
@@ -60,9 +28,12 @@
 							<div class="container-fluid">
 							  <div class="collapse navbar-collapse" id="navbarSupportedContent">
 								<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+									<li class="nav-item">
+										<a class="nav-link item" aria-current="page" href="#"><i class="fas fa-home"> Home</i></a>
+									  </li>
 									<li class="nav-item dropdown">
 										<a class="nav-link dropdown-toggle item" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-											Archivo
+											<i class="fas fa-ballot-check"> Reportes</i>
 										</a>
 										<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 											<li><a class="dropdown-item" href="#">Abrir</a></li>
@@ -71,24 +42,60 @@
 											<li><a class="dropdown-item" href="#">Crear</a></li>
 										</ul>
 									</li>
-								  <li class="nav-item">
-									<a class="nav-link item" aria-current="page" href="#">Reportes</a>
-								  </li>
-								  <li class="nav-item">
-									<a class="nav-link item" aria-current="page" href="#">Ejecutar</a>
-								  </li>							  
+								  
+								  						  
 								</ul>
 							  </div>
 							</div>
 						</nav>
 					</div>
-					<div class="col"></div>
+					<div class="col card-tools bg-light">
+						<nav class="navbar navbar-expand-md">
+							<div class="container-fluid">
+							  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+								<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+									<li class="nav-item">
+										<a class="nav-link item" href="#">
+											<input id="image1" type="file" class="inputfile hidden-xs hidden-md" value="image1" name="image1" onchange="loadFile(this.files[0])" required />
+											<label for="image1"><i class="fas fa-folder-open"> Abrir</i></label><br>
+											
+										</a>
+									</li>						  
+									<li class="nav-item">
+										<a class="nav-link item" href="#"><i class="fas fa-save"> Guardar</i></a>
+									</li>						  
+									<li class="nav-item">
+										<a class="nav-link item" href="#"><i class="fas fa-sd-card"> Guardar como</i></a>
+									</li>						  
+									<li class="nav-item">
+										<a class="btn nav-item item" id="agregarPestana"><i class="fas fa-plus-circle"> Pestaña</i></a>
+									</li>						  
+								</ul>
+							  </div>
+							</div>
+						</nav>
+
+					</div>
 				</div>
 				<div class="row">
-				  <div class="col card-textarea">					
-					<div class="form-floating">
-                        <textarea class="form-control" name="textA" id="textA" style="height: 900px"></textarea>                        
-                    </div>
+					
+					
+				  <div class="col card-textarea">
+					<table class="tabsB table" id="idBloques">
+						<thead>
+							<tr id="idPestanas">
+								<th id="th-p-1" class="pestana" onclick="activarTabB(this, 'p-1')">Pest. 1</th>
+							</tr>
+						</thead>
+							<tbody id="p-1">
+								<tr><td colspan="1" class="txt"><div class="tabsBint">
+									<textarea id="code-1" name="code-1">
+									</textarea>
+								</div></td></tr>
+							</tbody>
+						
+					</table>				
+					
 				  </div>
 				  <div class="col card-textarea">
 					<div class="form-floating">
@@ -100,6 +107,9 @@
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>        
-        
+		<script src="codemirror.js"></script>
+		<script src="pascal.js"></script>
+        <script type="text/javascript" src="cambiarPestanna.js"></script>
+		
     </body>
 </html>
