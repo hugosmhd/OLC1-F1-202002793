@@ -11,6 +11,6 @@ export abstract class Instruccion {
         this.column= column+1 ;
     }
 
-    public abstract executar(env:Environment): any;
     public abstract getNodo():nodo;
+    public abstract executar(env:Environment): any;
 }

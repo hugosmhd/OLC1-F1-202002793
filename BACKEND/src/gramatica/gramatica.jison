@@ -155,7 +155,7 @@ IF
 ;
 
 SWITCH
-    : pr_switch pabre EXPRESION pcierra llabre CASEBLOQUE llcierra  {$$ = new Switch($3, $5, @1.first_line, @1.first_column); }
+    : pr_switch // pabre EXPRESION pcierra llabre CASEBLOQUE llcierra  {$$ = new Switch($3, $5, @1.first_line, @1.first_column); }
 ;
 
 CASEBLOQUE

@@ -1,8 +1,9 @@
 import { Expression } from "../abstract/express"
 import { Retorno } from "../abstract/retorno"
+import nodo from "../grafo/nodo"
 import { Environment } from "../symbols/enviroment"
 import { Type } from "../symbols/type"
-import { ArithmeticOption } from "./aritmeticOption"
+import { ArithmeticOption, arithmeticString } from "./aritmeticOption"
 
 export class Arithmetic extends Expression {
 
@@ -18,6 +19,17 @@ export class Arithmetic extends Expression {
         if (!right) {
             this.operandoU = left;
         }
+    }
+
+    public getNodo() {
+        var operacion = arithmeticString(this.type);
+            
+        var nodoDec = new nodo(operacion);
+        // nodoDec.agregarHijo(this.l);
+        // nodoDec.agregarHijo(this.nombre[0]);
+        nodoDec.agregarHijo_nodo(this.left.getNodo());
+        this.right != null?nodoDec.agregarHijo_nodo(this.right.getNodo()):null;
+        return nodoDec;
     }
 
     public executar(env:Environment): Retorno {

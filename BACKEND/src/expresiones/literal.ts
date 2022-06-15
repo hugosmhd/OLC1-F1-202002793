@@ -1,5 +1,6 @@
 import { Expression } from "../abstract/express"
 import { Retorno } from "../abstract/retorno"
+import nodo from "../grafo/nodo";
 import { Type } from "../symbols/type"
 
 
@@ -12,6 +13,14 @@ export class Literal extends Expression {
         column: number
     ) {
         super(line, column)
+    }
+
+    public getNodo() {
+        var nodoDec = new nodo(this.value);
+        // nodoDec.agregarHijo(this.tipo + "");
+        // nodoDec.agregarHijo(this.nombre[0]);
+        // nodoDec.agregarHijo2(this.expresion.getNodo());
+        return nodoDec;
     }
 
     public executar(): Retorno {

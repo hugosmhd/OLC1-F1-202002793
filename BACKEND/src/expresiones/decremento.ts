@@ -4,6 +4,7 @@ import { Retorno } from "../abstract/retorno";
 import { Environment } from "../symbols/enviroment";
 import { Type } from "../symbols/type";
 import { DecrementOption } from './decrementOptions';
+import nodo from '../grafo/nodo';
 
 export class Decremento extends Expression {
   constructor(
@@ -13,6 +14,14 @@ export class Decremento extends Expression {
     column: number
   ) {
     super(line, column);
+  }
+
+  public getNodo() {
+      var nodoDec = new nodo("DECREMENTO");
+      // nodoDec.agregarHijo(this.tipo + "");
+      // nodoDec.agregarHijo(this.nombre[0]);
+      // nodoDec.agregarHijo2(this.expresion.getNodo());
+      return nodoDec;
   }
 
   public executar(env: Environment): Retorno {

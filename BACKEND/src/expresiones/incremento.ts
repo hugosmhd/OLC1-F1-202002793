@@ -4,6 +4,7 @@ import { Retorno } from "../abstract/retorno";
 import { Environment } from "../symbols/enviroment";
 import { Type } from "../symbols/type";
 import { IncrementOption } from './incrementOptions';
+import nodo from '../grafo/nodo';
 
 export class Incremento extends Expression {
   constructor(
@@ -14,6 +15,14 @@ export class Incremento extends Expression {
   ) {
     super(line, column);
   }
+
+  public getNodo() {
+    var nodoDec = new nodo("INCREMENTO");
+    // nodoDec.agregarHijo(this.tipo + "");
+    // nodoDec.agregarHijo(this.nombre[0]);
+    // nodoDec.agregarHijo2(this.expresion.getNodo());
+    return nodoDec;
+}
 
   public executar(env: Environment): Retorno {
     const variable = env.get_variable(this.identificador)

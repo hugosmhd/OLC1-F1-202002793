@@ -1,5 +1,6 @@
 import { Expression } from "../abstract/express";
 import { Retorno } from "../abstract/retorno";
+import nodo from "../grafo/nodo";
 import { Environment } from "../symbols/enviroment";
 import { Type } from "../symbols/type";
 import { LogicalOption } from './logicalOptions';
@@ -13,6 +14,14 @@ export class Logical extends Expression {
       column: number
     ) {
       super(line, column);
+    }
+
+    public getNodo() {
+        var nodoDec = new nodo("LOGICA");
+        // nodoDec.agregarHijo(this.tipo + "");
+        // nodoDec.agregarHijo(this.nombre[0]);
+        // nodoDec.agregarHijo2(this.expresion.getNodo());
+        return nodoDec;
     }
 
     public executar(env: Environment): Retorno {

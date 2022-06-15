@@ -1,3 +1,4 @@
+import nodo from './grafo/nodo';
 import { Environment } from './symbols/enviroment';
 
 const parser = require('./gramatica/gramatica');
@@ -19,8 +20,44 @@ try {
         }
     }
 
+    var instrucciones = new nodo("INSTRUCCIONES");
+    for(const instruccion of ast) {
+        instrucciones.agregarHijo_nodo(instruccion.getNodo());
+    }
+    var grafo = '';
+    grafo = getDot(instrucciones);
+    console.log(grafo)
+    
+
 
 } catch (error) {
     console.log(error);
     
+}
+
+
+var dot = ''
+var c = 0;
+
+function getDot(raiz:nodo)
+{
+    dot = "";
+    dot += "digraph {\n";
+    dot += "n0[label=\"" + raiz.getValor().replace("\"", "\\\"") + "\"];\n";
+    c = 1;
+    recorrerAST("n0",raiz);
+    dot += "}";
+    return dot;
+}
+
+function recorrerAST(padre:String, nPadre:nodo)
+{
+    for(let hijo of nPadre.getHijos())
+    {
+        var nombreHijo = "n" + c;
+        dot += nombreHijo + "[label=\"" + hijo.getValor().replace("\"", "\\\"") + "\"];\n";
+        dot += padre + "->" + nombreHijo + ";\n";
+        c++;
+        recorrerAST(nombreHijo,hijo);
+    }
 }

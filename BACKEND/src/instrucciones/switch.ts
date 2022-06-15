@@ -2,6 +2,7 @@ import { Environment } from './../symbols/enviroment';
 import { Expression } from "../abstract/express";
 import { Instruccion } from "../abstract/instruccion";
 import { Type } from '../symbols/type';
+import nodo from '../grafo/nodo';
 
 export class Switch extends Instruccion {
 
@@ -16,6 +17,15 @@ export class Switch extends Instruccion {
         super(line,column);
         
     }
+
+    public getNodo() {
+        var nodoDec = new nodo("SWITCH");
+        // nodoDec.agregarHijo(this.tipo + "");
+        // nodoDec.agregarHijo(this.nombre[0]);
+        // nodoDec.agregarHijo2(this.expresion.getNodo());
+        return nodoDec;
+    }
+
     public executar(env:Environment) {
         const condicion = this.condicion.executar(env); 
         console.log("----- EVALUACION SWITCH -----")

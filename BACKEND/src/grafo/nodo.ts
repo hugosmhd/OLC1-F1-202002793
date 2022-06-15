@@ -15,6 +15,11 @@ export default class nodo {
         return this.valor;
     }
 
+    public getHijos():Array<nodo>
+    {
+        return this.hijos;
+    }
+
     public agregarHijo(valor:String) {
         this.hijos.push(new nodo(valor));
     }

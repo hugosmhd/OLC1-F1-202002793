@@ -1,7 +1,8 @@
 import { Expression } from "../abstract/express";
 import { Instruccion } from "../abstract/instruccion";
+import nodo from "../grafo/nodo";
 import { Environment } from "../symbols/enviroment";
-import { Type } from "../symbols/type";
+import { Type, tipoString } from "../symbols/type";
 
 export class Declaracion extends Instruccion {
     constructor(
@@ -13,6 +14,19 @@ export class Declaracion extends Instruccion {
     ) {
         super(line,column);
         
+    }
+
+    public getNodo() {
+        var nodoDec = new nodo("DECLARACION");
+        var tipoStr = tipoString(this.tipo);
+        
+
+        tipoStr != null?nodoDec.agregarHijo(tipoStr):tipoStr;
+        this.nombre.forEach(id => {
+            nodoDec.agregarHijo(id);
+        });
+        nodoDec.agregarHijo_nodo(this.expresion.getNodo());
+        return nodoDec;
     }
 
     public executar(env:Environment) {
