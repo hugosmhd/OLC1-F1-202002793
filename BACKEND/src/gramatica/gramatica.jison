@@ -20,6 +20,11 @@
     const {Decremento} = require('../expresiones/decremento');
     const {DecrementOption} = require('../expresiones/decrementOptions');
 
+    const {Issue} = require('../error/issue');
+    const {Singleton} = require('../patron_singleton/singleton');
+
+
+
     var array_erroresLexicos;
 
 %}
@@ -92,6 +97,9 @@
 
 .					{ 
                         console.log('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);
+                        const singleton = Singleton.getInstance();
+                        const error = new Issue("Lexico", "Caracter que lo proboco: " + yytext, yylloc.first_line, yylloc.first_column + 1); 
+                        singleton.add_errores(error);
                         
                     }
 

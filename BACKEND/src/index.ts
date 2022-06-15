@@ -1,6 +1,9 @@
+import { Issue } from './error/issue';
 import nodo from './grafo/nodo';
+import { Singleton } from './patron_singleton/singleton';
 import { Environment } from './symbols/enviroment';
 
+const singleton = Singleton.getInstance()
 const parser = require('./gramatica/gramatica');
 const fs = require("fs");
 
@@ -27,6 +30,14 @@ try {
     var grafo = '';
     grafo = getDot(instrucciones);
     console.log(grafo)
+    const array = singleton.get_errores()
+    console.log("---- ERRORES ----")
+    // console.log(new Issue("Lexico", "Caracter que lo proboco", 2, 3))
+    // Singleton.getInstance().add_errores(new Issue("Lexico", "Caracter que lo proboco", 2, 3))
+
+    array.forEach(elementos => {
+        console.log(elementos)
+    });
     
 
 
