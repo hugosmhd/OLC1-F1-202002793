@@ -1,8 +1,28 @@
 var idTextArea = "code-1"
 
-var principalEditor = CodeMirror.fromTextArea(document.getElementById(idTextArea), {
-    lineNumbers: true
+var principalEditor = [];
+var editorActual;
+
+activarEditor();
+
+function activarEditor() {
+	var editor = CodeMirror.fromTextArea(document.getElementById(idTextArea), {
+		lineNumbers: true
+	});
+	principalEditor.push(editor)
+}
+
+function downloadFiles(data, file_name, file_type) {
+    var content = "What's up , hello world";
+// any kind of extension (.txt,.cpp,.cs,.bat)
+var filename = "hello.txt";
+
+var blob = new Blob([content], {
+ type: "text/plain;charset=utf-8"
 });
+
+saveAs(blob, filename);
+}
 
 $("#agregarPestana").addEventListener("click", function() {
 	const pest = document.querySelectorAll('.pestana')
@@ -12,7 +32,6 @@ $("#agregarPestana").addEventListener("click", function() {
 	th.setAttribute("id", `th-p-${pest.length + 1}`);
 	th.setAttribute("onclick", `activarTabB(this, 'p-${pest.length + 1}')`);
 	th.innerHTML = "Pest. " + (pest.length + 1)
-	console.log(th)
 	td.forEach(element => {
 		element.setAttribute("colspan", pest.length+1)
 	});
@@ -26,6 +45,7 @@ $("#agregarPestana").addEventListener("click", function() {
 	td_d.setAttribute("class", "txt")
 	var div = document.createElement("div");
 	div.setAttribute("class", "tabsBint")
+	div.setAttribute("style", "height: 100%;")
 	var textarea = document.createElement("textarea");
 	textarea.setAttribute("id", `code-${pest.length+1}`)
 	textarea.setAttribute("name", `code-${pest.length+1}`)
@@ -33,15 +53,10 @@ $("#agregarPestana").addEventListener("click", function() {
 	td_d.appendChild(div)
 	tr.appendChild(td_d)
 	tbody.appendChild(tr)
-	console.log(tbody)
 	$("#idBloques").appendChild(tbody);
-	var editor = CodeMirror.fromTextArea(document.getElementById(`code-${pest.length+1}`), {
-		lineNumbers: true				
-	});
-	activarTabB(th, `p-${pest.length + 1}`)
 	idTextArea = `code-${pest.length + 1}`
-	console.log("--- ID TEXT AREA ---")
-	console.log(idTextArea)
+	activarEditor()
+	activarTabB(th, `p-${pest.length + 1}`)
 })
 
 
@@ -49,21 +64,23 @@ $("#agregarPestana").addEventListener("click", function() {
 
 async function loadFile(file) {
 	let text = await file.text();
-	console.log(text)
+	// console.log(text)
 	getPrincipalFile(text)
-	document.getElementById('code-1').innerHTML = text;
+	document.getElementById('image1').value = "";
+	// document.getElementById('code-1').innerHTML = text;
   }
 
 function getPrincipalFile(event) {
     if (event) {
-		console.log("HOLA JAJA")
+		// console.log("HOLA JAJA")
         placeFileContent(
-            principalEditor, // Editor
+            editorActual, // Editor
             event);
     }
 }
 
 function placeFileContent(target, file) {
+	console.log(file + " desde place")
 	target.getDoc().setValue(file);
 }
 
@@ -76,13 +93,12 @@ function readFileContent(file) {
     })
 }
 
-function $(selector) {
-	return document.querySelector(selector)
-}
-
 function activarTabB(este, id){
-	console.log(id)
-    var tb = document.getElementById(id);
+	var tb = document.getElementById(id);
+	idTextArea = `code-${id}`
+	console.log(idTextArea)
+	// activarEditor()
+
     if ((tb != null) && (tb.tagName.toLowerCase() == "tbody")){
         var tabla = tb.parentNode || tb.parentElement;
         if ((tabla != null) && (tabla.tagName.toLowerCase()== "table")){
@@ -95,6 +111,8 @@ function activarTabB(este, id){
                     pestanya.style.backgroundColor = "rgb(235, 235, 225)";
                     tbs[i].style.display = "table-header-group";
 					idTextArea = `code-${i}`
+					editorActual = principalEditor[i]
+					// activarEditor()
                 } else {
                     pestanya.style.color = "white";
                     pestanya.style.fontWeight = "normal";
@@ -104,7 +122,14 @@ function activarTabB(este, id){
             }
         }
     }
+	
 }
+
+function $(selector) {
+	return document.querySelector(selector)
+}
+
+
 
 // const targets = document.querySelectorAll('.pestana')
 // const content = document.querySelectorAll('[data-content]')

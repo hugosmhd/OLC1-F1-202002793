@@ -5,6 +5,7 @@
     const {Declaracion} = require('../instrucciones/declaracion');
     const {If} = require('../instrucciones/if');
     const {Print} = require('../instrucciones/print');
+    const {Switch} = require('../instrucciones/switch');
     const {Literal} = require('../expresiones/literal')
     const {Type} = require('../symbols/type');
     const {Arithmetic} = require('../expresiones/aritmeticas');
@@ -53,6 +54,7 @@
 
 ","					return 'coma';
 ";"					return 'ptcoma';
+":"					return 'dospts';
 "{"					return 'llabre';
 "}"					return 'llcierra';
 "("					return 'pabre';
@@ -153,7 +155,27 @@ IF
 ;
 
 SWITCH
-    : pr_switch pabre EXPRESION pcierra
+    : pr_switch pabre EXPRESION pcierra llabre CASEBLOQUE llcierra  {$$ = new Switch($3, $5, @1.first_line, @1.first_column); }
+;
+
+CASEBLOQUE
+    : CASEBLOQUE CASOSSWITCH dospts SWITCHINSTRUCCIONES
+    | 
+;
+
+CASOSSWITCH
+    : pr_case EXPRESION
+    | pr_default
+;
+
+
+SWITCHINSTRUCCIONES
+    : INSTRUCCIONES BREAKOPTION
+;
+
+BREAKOPTION
+    : pr_break ptcoma
+    | 
 ;
 
 PRINT
