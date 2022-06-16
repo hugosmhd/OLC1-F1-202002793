@@ -1,3 +1,5 @@
+import { Issue } from './../error/issue';
+import { Singleton } from './../patron_singleton/singleton';
 import { Expression } from "../abstract/express";
 import { Instruccion } from "../abstract/instruccion";
 import nodo from "../grafo/nodo";
@@ -57,10 +59,13 @@ export class Declaracion extends Instruccion {
 
                     env.guardar_variable(elemento,expresion.value,expresion.type)
                     
+                } else {
+                    Singleton.getInstance().add_errores(new Issue("Semantico", "El tipo de dato declarado no coincide con la expresion", this.line, this.column))
+                    // console.log("Error semantico no coinciden los tipos")
                 }
                 
             } catch (error) {
-                console.log(error);
+                // console.log(error);
                 
             }
         }

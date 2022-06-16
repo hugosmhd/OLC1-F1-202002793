@@ -24,8 +24,16 @@ export class Identificador extends Instruccion {
         // console.log("------s----")
         // console.log(this.nombre)
         // console.log(env.get_variable(this.nombre))
-        const variable = env.get_variable(this.nombre)
+        const variable_ts = env.get_variable(this.nombre)
+
+        if(variable_ts== null|| variable_ts== undefined){
+            //errores semaintics
+            return
+        }
         
-        return variable;
+        return {
+            value: variable_ts.value,
+            type: variable_ts.type
+        }
     }
 }

@@ -1,3 +1,5 @@
+import { Singleton } from './../patron_singleton/singleton';
+import { Issue } from './../error/issue';
 import { Expression } from "../abstract/express"
 import { Retorno } from "../abstract/retorno"
 import nodo from "../grafo/nodo"
@@ -104,6 +106,8 @@ export class Arithmetic extends Expression {
                     value: (String(nodoIzq.value) + String(nodoDer.value)), 
                     type: Type.STRING 
                 }
+            } else {
+                Singleton.getInstance().add_errores(new Issue("Semantico", "El tipo de dato de los operandos no son validos para la suma(+)", this.line, this.column))
             }
             
             //demas validadionces para la operaciones aritmeticas
@@ -146,6 +150,8 @@ export class Arithmetic extends Expression {
                     value: (String(nodoIzq.value).charCodeAt(0) - String(nodoDer.value).charCodeAt(0)), 
                     type: Type.INT 
                 }
+            } else {
+                Singleton.getInstance().add_errores(new Issue("Semantico", "El tipo de dato de los operandos no son validos para la resta(-)", this.line, this.column))
             }
             
         } else if (this.type == ArithmeticOption.POR && nodoDer != null) {   
@@ -186,6 +192,8 @@ export class Arithmetic extends Expression {
                     value: (String(nodoIzq.value).charCodeAt(0) * String(nodoDer.value).charCodeAt(0)), 
                     type: Type.INT 
                 }
+            } else {
+                Singleton.getInstance().add_errores(new Issue("Semantico", "El tipo de dato de los operandos no son validos para la multiplicacion(*)", this.line, this.column))
             }
             
         } else if (this.type == ArithmeticOption.DIV && nodoDer != null) {   
@@ -226,6 +234,8 @@ export class Arithmetic extends Expression {
                     value: Math.trunc(String(nodoIzq.value).charCodeAt(0) / String(nodoDer.value).charCodeAt(0)), 
                     type: Type.INT 
                 }
+            } else {
+                Singleton.getInstance().add_errores(new Issue("Semantico", "El tipo de dato de los operandos no son validos para la division(/)", this.line, this.column))
             }
             
         } else if (this.type == ArithmeticOption.POT && nodoDer != null) {   
@@ -266,6 +276,8 @@ export class Arithmetic extends Expression {
                     value: Math.pow((nodoIzq.value).charCodeAt(0),(nodoDer.value).charCodeAt(0)), 
                     type: Type.DOUBLE 
                 }
+            } else {
+                Singleton.getInstance().add_errores(new Issue("Semantico", "El tipo de dato de los operandos no son validos para la potencia(**)", this.line, this.column))
             }
             
         } else if (this.type == ArithmeticOption.MODULO && nodoDer != null) {   
@@ -306,6 +318,8 @@ export class Arithmetic extends Expression {
                     value: ((nodoIzq.value).charCodeAt(0) % (nodoDer.value).charCodeAt(0)), 
                     type: Type.DOUBLE 
                 }
+            } else {
+                Singleton.getInstance().add_errores(new Issue("Semantico", "El tipo de dato de los operandos no son validos para el modulo(%)", this.line, this.column))
             }
             
         }
@@ -321,7 +335,11 @@ export class Arithmetic extends Expression {
                     value: Number(-1*nodoIzq.value), 
                     type: Type.DOUBLE 
                 }
-            } 
+            } else {
+                Singleton.getInstance().add_errores(new Issue("Semantico", "El operador unario menos(-) no es valido para el tipo de dato " + nodoIzq.type, this.line, this.column))
+            }
+        } else {
+            Singleton.getInstance().add_errores(new Issue("Semantico", "Verifique su entrada, en las lineas y columnas indicadas " + nodoIzq.type, this.line, this.column))
         }
         return result
     }

@@ -36,15 +36,30 @@ export class Environment {
     return Type.error
   }
 
-  public get_variable(nombre: string): any {
-    for (let entry of Array.from(this.tablaSimbolos.entries())) {
-        if (entry[0] == nombre) return entry[1];
+  public get_variable(nombre: string): Symbol | undefined | null {
+    let env: Environment | null = this;
+    while (env != null) {
+        if (env.tablaSimbolos.has(nombre)) return env.tablaSimbolos.get(nombre);
+        env = env.anterior;
     }
-    return Type.error
+    return null;
   }
+
+  public get_env(nombre: string): Environment | undefined | null {
+    let env: Environment | null = this;
+    while (env != null) {
+        if (env.tablaSimbolos.has(nombre)) return env;
+        env = env.anterior;
+    }
+    return null;
+  }
+
+
+
   public actualizar_variable(nombre: string, new_valor: any) {
     for (let entry of Array.from(this.tablaSimbolos.entries())) {
       if (entry[0] == nombre) {
+          console.log("ENCONTRO LA VARIABLE " + nombre)
           entry[1].value = new_valor;
       }
   }

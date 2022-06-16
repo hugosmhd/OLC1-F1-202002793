@@ -6,6 +6,8 @@
     const {If} = require('../instrucciones/if');
     const {Print} = require('../instrucciones/print');
     const {Switch} = require('../instrucciones/switch');
+    const {Bloque} = require('../instrucciones/bloque')
+
     const {Literal} = require('../expresiones/literal')
     const {Type} = require('../symbols/type');
     const {Arithmetic} = require('../expresiones/aritmeticas');
@@ -96,7 +98,7 @@
 <<EOF>>				return 'EOF';
 
 .					{ 
-                        console.log('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);
+                        // console.log('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);
                         const singleton = Singleton.getInstance();
                         const error = new Issue("Lexico", "Caracter que lo proboco: " + yytext, yylloc.first_line, yylloc.first_column + 1); 
                         singleton.add_errores(error);
@@ -140,6 +142,11 @@ INSTRUCCION
     | PRINT ptcoma
     | INCREMENT ptcoma          { $$=$1; }
     | DECREMENT ptcoma          { $$=$1; }
+    | BLOQUE                    { $$=$1; } 
+    | error ptcoma { 
+        const singleton = Singleton.getInstance();
+        var errors = new Issue("Sintactico", "Error sintactico, verificar entrada", this._$.first_line, this._$.first_column + 1); 
+        singleton.add_errores(errors); }
 ;
 
 DECLARACION
@@ -206,6 +213,11 @@ TIPODATO
 
 BLOQUEINSTRUCCIONES
     : llabre INSTRUCCIONES llcierra { $$ = $2; }
+    | llabre llcierra
+;
+
+BLOQUE
+: llabre INSTRUCCIONES llcierra { $$= new Bloque($2,@1.first_line, @1.first_column) }
     | llabre llcierra
 ;
 

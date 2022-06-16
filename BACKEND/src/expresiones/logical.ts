@@ -1,3 +1,5 @@
+import { Issue } from './../error/issue';
+import { Singleton } from './../patron_singleton/singleton';
 import { Expression } from "../abstract/express";
 import { Retorno } from "../abstract/retorno";
 import nodo from "../grafo/nodo";
@@ -39,6 +41,8 @@ export class Logical extends Expression {
                     value: nodoIzq.value || nodoDer.value,
                     type: Type.BOOLEAN,
                 };
+            } else {
+                Singleton.getInstance().add_errores(new Issue("Semantico", "La expresion logica OR(||) solo acepta operadores booleanos", this.line, this.column))
             }
         } else if (this.type == LogicalOption.AND && nodoDer != null) {
             if (nodoDer.type == Type.BOOLEAN && nodoIzq.type == Type.BOOLEAN) {
@@ -46,6 +50,8 @@ export class Logical extends Expression {
                     value: nodoIzq.value && nodoDer.value,
                     type: Type.BOOLEAN,
                 };
+            } else {
+                Singleton.getInstance().add_errores(new Issue("Semantico", "La expresion logica AND(&&) solo acepta operadores booleanos", this.line, this.column))
             }
         } else if (this.type == LogicalOption.XOR && nodoDer != null) {
             if (nodoDer.type == Type.BOOLEAN && nodoIzq.type == Type.BOOLEAN) {
@@ -53,6 +59,8 @@ export class Logical extends Expression {
                     value: (nodoIzq.value ^ nodoDer.value) == 1 ? true: false,
                     type: Type.BOOLEAN,
                 };
+            } else {
+                Singleton.getInstance().add_errores(new Issue("Semantico", "La expresion logica XOR(^) solo acepta operadores booleanos", this.line, this.column))
             }
         } else if (this.type == LogicalOption.NOT) {
             if (nodoDer == null && nodoIzq.type == Type.BOOLEAN) {
@@ -60,7 +68,11 @@ export class Logical extends Expression {
                     value: !nodoIzq.value,
                     type: Type.BOOLEAN,
                 };
+            } else {
+                Singleton.getInstance().add_errores(new Issue("Semantico", "La expresion logica NOT(!) solo acepta operadores booleanos", this.line, this.column))
             }
+        } else {
+            Singleton.getInstance().add_errores(new Issue("Semantico", "Verifique su entrada, en las lineas y columnas indicadas " + nodoIzq.type, this.line, this.column))
         }
 
         return result;

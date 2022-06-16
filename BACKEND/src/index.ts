@@ -14,22 +14,24 @@ try {
     //aqui analisis semantico
     // console.log("Hola ya esta")
     for (const elemento  of ast) {
-        try {
-            
+        try {            
             elemento.executar(env_padre)
         } catch (error) {
-            console.log(error);
+            // console.log(error);
+            if (error instanceof Issue) {
+                singleton.add_errores(error)                
+            }
             
         }
     }
 
-    var instrucciones = new nodo("INSTRUCCIONES");
-    for(const instruccion of ast) {
-        instrucciones.agregarHijo_nodo(instruccion.getNodo());
-    }
-    var grafo = '';
-    grafo = getDot(instrucciones);
-    console.log(grafo)
+    // var instrucciones = new nodo("INSTRUCCIONES");
+    // for(const instruccion of ast) {
+    //     instrucciones.agregarHijo_nodo(instruccion.getNodo());
+    // }
+    // var grafo = '';
+    // grafo = getDot(instrucciones);
+    // console.log(grafo)
     const array = singleton.get_errores()
     console.log("---- ERRORES ----")
     // console.log(new Issue("Lexico", "Caracter que lo proboco", 2, 3))

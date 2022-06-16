@@ -1,3 +1,5 @@
+import { Issue } from './../error/issue';
+import { Singleton } from './../patron_singleton/singleton';
 import { Expression } from "../abstract/express";
 import { Retorno } from "../abstract/retorno";
 import nodo from "../grafo/nodo";
@@ -63,6 +65,8 @@ export class Relacional extends Expression {
                 value: String(nodoIzq.value).charCodeAt(0) > String(nodoDer.value).charCodeAt(0), 
                 type: Type.BOOLEAN 
             }
+        } else {
+            Singleton.getInstance().add_errores(new Issue("Semantico", "El operador mayor que(>) no es valido para los tipos de operandos", this.line, this.column))
         }
     } else if (this.type == RelacionalOption.MENOR) {
         if (nodoDer.type == Type.INT && nodoIzq.type == Type.INT
@@ -94,6 +98,8 @@ export class Relacional extends Expression {
                 value: String(nodoIzq.value).charCodeAt(0) < String(nodoDer.value).charCodeAt(0), 
                 type: Type.BOOLEAN 
             }
+        } else {
+            Singleton.getInstance().add_errores(new Issue("Semantico", "El operador menor que(<) no es valido para los tipos de operandos", this.line, this.column))
         }
     } else if (this.type == RelacionalOption.MAYORIGUAL) {
         if (nodoDer.type == Type.INT && nodoIzq.type == Type.INT
@@ -125,6 +131,8 @@ export class Relacional extends Expression {
                 value: String(nodoIzq.value).charCodeAt(0) >= String(nodoDer.value).charCodeAt(0), 
                 type: Type.BOOLEAN 
             }
+        } else {
+            Singleton.getInstance().add_errores(new Issue("Semantico", "El operador mayor igual que(>=) no es valido para los tipos de operandos", this.line, this.column))
         }
     } else if (this.type == RelacionalOption.MENORIGUAL) {
         if (nodoDer.type == Type.INT && nodoIzq.type == Type.INT
@@ -156,6 +164,8 @@ export class Relacional extends Expression {
                 value: String(nodoIzq.value).charCodeAt(0) <= String(nodoDer.value).charCodeAt(0), 
                 type: Type.BOOLEAN 
             }
+        } else {
+            Singleton.getInstance().add_errores(new Issue("Semantico", "El operador menor igual que(<=) no es valido para los tipos de operandos", this.line, this.column))
         }
     } else if (this.type == RelacionalOption.IGUALIGUAL) {
         if (nodoDer.type == Type.INT && nodoIzq.type == Type.INT
@@ -197,6 +207,8 @@ export class Relacional extends Expression {
                 value: (nodoIzq.value) == (nodoDer.value), 
                 type: Type.BOOLEAN 
             }
+        } else {
+            Singleton.getInstance().add_errores(new Issue("Semantico", "El operador de comparacion igual que(==) no es valido para los tipos de operandos", this.line, this.column))
         }
     } else if (this.type == RelacionalOption.DIFERENTE) {
         if (nodoDer.type == Type.INT && nodoIzq.type == Type.INT
@@ -238,8 +250,12 @@ export class Relacional extends Expression {
                 value: (nodoIzq.value) != (nodoDer.value), 
                 type: Type.BOOLEAN 
             }
+        } else {
+            Singleton.getInstance().add_errores(new Issue("Semantico", "El operador de comparacion diferente que(!=) no es valido para los tipos de operandos", this.line, this.column))
         }
-    } 
+    } else {
+        Singleton.getInstance().add_errores(new Issue("Semantico", "Verifique su entrada, en las lineas y columnas indicadas " + nodoIzq.type, this.line, this.column))
+    }
     
     return result;
   }
