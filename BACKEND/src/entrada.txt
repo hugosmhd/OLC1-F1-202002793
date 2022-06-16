@@ -1,6 +1,5 @@
-
-if(true) {
-    print("esto es una prueba");
-    int b = 12;
-    int c = 12;
-} 
+int b = 1;
+while(b<=10) {
+    print("contador: " + b);
+    b++;
+}

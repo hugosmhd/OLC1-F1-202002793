@@ -7,11 +7,11 @@ import nodo from '../grafo/nodo';
 export class While extends Instruccion {
 
     private condicion:Expression;
-    private instrucciones:Array<Instruccion>;
+    private instrucciones:Instruccion;
 
     constructor(
         condicion: Expression,
-        instrucciones: Array<Instruccion>,
+        instrucciones: Instruccion,
         line: number, 
         column : number,
     ) {
@@ -29,14 +29,20 @@ export class While extends Instruccion {
     }
 
     public executar(env:Environment) {
+        // console.log("CONDICION -----");
+        // console.log(this.condicion);
+        // console.log("INSTRUCCIONES -----");
+        // console.log(this.instrucciones);
+        
         while (true) {
             const condicion = this.condicion.executar(env);
             if (condicion.type == Type.BOOLEAN) {
                 if (condicion.value) {
                     const env_while = new Environment(env);
-                    for(let instrucciones of this.instrucciones) {
-                        var if_instruc = instrucciones.executar(env_while);
-                    }
+                    this.instrucciones.executar(env_while)
+                    // for(let instrucciones of this.instrucciones) {
+                    //     var if_instruc = instrucciones.executar(env_while);
+                    // }
                 } else {
                     break
                 }

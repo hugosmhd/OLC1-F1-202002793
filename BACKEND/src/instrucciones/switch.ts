@@ -9,7 +9,7 @@ export class Switch extends Instruccion {
 
     constructor(
         public condicion: Expression,
-        public bloqueCase: Array<Instruccion>,
+        public bloqueCase: Instruccion,
         line: number, 
         column : number,
         public bloqueDefault?:Array<Instruccion>|Instruccion,

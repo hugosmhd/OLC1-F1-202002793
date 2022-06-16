@@ -7,6 +7,7 @@
     const {Print} = require('../instrucciones/print');
     const {Switch} = require('../instrucciones/switch');
     const {Bloque} = require('../instrucciones/bloque')
+    const {While} = require('../instrucciones/while')
 
     const {Literal} = require('../expresiones/literal')
     const {Type} = require('../symbols/type');
@@ -170,22 +171,22 @@ IF
 ;
 
 SWITCH
-    : pr_switch // pabre EXPRESION pcierra llabre CASEBLOQUE llcierra  {$$ = new Switch($3, $5, @1.first_line, @1.first_column); }
+    : pr_switch pabre EXPRESION pcierra llabre CASEBLOQUE llcierra  {$$ = new Switch($3, $6, @1.first_line, @1.first_column); }
 ;
 
 CASEBLOQUE
-    : CASEBLOQUE CASOSSWITCH dospts SWITCHINSTRUCCIONES
+    : CASEBLOQUE CASOSSWITCH dospts SWITCHINSTRUCCIONES {$$ = $4}
     | 
 ;
 
 CASOSSWITCH
-    : pr_case EXPRESION
+    : pr_case EXPRESION {console.log($1)}
     | pr_default
 ;
 
 
 SWITCHINSTRUCCIONES
-    : INSTRUCCIONES BREAKOPTION
+    : INSTRUCCIONES  {$$ = $1} // BREAKOPTION
 ;
 
 BREAKOPTION
@@ -198,7 +199,7 @@ PRINT
 ;
 
 WHILE
-    : pr_while pabre EXPRESION pcierra BLOQUEINSTRUCCIONES 
+    : pr_while pabre EXPRESION pcierra BLOQUEINSTRUCCIONES  {$$ = new While($3, $5);}
 ;
 
 TIPO_DECLARACION: 'pr_const' | ;
