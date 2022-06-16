@@ -3,6 +3,7 @@
     //codigo en JS
     //importaciones y declaraciones
     const {Declaracion} = require('../instrucciones/declaracion');
+    const {Asignacion} = require('../instrucciones/asignar');
     const {If} = require('../instrucciones/if');
     const {Print} = require('../instrucciones/print');
     const {Switch} = require('../instrucciones/switch');
@@ -141,7 +142,7 @@ INSTRUCCIONES
 
 INSTRUCCION
 	: DECLARACION ptcoma        { $$=$1; }
-	| ASIGNACION ptcoma		
+	| ASIGNACION ptcoma         { $$=$1; }		
     | IF	                    { $$=$1; }					
     | SWITCH                    { $$=$1; }					
     | WHILE					    { $$=$1; }
@@ -159,7 +160,7 @@ INSTRUCCION
 
 DECLARACION
     : TIPO_DECLARACION TIPODATO IDS igual EXPRESION
-    {$$= new Declaracion($3,$2,$5,@1.first_line, @1.first_column);}
+    {$$= new Declaracion($3,$2,$5,$1,@1.first_line, @1.first_column);}
 ;
 
 IDS
@@ -168,7 +169,7 @@ IDS
 ;
 
 ASIGNACION
-    : identificador igual EXPRESION 	
+    : identificador igual EXPRESION     {$$ = new Asignacion($1, $3, @1.first_line, @1.first_column)} 	
 ;
 
 METODOS:  'pr_void' 'identificador' 'pabre' /*parametros*/   'pcierra' BLOQUE {$$= new Metodo($2,null,$5,@1.first_line, @1.first_column );} 
@@ -208,7 +209,8 @@ DOWHILE
     : pr_do BLOQUEINSTRUCCIONES pr_while pabre EXPRESION pcierra   {$$ = new DoWhile($5, $2);}
 ;
 
-TIPO_DECLARACION: 'pr_const' | ;
+TIPO_DECLARACION: 'pr_const'    {$$ = false}
+    | {$$ = true} ;
 
 TIPODATO
     : pr_int 	        {$$=Type.INT;} 

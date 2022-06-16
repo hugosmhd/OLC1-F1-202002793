@@ -15,10 +15,10 @@ export class Environment {
     return this.tablaSimbolos
   }
 
-  public guardar_variable(nombre: string, valor: any, type: Type): boolean {
+  public guardar_variable(nombre: string, valor: any, type: Type, editable: boolean): boolean {
     
     if(!this.buscar_variable(nombre)){
-      this.tablaSimbolos.set(nombre, new Symbol(valor, nombre, type));
+      this.tablaSimbolos.set(nombre, new Symbol(valor, nombre, type, editable));
       return true
     }
     console.log("esta variable ["+nombre+"] ya existe...");
@@ -66,12 +66,14 @@ export class Environment {
 
 
 
-  public actualizar_variable(nombre: string, new_valor: any) {
+  public actualizar_variable(nombre: string, new_valor: any): boolean {
     for (let entry of Array.from(this.tablaSimbolos.entries())) {
-      if (entry[0] == nombre) {
+      if (entry[0] == nombre && entry[1].editable) {
           entry[1].value = new_valor;
+          return true
       }
-  }
+    }
+    return false
   }
   
 }

@@ -94,7 +94,7 @@ break;
 case 3:
  this.$ = [$$[$0]] 
 break;
-case 4: case 9: case 11: case 12:
+case 4: case 5: case 9: case 11: case 12:
  this.$=$$[$0-1]; 
 break;
 case 6: case 7: case 8: case 13: case 14:
@@ -107,13 +107,16 @@ case 15:
         singleton.add_errores(errors); 
 break;
 case 16:
-this.$= new Declaracion($$[$0-2],$$[$0-3],$$[$0],_$[$0-4].first_line, _$[$0-4].first_column);
+this.$= new Declaracion($$[$0-2],$$[$0-3],$$[$0],$$[$0-4],_$[$0-4].first_line, _$[$0-4].first_column);
 break;
 case 17:
 $$[$0-2].push($$[$0]);
 break;
 case 18: case 26:
 this.$ = [$$[$0]]
+break;
+case 19:
+this.$ = new Asignacion($$[$0-2], $$[$0], _$[$0-2].first_line, _$[$0-2].first_column)
 break;
 case 20:
 this.$= new Metodo($$[$0-3],null,$$[$0],_$[$0-4].first_line, _$[$0-4].first_column );
@@ -144,6 +147,12 @@ this.$ = new While($$[$0-2], $$[$0]);
 break;
 case 31:
 this.$ = new DoWhile($$[$0-1], $$[$0-4]);
+break;
+case 32:
+this.$ = false
+break;
+case 33:
+this.$ = true
 break;
 case 34:
 this.$=Type.INT;
@@ -503,6 +512,7 @@ _handle_error:
     //codigo en JS
     //importaciones y declaraciones
     const {Declaracion} = require('../instrucciones/declaracion');
+    const {Asignacion} = require('../instrucciones/asignar');
     const {If} = require('../instrucciones/if');
     const {Print} = require('../instrucciones/print');
     const {Switch} = require('../instrucciones/switch');

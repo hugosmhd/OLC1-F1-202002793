@@ -11,6 +11,7 @@ export class Declaracion extends Instruccion {
         public nombre: string[],
         public tipo: Type,
         public expresion : Expression,
+        public isConstant : boolean,
         line: number, 
         column : number
     ) {
@@ -57,7 +58,7 @@ export class Declaracion extends Instruccion {
                     //     //reporte de error semantico
                     // }
 
-                    env.guardar_variable(elemento,expresion.value,expresion.type)
+                    env.guardar_variable(elemento,expresion.value,expresion.type, this.isConstant)
                     
                 } else {
                     Singleton.getInstance().add_errores(new Issue("Semantico", "El tipo de dato declarado no coincide con la expresion", this.line, this.column))
