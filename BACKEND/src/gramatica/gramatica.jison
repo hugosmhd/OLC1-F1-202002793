@@ -142,7 +142,7 @@ INSTRUCCION
     | PRINT ptcoma
     | INCREMENT ptcoma          { $$=$1; }
     | DECREMENT ptcoma          { $$=$1; }
-    | BLOQUE                    { $$=$1; } 
+    | BLOQUEINSTRUCCIONES       { $$=$1; } 
     | error ptcoma { 
         const singleton = Singleton.getInstance();
         var errors = new Issue("Sintactico", "Error sintactico, verificar entrada", this._$.first_line, this._$.first_column + 1); 
@@ -212,7 +212,7 @@ TIPODATO
 ;
 
 BLOQUEINSTRUCCIONES
-    : llabre INSTRUCCIONES llcierra { $$ = $2; }
+    : llabre INSTRUCCIONES llcierra { $$= new Bloque($2,@1.first_line, @1.first_column) }
     | llabre llcierra
 ;
 

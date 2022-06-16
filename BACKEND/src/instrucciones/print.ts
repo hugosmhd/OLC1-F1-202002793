@@ -23,6 +23,8 @@ export class Print extends Instruccion {
     }
 
     public executar(env:Environment) {
+        // console.log("print jajaj");
+        
         const instruccion = this.expresion.executar(env);
         console.log(instruccion);   
     }

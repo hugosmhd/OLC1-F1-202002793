@@ -59,7 +59,6 @@ export class Environment {
   public actualizar_variable(nombre: string, new_valor: any) {
     for (let entry of Array.from(this.tablaSimbolos.entries())) {
       if (entry[0] == nombre) {
-          console.log("ENCONTRO LA VARIABLE " + nombre)
           entry[1].value = new_valor;
       }
   }

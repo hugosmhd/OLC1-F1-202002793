@@ -7,16 +7,16 @@ import nodo from '../grafo/nodo';
 export class If extends Instruccion {
 
     private condicion:Expression;
-    private bloqueIf:Array<Instruccion>;
-    private bloqueElse:Array<Instruccion> | undefined;
+    private bloqueIf:Instruccion;
+    private bloqueElse:Instruccion | undefined;
     private bloqueElseIf:Instruccion | undefined;
 
     constructor(
         condicion: Expression,
-        bloqueIf: Array<Instruccion>,
+        bloqueIf: Instruccion,
         line: number, 
         column : number,
-        bloqueElse?:Array<Instruccion>|Instruccion,
+        bloqueElse?:Instruccion,
     ) {
         super(line,column);
         this.condicion = condicion;
@@ -39,25 +39,44 @@ export class If extends Instruccion {
     }
 
     public executar(env:Environment) {
+        // console.log("SENTENCIA IF BLOQUES");
+        // console.log("IF");        
+        // console.log(this.bloqueIf);
+        // console.log("ELSE IF");        
+        // console.log(this.bloqueElseIf);
+        // console.log("ELSE");        
+        // console.log(this.bloqueElse);
+        
         const condicion = this.condicion.executar(env); 
-        console.log("----- CONDICION IF -----")
-        console.log(condicion)
+        // console.log("----- CONDICION IF -----")
+        // console.log(condicion)
 
         if (condicion.type == Type.BOOLEAN) {
+            // console.log("es bool entra aqui");
+            
             if (condicion.value) {
                 const env_if = new Environment(env);
-                console.log(this.bloqueIf)
-                for(let instrucciones of this.bloqueIf) {
-                    var if_instruc = instrucciones.executar(env_if);
-                }
+                // console.log("BLOQUE DEL IF");
+                
+                // console.log(this.bloqueIf.length);
+                this.bloqueIf.executar(env_if)
+                // console.log(this.bloqueIf) 
+                
+                // console.log("POR FAVOR EJECUTAR ESOT") 
+                // for(let instrucciones of this.bloqueIf) {
+                //     var if_instruc = instrucciones.executar(env_if);
+                // }
             } else {
                 if(this.bloqueElseIf != undefined) {
                     var elseif_intruc = this.bloqueElseIf.executar(env)
                 } else if(this.bloqueElse != undefined) {
+                    console.log("else se ejecuta");
                     const env_else = new Environment(env);
-                    for(let instrucciones of this.bloqueElse) {
-                        var else_intruc = instrucciones.executar(env_else);
-                    }
+                    this.bloqueElse.executar(env_else)
+                    // for(let instrucciones of this.bloqueElse) {
+                        
+                    //     var else_intruc = instrucciones.executar(env_else);
+                    // }
                 }
             }
         }
