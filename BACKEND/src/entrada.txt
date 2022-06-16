@@ -1,5 +1,5 @@
 int b = 1;
-while(b<=10) {
+do {
     print("contador: " + b);
     b++;
-}
+} while(b!=2);

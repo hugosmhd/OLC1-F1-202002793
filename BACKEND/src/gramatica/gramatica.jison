@@ -8,6 +8,7 @@
     const {Switch} = require('../instrucciones/switch');
     const {Bloque} = require('../instrucciones/bloque')
     const {While} = require('../instrucciones/while')
+    const {DoWhile} = require('../instrucciones/dowhile')
 
     const {Literal} = require('../expresiones/literal')
     const {Type} = require('../symbols/type');
@@ -52,6 +53,7 @@
 "else"				return 'pr_else';
 "true"				return 'pr_true';
 "false"				return 'pr_false';
+"do"                return 'pr_do';
 "while"             return 'pr_while';
 "switch"            return 'pr_switch'
 "case"              return 'pr_case'
@@ -138,8 +140,9 @@ INSTRUCCION
 	: DECLARACION ptcoma        { $$=$1; }
 	| ASIGNACION ptcoma		
     | IF	                    { $$=$1; }					
-    | SWITCH	                    { $$=$1; }					
-    | WHILE					
+    | SWITCH                    { $$=$1; }					
+    | WHILE					    { $$=$1; }
+    | DOWHILE ptcoma		    { $$=$1; }
     | PRINT ptcoma
     | INCREMENT ptcoma          { $$=$1; }
     | DECREMENT ptcoma          { $$=$1; }
@@ -200,6 +203,10 @@ PRINT
 
 WHILE
     : pr_while pabre EXPRESION pcierra BLOQUEINSTRUCCIONES  {$$ = new While($3, $5);}
+;
+
+DOWHILE
+    : pr_do BLOQUEINSTRUCCIONES pr_while pabre EXPRESION pcierra   {$$ = new DoWhile($5, $2);}
 ;
 
 TIPO_DECLARACION: 'pr_const' | ;
