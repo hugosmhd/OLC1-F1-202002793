@@ -9,10 +9,10 @@ export class Switch extends Instruccion {
 
     constructor(
         public condicion: Expression,
-        public bloqueCase: Instruccion,
+        public bloqueCase: Instruccion[],
         line: number, 
         column : number,
-        public bloqueDefault?:Array<Instruccion>|Instruccion,
+        public bloqueDefault?:Instruccion,
     ) {
         super(line,column);
         
@@ -27,13 +27,18 @@ export class Switch extends Instruccion {
     }
 
     public executar(env:Environment) {
-        const condicion = this.condicion.executar(env); 
-        console.log("----- EVALUACION SWITCH -----")
-        console.log(condicion)
-        console.log("----- BLOQUE CASE -----")
-        console.log(this.bloqueCase)
-        console.log("----- BLOQUE DEFAULT -----")
-        console.log(this.bloqueDefault)
+        const condicion = this.condicion.executar(env);
+        console.log("------ HOLA HOLA ------")
+        for (const elemento  of this.bloqueCase) {
+            console.log(elemento)
+        }
+        console.log("------ HOLA HOLA ------")
+        // console.log("----- EVALUACION SWITCH -----")
+        // console.log(condicion)
+        // console.log("----- BLOQUE CASE -----")
+        // console.log(this.bloqueCase)
+        // console.log("----- BLOQUE DEFAULT -----")
+        // console.log(this.bloqueDefault)
 
 
         // if (condicion.type == Type.BOOLEAN) {

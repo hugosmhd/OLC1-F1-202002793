@@ -9,6 +9,8 @@
     const {Bloque} = require('../instrucciones/bloque')
     const {While} = require('../instrucciones/while')
     const {DoWhile} = require('../instrucciones/dowhile')
+    const {Metodo} = require('../instrucciones/metodo')
+    const {CaseSwitch} = require('../instrucciones/caseswitch')
 
     const {Literal} = require('../expresiones/literal')
     const {Type} = require('../symbols/type');
@@ -59,6 +61,7 @@
 "case"              return 'pr_case'
 "default"           return 'pr_default'
 "break"             return 'pr_break'
+"void"              return 'pr_void'
 
 
 
@@ -147,6 +150,7 @@ INSTRUCCION
     | INCREMENT ptcoma          { $$=$1; }
     | DECREMENT ptcoma          { $$=$1; }
     | BLOQUEINSTRUCCIONES       { $$=$1; } 
+    | METODOS                   { $$=$1; } 
     | error ptcoma { 
         const singleton = Singleton.getInstance();
         var errors = new Issue("Sintactico", "Error sintactico, verificar entrada", this._$.first_line, this._$.first_column + 1); 
@@ -167,6 +171,9 @@ ASIGNACION
     : identificador igual EXPRESION 	
 ;
 
+METODOS:  'pr_void' 'identificador' 'pabre' /*parametros*/   'pcierra' BLOQUE {$$= new Metodo($2,null,$5,@1.first_line, @1.first_column );} 
+;
+
 IF
     : pr_if pabre EXPRESION pcierra BLOQUEINSTRUCCIONES     {$$ = new If($3, $5, @1.first_line, @1.first_column); }
     | pr_if pabre EXPRESION pcierra BLOQUEINSTRUCCIONES pr_else BLOQUEINSTRUCCIONES     { $$ = new If($3, $5, @1.first_line, @1.first_column, $7); }    
@@ -174,28 +181,20 @@ IF
 ;
 
 SWITCH
-    : pr_switch pabre EXPRESION pcierra llabre CASEBLOQUE llcierra  {$$ = new Switch($3, $6, @1.first_line, @1.first_column); }
+    : pr_switch pabre EXPRESION pcierra llabre LISTACASE llcierra  {$$ = new Switch($3, $6, @1.first_line, @1.first_column); }
+;
+
+LISTACASE
+    : LISTACASE CASEBLOQUE      {$1.push($2);$$ = $1}
+    | CASEBLOQUE                {$$ = [$1]}
 ;
 
 CASEBLOQUE
-    : CASEBLOQUE CASOSSWITCH dospts SWITCHINSTRUCCIONES {$$ = $4}
-    | 
-;
-
-CASOSSWITCH
-    : pr_case EXPRESION {console.log($1)}
-    | pr_default
+    : pr_case EXPRESION dospts INSTRUCCIONES    {$$ = new CaseSwitch("case", $2, $4, @1.first_line, @1.first_column)}
+    | pr_default dospts INSTRUCCIONES           {$$ = new CaseSwitch("default", null, $3, @1.first_line, @1.first_column)}
 ;
 
 
-SWITCHINSTRUCCIONES
-    : INSTRUCCIONES  {$$ = $1} // BREAKOPTION
-;
-
-BREAKOPTION
-    : pr_break ptcoma
-    | 
-;
 
 PRINT
     : pr_print pabre EXPRESION pcierra      {$$ = new Print($3, @1.first_line, @1.first_column);}			

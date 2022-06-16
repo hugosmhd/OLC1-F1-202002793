@@ -1,5 +1,9 @@
-int b = 1;
-do {
-    print("contador: " + b);
-    b++;
-} while(b!=2);
+switch(1) {
+    case 1:
+        print("lññññ");
+        int a = 12;
+    case 2:
+        print("p");
+    default:
+        print("y");
+}
