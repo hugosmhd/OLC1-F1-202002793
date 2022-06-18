@@ -29,6 +29,10 @@ export class Singleton {
         return this.consola
     }
 
+    public limpiar_consola() {
+        this.consola = "";
+    }
+
     public add_errores(data: any) {
         this.errores.push(data)
     }

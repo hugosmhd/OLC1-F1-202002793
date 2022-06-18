@@ -1,10 +1,12 @@
+import { Type } from './../symbols/type';
 import { Expression } from "../abstract/express";
 import { Instruccion } from "../abstract/instruccion";
 import nodo from "../grafo/nodo";
 import { Environment } from "../symbols/enviroment";
 
-export class Metodo extends Instruccion {
+export class Funcion extends Instruccion {
     constructor(
+        public retorno:Type,
         public id:string,
         public parametros:any[],
         public bloque: Instruccion,
@@ -15,7 +17,7 @@ export class Metodo extends Instruccion {
     }
 
     public getNodo() {
-        var nodoDec = new nodo("METODO");
+        var nodoDec = new nodo("FUNCION");
         // nodoDec.agregarHijo(this.tipo + "");
         // nodoDec.agregarHijo(this.nombre[0]);
         // nodoDec.agregarHijo2(this.expresion.getNodo());

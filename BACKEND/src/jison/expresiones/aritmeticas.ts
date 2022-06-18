@@ -321,7 +321,7 @@ export class Arithmetic extends Expression {
             
         }
 
-        else if (this.type == ArithmeticOption.MENOSUNARIO && nodoIzq != null && nodoDer != null) {
+        else if (this.type == ArithmeticOption.MENOSUNARIO && nodoIzq != null) {
             if (nodoIzq.type == Type.INT) {
                 result = { 
                     value: Number(-1*nodoIzq.value), 
@@ -335,9 +335,10 @@ export class Arithmetic extends Expression {
             } else {
                 Singleton.getInstance().add_errores(new Issue("Semantico", "El operador unario menos(-) no es valido para el tipo de dato " + nodoIzq.type, this.line, this.column))
             }
-        } else {
-            Singleton.getInstance().add_errores(new Issue("Semantico", "Verifique su entrada, en las lineas y columnas indicadas " + nodoIzq.type, this.line, this.column))
-        }
+        } 
+        // else {
+        //     Singleton.getInstance().add_errores(new Issue("Semantico", "Verifique su entrada, en las lineas y columnas indicadas " + nodoIzq.type, this.line, this.column))
+        // }
         return result
     }
 

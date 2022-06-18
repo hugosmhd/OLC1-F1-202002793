@@ -1,10 +1,11 @@
+import { Return } from './return';
 
 import { Instruccion } from "../abstract/instruccion";
 import nodo from "../grafo/nodo";
 import { Environment } from "../symbols/enviroment";
 
 export class Llamada extends Instruccion {
-    constructor(
+    constructor(        
         public id:string,
         public parametros:any[],
         line: number, 
@@ -62,10 +63,29 @@ export class Llamada extends Instruccion {
         // console.log(env_para_parametros);
         
 
-        x.bloque.executar(env_para_parametros)
+        const res = x.bloque.executar(env_para_parametros)
+        // console.log("IMPRIMIENDO BLOQUE METODO");        
+        // console.log(res);
+        // console.log("IMPRIMIENDO BLOQUE METODO");
+        if (x.retorno != null && res != undefined) {
+            // const valorRetorno = null
+            // console.log("DESDE LLAMADA");
+            // console.log(valorRetorno);
+            // console.log("DESDE LLAMADA");
+            if (x.retorno == res.type) {
+                                
+                return {
+                    value: res.value,
+                    type: res.type
+                }                
+            }
+
+
+            // console.log(res.executar(env_para_parametros).express?.executar(env_para_parametros));
+            
+        }
         
 
-        return "este dato nunca lo he usado"
         
 
     }

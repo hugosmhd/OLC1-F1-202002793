@@ -32,6 +32,13 @@ export class Declaracion extends Instruccion {
         return nodoDec;
     }
 
+    /**
+     * setConstant
+valor: boolea     */
+    public setConstant(isConstant: boolean) {
+        this.isConstant = isConstant;
+    }
+
     public executar(env:Environment) {
         for (const elemento  of this.nombre) {
             try {
@@ -57,7 +64,7 @@ export class Declaracion extends Instruccion {
                     // else{
                     //     //reporte de error semantico
                     // }
-
+                    
                     env.guardar_variable(elemento,expresion.value,expresion.type, this.isConstant)
                     
                 } else {

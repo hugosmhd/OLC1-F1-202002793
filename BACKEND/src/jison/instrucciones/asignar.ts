@@ -33,11 +33,16 @@ export class Asignacion extends Instruccion {
         // console.log("---- DESDE ASIGNAR ----");
         
         const valor = this.expresion.executar(env);
-        // console.log(valor);
-        
-        const actual = env.actualizar_variable(this.nombre,valor.value);
-        if (!actual) {
-            Singleton.getInstance().add_errores(new Issue("Semantico", "No se puede modificar una variable const", this.line, this.column));
+        const variable = env.get_variable(this.nombre);
+        if (variable != undefined && variable != null && valor.type == variable.type) {
+            const actual = env.actualizar_variable(this.nombre,valor.value);
+            if (!actual) {
+                Singleton.getInstance().add_errores(new Issue("Semantico", "No se puede modificar una variable const", this.line, this.column));
+            }            
+        } else if (variable == undefined && variable == null) {
+            Singleton.getInstance().add_errores(new Issue("Semantico", "No existe la variable " + this.nombre, this.line, this.column));            
+        } else {
+            Singleton.getInstance().add_errores(new Issue("Semantico", "La expresion no coincide con el tipo que fue declarada la variable", this.line, this.column));
         }
         
     }

@@ -1,5 +1,4 @@
 %{
-
     //codigo en JS
     //importaciones y declaraciones
     const {Declaracion} = require('../instrucciones/declaracion');
@@ -12,10 +11,11 @@
     const {While} = require('../instrucciones/while')
     const {DoWhile} = require('../instrucciones/dowhile')
     const {Metodo} = require('../instrucciones/metodo')
+    const {Funcion} = require('../instrucciones/funcion')
     const {CaseSwitch} = require('../instrucciones/caseswitch')
     const {Break} = require('../instrucciones/break')
+    const {Return} = require('../instrucciones/return')
     const {Llamada} = require('../instrucciones/llamada')
-
     const {Literal} = require('../expresiones/literal')
     const {Type} = require('../symbols/type');
     const {Arithmetic} = require('../expresiones/aritmeticas');
@@ -30,13 +30,11 @@
     const {Decremento} = require('../expresiones/decremento');
     const {DecrementOption} = require('../expresiones/decrementOptions');
 
+
     const {Issue} = require('../error/issue');
     const {Singleton} = require('../patron_singleton/singleton');
-
-
-
     var array_erroresLexicos;
-
+    var tipoDeclaracion;
 %}
 
 %lex
@@ -54,6 +52,7 @@
 "boolean"			return 'pr_boolean';
 "string"			return 'pr_string';
 "print"				return 'pr_print';
+"println"			return 'pr_println';
 "const"				return 'pr_const';
 "if"				return 'pr_if';
 "else"				return 'pr_else';
@@ -67,6 +66,7 @@
 "break"             return 'pr_break'
 "void"              return 'pr_void'
 "call"              return 'pr_call'
+"return"            return 'pr_return'
 
 
 
@@ -104,7 +104,7 @@
 "'"[^']"'"				    { yytext = yytext.substr(1,yyleng-2); return 'caracter'; }
 [0-9]+("."[0-9]+)\b  		return 'decimal';
 [0-9]+\b					return 'entero';
-([a-zA-Z])[a-zA-Z0-9_]*	    return 'identificador';
+([a-zA-Z])[a-zA-Z0-9'_']*	    return 'identificador';
 
 <<EOF>>				return 'EOF';
 
@@ -148,7 +148,8 @@ INSTRUCCION
 	: DECLARACION ptcoma        { $$=$1; }
 	| ASIGNACION ptcoma         { $$=$1; }		
     | IF	                    { $$=$1; }					
-    | SWITCH                    { $$=$1; }					
+    | SWITCH                    { $$=$1; }		
+    | FUNCIONES			
     | WHILE					    { $$=$1; }
     | DOWHILE ptcoma		    { $$=$1; }
     | PRINT ptcoma
@@ -158,10 +159,16 @@ INSTRUCCION
     | METODOS                   { $$=$1; } 
     | LLAMADA_METODO ptcoma     { $$=$1; } 
     | pr_break ptcoma              { $$= new Break(@1.first_line, @1.first_column); } 
+    | RETURN ptcoma             { $$=$1; }      
     | error ptcoma { 
         const singleton = Singleton.getInstance();
         var errors = new Issue("Sintactico", "Error sintactico, verificar entrada", this._$.first_line, this._$.first_column + 1); 
         singleton.add_errores(errors); }
+;
+
+RETURN
+    : pr_return EXPRESION   { $$= new Return($2, @1.first_line, @1.first_column); }
+    | pr_return             { $$= new Return(null, @1.first_line, @1.first_column); }
 ;
 
 LLAMADA_METODO: 'pr_call' 'identificador' 'pabre' LISTA_PASO_PARAMETROS 'pcierra' {$$= new Llamada($2,$4,@1.first_line, @1.first_column )}
@@ -170,12 +177,17 @@ LLAMADA_METODO: 'pr_call' 'identificador' 'pabre' LISTA_PASO_PARAMETROS 'pcierra
 LISTA_PASO_PARAMETROS
     : LISTA_PASO_PARAMETROS coma EXPRESION      {$1.push($3); $$ = $1}
     | EXPRESION     {$$ = [$1]}
-    |
+    | {$$ = []}
 ;
 
 DECLARACION
-    : TIPO_DECLARACION TIPODATO IDS igual EXPRESION
+    : 'pr_const' TIPODATO IDS igual EXPRESION
     {$$= new Declaracion($3,$2,$5,$1,@1.first_line, @1.first_column);}
+    | TIPODATO IDS igual EXPRESION
+    {$$= new Declaracion($2,$1,$4,true,@1.first_line, @1.first_column);}
+;
+
+FUNCIONES: TIPODATO  'identificador' 'pabre' LISTA_PARAMETROS 'pcierra' BLOQUE {$$= new Funcion($1,$2,$4,$6,@1.first_line, @1.first_column );} 
 ;
 
 IDS
@@ -187,19 +199,35 @@ ASIGNACION
     : identificador igual EXPRESION     {$$ = new Asignacion($1, $3, @1.first_line, @1.first_column)} 	
 ;
 
-METODOS:  'pr_void' 'identificador' 'pabre' LISTA_PARAMETROS 'pcierra' BLOQUE {$$= new Metodo($2,$4,$6,@1.first_line, @1.first_column );} 
+METODOS:  'pr_void' 'identificador' 'pabre' LISTA_PARAMETROS 'pcierra' BLOQUE {$$= new Metodo(null, $2,$4,$6,@1.first_line, @1.first_column );} 
 ;
 
 LISTA_PARAMETROS
     : LISTA_PARAMETROS coma TIPODATO 'identificador'    {$1.push({'tipo': $3, 'id': $4}); $$ = $1}
     | TIPODATO 'identificador'          {$$ = [{'tipo': $1, 'id': $2}]}
-    |
+    | {$$ = []}
 ;
 
 IF
-    : pr_if pabre EXPRESION pcierra BLOQUEINSTRUCCIONES     {$$ = new If($3, $5, @1.first_line, @1.first_column); }
-    | pr_if pabre EXPRESION pcierra BLOQUEINSTRUCCIONES pr_else BLOQUEINSTRUCCIONES     { $$ = new If($3, $5, @1.first_line, @1.first_column, $7); }    
-    | pr_if pabre EXPRESION pcierra BLOQUEINSTRUCCIONES pr_else IF      { $$ = new If($3, $5, @1.first_line, @1.first_column, $7); }
+    : pr_if pabre EXPRESION pcierra IF_INSTRUCCIONES    {$$ = new If($3, $5, @1.first_line, @1.first_column); }
+    | pr_if pabre EXPRESION pcierra IF_INSTRUCCIONES pr_else IF_INSTRUCCIONES     { $$ = new If($3, $5, @1.first_line, @1.first_column, $7); }    
+    | pr_if pabre EXPRESION pcierra IF_INSTRUCCIONES pr_else IF      { $$ = new If($3, $5, @1.first_line, @1.first_column, $7); }
+;
+
+IF_INSTRUCCIONES
+    : DECLARACION ptcoma        { $$=$1; }
+	| ASIGNACION ptcoma         { $$=$1; }		
+    | PRINT ptcoma
+    | INCREMENT ptcoma          { $$=$1; }
+    | DECREMENT ptcoma          { $$=$1; }
+    | BLOQUEINSTRUCCIONES       { $$=$1; } 
+    | LLAMADA_METODO ptcoma     { $$=$1; } 
+    | pr_break ptcoma              { $$= new Break(@1.first_line, @1.first_column); } 
+    | RETURN ptcoma             { $$=$1; }      
+    | error ptcoma { 
+        const singleton = Singleton.getInstance();
+        var errors = new Issue("Sintactico", "Error sintactico, verificar entrada", this._$.first_line, this._$.first_column + 1); 
+        singleton.add_errores(errors); }
 ;
 
 SWITCH
@@ -219,7 +247,13 @@ CASEBLOQUE
 
 
 PRINT
-    : pr_print pabre EXPRESION pcierra      {$$ = new Print($3, @1.first_line, @1.first_column);}			
+    : pr_print pabre EXP_PRINT pcierra      {$$ = new Print(false, $3, @1.first_line, @1.first_column);}	
+    | pr_println pabre EXP_PRINT pcierra      {$$ = new Print(true, $3, @1.first_line, @1.first_column);}			
+;
+
+EXP_PRINT
+    : EXPRESION     {$$ = $1}
+    |
 ;
 
 WHILE
@@ -243,17 +277,13 @@ TIPODATO
 
 BLOQUEINSTRUCCIONES
     : llabre INSTRUCCIONES llcierra { $$= new Bloque($2,@1.first_line, @1.first_column) }
-    | llabre llcierra
+    | llabre llcierra   { $$= new Bloque(null,@1.first_line, @1.first_column) }
 ;
 
-BLOQUEINSTRUCCIONESB
-    : llabre INSTRUCCIONES llcierra { $$= new BloqueBreak($2,@1.first_line, @1.first_column) }
-    | llabre llcierra
-;
 
 BLOQUE
 : llabre INSTRUCCIONES llcierra { $$= new Bloque($2,@1.first_line, @1.first_column) }
-    | llabre llcierra
+    | llabre llcierra       { $$= new Bloque(null,@1.first_line, @1.first_column) }
 ;
 
 INCREMENT
@@ -294,4 +324,5 @@ EXPRESION
     | INCREMENT                         {$$ = $1}
     | DECREMENT                         {$$ = $1}
     | pabre EXPRESION pcierra 
+    | identificador pabre LISTA_PASO_PARAMETROS pcierra     {$$= new Llamada($1,$3,@1.first_line, @1.first_column )}
 ;   
