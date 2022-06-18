@@ -15,8 +15,7 @@ export class Declaracion extends Instruccion {
         line: number, 
         column : number
     ) {
-        super(line,column);
-        
+        super(line,column);        
     }
 
     public getNodo() {

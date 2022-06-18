@@ -28,7 +28,13 @@ export class Asignacion extends Instruccion {
        
     
         //env.getTipo_variable()
+        // console.log("---- DESDE ASIGNAR ----");
+        // console.log(env);        
+        // console.log("---- DESDE ASIGNAR ----");
+        
         const valor = this.expresion.executar(env);
+        // console.log(valor);
+        
         const actual = env.actualizar_variable(this.nombre,valor.value);
         if (!actual) {
             Singleton.getInstance().add_errores(new Issue("Semantico", "No se puede modificar una variable const", this.line, this.column));

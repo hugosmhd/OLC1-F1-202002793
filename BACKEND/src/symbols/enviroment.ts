@@ -1,3 +1,4 @@
+import { Metodo } from './../instrucciones/metodo';
 import { Symbol } from "./symbols";
 import { Type } from "./type";
 
@@ -60,20 +61,41 @@ export class Environment {
     
     //verificar que no existan duplicados
     this.tablaSimbolos_metodos.set(nombre, valor);
-    console.log(this.tablaSimbolos_metodos);
+    // console.log(this.tablaSimbolos_metodos);
     
   }
 
 
 
   public actualizar_variable(nombre: string, new_valor: any): boolean {
-    for (let entry of Array.from(this.tablaSimbolos.entries())) {
-      if (entry[0] == nombre && entry[1].editable) {
-          entry[1].value = new_valor;
-          return true
+    // console.log("ES EDITABLE??");
+    // console.log("ES EDITABLE??");
+    // console.log(this.tablaSimbolos);
+
+    let env: Environment | null = this;
+    while (env != null) {
+      for (let entry of Array.from(env.tablaSimbolos.entries())) {
+        // console.log(entry[1].editable);        
+        
+        if (entry[0] == nombre && entry[1].editable) {
+            entry[1].value = new_valor;
+            return true
+        }
       }
+      env = env.anterior;
+      
     }
+    
     return false
+  }
+
+  public get_metodo(nombre: string): Metodo | undefined | null {
+    let env: Environment | null = this;
+    while (env != null) {
+        if (env.tablaSimbolos_metodos.has(nombre)) return env.tablaSimbolos_metodos.get(nombre);
+        env = env.anterior;
+    }
+    return null;
   }
   
 }

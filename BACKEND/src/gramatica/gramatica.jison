@@ -14,6 +14,7 @@
     const {Metodo} = require('../instrucciones/metodo')
     const {CaseSwitch} = require('../instrucciones/caseswitch')
     const {Break} = require('../instrucciones/break')
+    const {Llamada} = require('../instrucciones/llamada')
 
     const {Literal} = require('../expresiones/literal')
     const {Type} = require('../symbols/type');
@@ -65,6 +66,7 @@
 "default"           return 'pr_default'
 "break"             return 'pr_break'
 "void"              return 'pr_void'
+"call"              return 'pr_call'
 
 
 
@@ -154,11 +156,21 @@ INSTRUCCION
     | DECREMENT ptcoma          { $$=$1; }
     | BLOQUEINSTRUCCIONES       { $$=$1; } 
     | METODOS                   { $$=$1; } 
+    | LLAMADA_METODO ptcoma     { $$=$1; } 
     | pr_break ptcoma              { $$= new Break(@1.first_line, @1.first_column); } 
     | error ptcoma { 
         const singleton = Singleton.getInstance();
         var errors = new Issue("Sintactico", "Error sintactico, verificar entrada", this._$.first_line, this._$.first_column + 1); 
         singleton.add_errores(errors); }
+;
+
+LLAMADA_METODO: 'pr_call' 'identificador' 'pabre' LISTA_PASO_PARAMETROS 'pcierra' {$$= new Llamada($2,$4,@1.first_line, @1.first_column )}
+;
+
+LISTA_PASO_PARAMETROS
+    : LISTA_PASO_PARAMETROS coma EXPRESION      {$1.push($3); $$ = $1}
+    | EXPRESION     {$$ = [$1]}
+    |
 ;
 
 DECLARACION
@@ -175,7 +187,13 @@ ASIGNACION
     : identificador igual EXPRESION     {$$ = new Asignacion($1, $3, @1.first_line, @1.first_column)} 	
 ;
 
-METODOS:  'pr_void' 'identificador' 'pabre' /*parametros*/   'pcierra' BLOQUE {$$= new Metodo($2,null,$5,@1.first_line, @1.first_column );} 
+METODOS:  'pr_void' 'identificador' 'pabre' LISTA_PARAMETROS 'pcierra' BLOQUE {$$= new Metodo($2,$4,$6,@1.first_line, @1.first_column );} 
+;
+
+LISTA_PARAMETROS
+    : LISTA_PARAMETROS coma TIPODATO 'identificador'    {$1.push({'tipo': $3, 'id': $4}); $$ = $1}
+    | TIPODATO 'identificador'          {$$ = [{'tipo': $1, 'id': $2}]}
+    |
 ;
 
 IF

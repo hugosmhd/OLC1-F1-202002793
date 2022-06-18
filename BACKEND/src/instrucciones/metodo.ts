@@ -6,7 +6,7 @@ import { Environment } from "../symbols/enviroment";
 export class Metodo extends Instruccion {
     constructor(
         public id:string,
-        public parametros:any,
+        public parametros:any[],
         public bloque: Instruccion,
         line: number, 
         column : number
@@ -22,12 +22,27 @@ export class Metodo extends Instruccion {
         return nodoDec;
     }
 
+    /**
+     * getParametros
+     */
+    public getParametros() {
+        return this.parametros;
+    }
+
     public executar(env:Environment) {
        
         //semantica
 
         //asignacion parecida a la de varibles, envez de guardar variables, estoy guardando funciones/metodods
-        console.log("hola que hace");
+        // console.log("hola que hace");
+        // console.log("--- PARAMETROS ---");
+        
+        // console.log(this.parametros)
+        
+        // this.parametros.forEach(element => {
+            // console.log(element);            
+        // });
+        // console.log("--- PARAMETROS ---");
         
         env.guardar_funcion(this.id, this);
 

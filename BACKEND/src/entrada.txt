@@ -1,44 +1,13 @@
-switch(1) {
-    case 1:
-        print("lññññ");
-        int a = 12;
-        // break;
-    default:
-        print("y");
-        break;
-    case 2:
-        print("p");
-        // break;
-    case 3:
-        print("zzzz");
-        // break;
-}
-/*
-
-int b = 10;
-b = 11;
-while(b>5) {
-    print("contador " + b);
-    --b;
+void metodo_uno(int b, string c){
+    print(">> desde el metodo uno");
+    b = 14;
+    c = "se edito";
+    print(c);
+    print(b);
+    
 }
 
- boolean b = 12 != 15;
+string tmp = "199";
+call metodo_uno(12, tmp);
+print(tmp);
 
-int b = 10;
-do {
-    print("contador " + b);
-    --b;
-
-} while(b>5);
-
-int b = 12;
-if(b == 10) {
-    print("hola que tal");
-} else if(b == 12) {
-    print("hola jaja");
-} else if(b == 14) {
-    print("hola no pues");
-}
-else {
-    print("nada mas");
-}*/
