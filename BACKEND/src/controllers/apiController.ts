@@ -51,8 +51,8 @@ class ApiController {
     const fs = require("fs");
     
     try {
-        // const entrada = requ.body.entrada;
-        const entrada = fs.readFileSync("src/entrada.txt");
+        const entrada = requ.body.entrada;
+        // const entrada = fs.readFileSync("src/entrada.txt");
         const ast = parser.parse(entrada.toString());
         const env_padre = new Environment(null);
         //aqui analisis semantico
