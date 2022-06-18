@@ -18,14 +18,9 @@ export class Asignacion extends Instruccion {
 
     public getNodo() {
         var nodoDec = new nodo("ASIGNAR");
-        // var tipoStr = tipoString(this.tipo);
-        
+        nodoDec.agregarHijo(this.nombre)
+        nodoDec.agregarHijo_nodo(this.expresion.getNodo())
 
-        // tipoStr != null?nodoDec.agregarHijo(tipoStr):tipoStr;
-        // this.nombre.forEach(id => {
-        //     nodoDec.agregarHijo(id);
-        // });
-        // nodoDec.agregarHijo_nodo(this.expresion.getNodo());
         return nodoDec;
     }
 
@@ -33,7 +28,8 @@ export class Asignacion extends Instruccion {
        
     
         //env.getTipo_variable()
-        const actual = env.actualizar_variable(this.nombre,10);
+        const valor = this.expresion.executar(env);
+        const actual = env.actualizar_variable(this.nombre,valor.value);
         if (!actual) {
             Singleton.getInstance().add_errores(new Issue("Semantico", "No se puede modificar una variable const", this.line, this.column));
         }

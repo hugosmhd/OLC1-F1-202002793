@@ -1,3 +1,4 @@
+import { Break } from './break';
 import { Environment } from './../symbols/enviroment';
 import { Expression } from "../abstract/express";
 import { Instruccion } from "../abstract/instruccion";
@@ -31,10 +32,23 @@ export class If extends Instruccion {
     }
 
     public getNodo() {
-        var nodoDec = new nodo("IF");
-        // nodoDec.agregarHijo(this.tipo + "");
-        // nodoDec.agregarHijo(this.nombre[0]);
-        // nodoDec.agregarHijo2(this.expresion.getNodo());
+        var nodoDec = new nodo("IF");;
+        nodoDec.agregarHijo_nodo(this.condicion.getNodo())
+        nodoDec.agregarHijo_nodo(this.bloqueIf.getNodo())
+
+        if(this.bloqueElseIf != undefined) {
+            var nodoElse = new nodo("ELSE")
+            nodoElse.agregarHijo_nodo(this.bloqueElseIf.getNodo())
+            nodoDec.agregarHijo_nodo(nodoElse); 
+        }
+
+        // if(this.bloqueElseIf != undefined && nodoDec != null) {
+        //     var nodeElse = new nodo("ELSE-IF")
+        //     nodeElse.agregarHijo_nodo(this.bloqueElseIf.getNodo()); 
+        //     nodoDec.agregarHijo_nodo(nodeElse);                    
+            
+        // }
+
         return nodoDec;
     }
 
@@ -47,49 +61,34 @@ export class If extends Instruccion {
         // console.log("ELSE");        
         // console.log(this.bloqueElse);
         
-        const condicion = this.condicion.executar(env); 
-        // console.log("----- CONDICION IF -----")
-        // console.log(condicion)
+        const condicion = this.condicion.executar(env);
 
         if (condicion.type == Type.BOOLEAN) {
-            // console.log("es bool entra aqui");
             
             if (condicion.value) {
                 const env_if = new Environment(env);
-                // console.log("BLOQUE DEL IF");
-                
-                // console.log(this.bloqueIf.length);
-                this.bloqueIf.executar(env_if)
-                // console.log(this.bloqueIf) 
-                
-                // console.log("POR FAVOR EJECUTAR ESOT") 
-                // for(let instrucciones of this.bloqueIf) {
-                //     var if_instruc = instrucciones.executar(env_if);
-                // }
+                var res = this.bloqueIf.executar(env_if)
+                if (res instanceof Break ) {
+                    return res
+                }
             } else {
                 if(this.bloqueElseIf != undefined) {
+                    
+                    // console.log("BLOQUE ELSE");
                     var elseif_intruc = this.bloqueElseIf.executar(env)
+                    if (elseif_intruc instanceof Break ) {
+                        return elseif_intruc
+                    }
                 } else if(this.bloqueElse != undefined) {
-                    console.log("else se ejecuta");
-                    const env_else = new Environment(env);
-                    this.bloqueElse.executar(env_else)
-                    // for(let instrucciones of this.bloqueElse) {
-                        
-                    //     var else_intruc = instrucciones.executar(env_else);
-                    // }
+                    const env_else = new Environment(env);                 
+                    
+                    var elseif_intruc = this.bloqueElse.executar(env_else)
+                    if (elseif_intruc instanceof Break ) {
+                        return elseif_intruc
+                    }
                 }
             }
         }
-        // console.log("----- IF -----")
-        // console.log(this.instruccionesIf)
-        // console.log("----- ELSE IF -----")
-        // console.log(this.elseif)
-        // if (this.elseif != undefined) {            
-        //     var instr = this.elseif.executar(env);
-        //     console.log(instr)
-        // }
-        // console.log("----- ELSE -----")
-        // console.log(this.instruccionesElse)
     }
 
 }

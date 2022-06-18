@@ -24,6 +24,7 @@ export class Declaracion extends Instruccion {
         var tipoStr = tipoString(this.tipo);
         
 
+        this.isConstant?null:nodoDec.agregarHijo("const");
         tipoStr != null?nodoDec.agregarHijo(tipoStr):tipoStr;
         this.nombre.forEach(id => {
             nodoDec.agregarHijo(id);

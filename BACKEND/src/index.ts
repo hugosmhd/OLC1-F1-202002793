@@ -1,3 +1,4 @@
+import { Break } from './instrucciones/break';
 import { Issue } from './error/issue';
 import nodo from './grafo/nodo';
 import { Singleton } from './patron_singleton/singleton';
@@ -13,25 +14,38 @@ try {
     const env_padre = new Environment(null);
     //aqui analisis semantico
     // console.log("Hola ya esta")
-    for (const elemento  of ast) {
-        try {            
-            elemento.executar(env_padre)
-        } catch (error) {
-            // console.log(error);
-            if (error instanceof Issue) {
-                singleton.add_errores(error)                
-            }
-            
-        }
-    }
 
-    // var instrucciones = new nodo("INSTRUCCIONES");
-    // for(const instruccion of ast) {
-    //     instrucciones.agregarHijo_nodo(instruccion.getNodo());
+    ast.map((element: any) => {
+        const res = element.executar(env_padre)
+        if (res instanceof Break) {
+            console.log("Error break fuera de su lugar")
+            console.log(res);                
+        }
+    });
+
+    // for (const elemento  of ast) {
+    //     try {            
+    //         const res = elemento.executar(env_padre)
+    //         if (res instanceof Break) {
+    //             console.log("Error break fuera de su lugar")
+    //             console.log(res);                
+    //         }
+    //     } catch (error) {
+    //         // console.log(error);
+    //         if (error instanceof Issue) {
+    //             singleton.add_errores(error)                
+    //         }
+            
+    //     }
     // }
-    // var grafo = '';
-    // grafo = getDot(instrucciones);
-    // console.log(grafo)
+
+    var instrucciones = new nodo("INSTRUCCIONES");
+    for(const instruccion of ast) {
+        instrucciones.agregarHijo_nodo(instruccion.getNodo());
+    }
+    var grafo = '';
+    grafo = getDot(instrucciones);
+    console.log(grafo)
     const array = singleton.get_errores()
     console.log("---- ERRORES ----")
     // console.log(new Issue("Lexico", "Caracter que lo proboco", 2, 3))

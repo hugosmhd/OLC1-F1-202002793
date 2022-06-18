@@ -9,15 +9,15 @@ export enum Type {
 
 export function tipoString(tipo: number): string | null {
     if (tipo == 0) {
-      return "INT" 
+      return "int" 
   } else if (tipo == 1) {
-      return "STRING" 
+      return "string" 
   } else if (tipo == 2) {
-      return "DOUBLE" 
+      return "double" 
   } else if (tipo == 3) {
-      return "BOOLEAN" 
+      return "boolean" 
   } else if (tipo == 4) {
-      return "CHAR" 
+      return "char" 
   }
   return null
 }

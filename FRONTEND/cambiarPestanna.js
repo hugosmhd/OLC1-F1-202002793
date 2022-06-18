@@ -4,7 +4,7 @@ var principalEditor = [];
 var editorActual;
 
 activarEditor();
-
+editorActual = principalEditor[0]
 function activarEditor() {
 	var editor = CodeMirror.fromTextArea(document.getElementById(idTextArea), {
 		lineNumbers: true
@@ -49,6 +49,7 @@ $("#agregarPestana").addEventListener("click", function() {
 	var textarea = document.createElement("textarea");
 	textarea.setAttribute("id", `code-${pest.length+1}`)
 	textarea.setAttribute("name", `code-${pest.length+1}`)
+	textarea.setAttribute("style", "width: 50%;")
 	div.appendChild(textarea)
 	td_d.appendChild(div)
 	tr.appendChild(td_d)
@@ -67,6 +68,7 @@ async function loadFile(file) {
 	// console.log(text)
 	getPrincipalFile(text)
 	document.getElementById('image1').value = "";
+	console.log("Hola cambio el documento");
 	// document.getElementById('code-1').innerHTML = text;
   }
 

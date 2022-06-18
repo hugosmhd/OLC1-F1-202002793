@@ -25,10 +25,7 @@ export class Arithmetic extends Expression {
 
     public getNodo() {
         var operacion = arithmeticString(this.type);
-            
         var nodoDec = new nodo(operacion);
-        // nodoDec.agregarHijo(this.l);
-        // nodoDec.agregarHijo(this.nombre[0]);
         nodoDec.agregarHijo_nodo(this.left.getNodo());
         this.right != null?nodoDec.agregarHijo_nodo(this.right.getNodo()):null;
         return nodoDec;

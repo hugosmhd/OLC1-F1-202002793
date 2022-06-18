@@ -18,9 +18,13 @@ export class Decremento extends Expression {
 
   public getNodo() {
       var nodoDec = new nodo("DECREMENTO");
-      // nodoDec.agregarHijo(this.tipo + "");
-      // nodoDec.agregarHijo(this.nombre[0]);
-      // nodoDec.agregarHijo2(this.expresion.getNodo());
+      if (this.type == DecrementOption.MENOSMENOS_POST) {
+        nodoDec.agregarHijo(this.identificador)
+        nodoDec.agregarHijo("--")
+      } else if (this.type == DecrementOption.MENOSMENOS_PRE) {
+        nodoDec.agregarHijo("--")
+        nodoDec.agregarHijo(this.identificador)
+      }
       return nodoDec;
   }
 

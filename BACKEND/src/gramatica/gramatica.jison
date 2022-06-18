@@ -8,10 +8,12 @@
     const {Print} = require('../instrucciones/print');
     const {Switch} = require('../instrucciones/switch');
     const {Bloque} = require('../instrucciones/bloque')
+    const {BloqueBreak} = require('../instrucciones/bloquebreak')
     const {While} = require('../instrucciones/while')
     const {DoWhile} = require('../instrucciones/dowhile')
     const {Metodo} = require('../instrucciones/metodo')
     const {CaseSwitch} = require('../instrucciones/caseswitch')
+    const {Break} = require('../instrucciones/break')
 
     const {Literal} = require('../expresiones/literal')
     const {Type} = require('../symbols/type');
@@ -152,6 +154,7 @@ INSTRUCCION
     | DECREMENT ptcoma          { $$=$1; }
     | BLOQUEINSTRUCCIONES       { $$=$1; } 
     | METODOS                   { $$=$1; } 
+    | pr_break ptcoma              { $$= new Break(@1.first_line, @1.first_column); } 
     | error ptcoma { 
         const singleton = Singleton.getInstance();
         var errors = new Issue("Sintactico", "Error sintactico, verificar entrada", this._$.first_line, this._$.first_column + 1); 
@@ -222,6 +225,11 @@ TIPODATO
 
 BLOQUEINSTRUCCIONES
     : llabre INSTRUCCIONES llcierra { $$= new Bloque($2,@1.first_line, @1.first_column) }
+    | llabre llcierra
+;
+
+BLOQUEINSTRUCCIONESB
+    : llabre INSTRUCCIONES llcierra { $$= new BloqueBreak($2,@1.first_line, @1.first_column) }
     | llabre llcierra
 ;
 

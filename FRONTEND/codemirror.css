@@ -1,9 +1,10 @@
-/* BASICS */
 
 .CodeMirror {
   /* Set height, width, borders, and global font properties here */
+  font-family: monospace;
+  height: 300px;
   color: black;
-  height: 100%;
+  direction: ltr;
 }
 
 /* PADDING */
@@ -179,7 +180,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #a22;}
    before actual scrolling happens, thus preventing shaking and
    flickering artifacts. */
 .CodeMirror-vscrollbar, .CodeMirror-hscrollbar, .CodeMirror-scrollbar-filler, .CodeMirror-gutter-filler {
-  position: absolute;
+  /* position: absolute; */
   z-index: 6;
   display: none;
 }

@@ -5,7 +5,7 @@ import { Retorno } from "../abstract/retorno";
 import nodo from "../grafo/nodo";
 import { Environment } from "../symbols/enviroment";
 import { Type } from "../symbols/type";
-import { LogicalOption } from './logicalOptions';
+import { LogicalOption, tipoString } from './logicalOptions';
 
 export class Logical extends Expression {
     constructor(
@@ -19,10 +19,12 @@ export class Logical extends Expression {
     }
 
     public getNodo() {
-        var nodoDec = new nodo("LOGICA");
-        // nodoDec.agregarHijo(this.tipo + "");
-        // nodoDec.agregarHijo(this.nombre[0]);
-        // nodoDec.agregarHijo2(this.expresion.getNodo());
+        var tipoStr = tipoString(this.type);
+        var nodoDec = new nodo(tipoStr);
+        nodoDec.agregarHijo_nodo(this.left.getNodo());
+        if (this.right != undefined) {
+            nodoDec.agregarHijo_nodo(this.right.getNodo());            
+        }
         return nodoDec;
     }
 

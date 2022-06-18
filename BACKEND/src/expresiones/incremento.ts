@@ -18,9 +18,13 @@ export class Incremento extends Expression {
 
   public getNodo() {
     var nodoDec = new nodo("INCREMENTO");
-    // nodoDec.agregarHijo(this.tipo + "");
-    // nodoDec.agregarHijo(this.nombre[0]);
-    // nodoDec.agregarHijo2(this.expresion.getNodo());
+    if (this.type == IncrementOption.MASMAS_POST) {
+      nodoDec.agregarHijo(this.identificador)
+      nodoDec.agregarHijo("++")
+    } else if (this.type == IncrementOption.MASMAS_PRE) {
+      nodoDec.agregarHijo("++")
+      nodoDec.agregarHijo(this.identificador)
+    }
     return nodoDec;
 }
 

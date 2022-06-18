@@ -17,9 +17,6 @@ export class Literal extends Expression {
 
     public getNodo() {
         var nodoDec = new nodo(this.value);
-        // nodoDec.agregarHijo(this.tipo + "");
-        // nodoDec.agregarHijo(this.nombre[0]);
-        // nodoDec.agregarHijo2(this.expresion.getNodo());
         return nodoDec;
     }
 

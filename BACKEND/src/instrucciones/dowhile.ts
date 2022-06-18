@@ -21,10 +21,13 @@ export class DoWhile extends Instruccion {
     }
 
     public getNodo() {
-        var nodoDec = new nodo("WHILE");
+        var nodoDec = new nodo("DO");
         // nodoDec.agregarHijo(this.tipo + "");
         // nodoDec.agregarHijo(this.nombre[0]);
-        // nodoDec.agregarHijo2(this.expresion.getNodo());
+        nodoDec.agregarHijo_nodo(this.instrucciones.getNodo());
+        var nodoWhile = new nodo("WHILE")
+        nodoWhile.agregarHijo_nodo(this.condicion.getNodo())
+        nodoDec.agregarHijo_nodo(nodoWhile)
         return nodoDec;
     }
 

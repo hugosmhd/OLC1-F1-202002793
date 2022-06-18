@@ -16,7 +16,7 @@ export class Print extends Instruccion {
 
     public getNodo() {
         var nodoDec = new nodo("PRINT");
-        // nodoDec.agregarHijo(this.tipo + "");
+        nodoDec.agregarHijo_nodo(this.expresion.getNodo());
         // nodoDec.agregarHijo(this.nombre[0]);
         // nodoDec.agregarHijo2(this.expresion.getNodo());
         return nodoDec;

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
     <head>
@@ -80,21 +79,24 @@
 				<div class="row">
 					
 					
-				  <div class="col card-textarea">
-					<table class="tabsB table" id="idBloques">
-						<thead>
-							<tr id="idPestanas">
-								<th id="th-p-1" class="pestana" onclick="activarTabB(this, 'p-1')">Pest. 1</th>
-							</tr>
-						</thead>
-							<tbody id="p-1">
-								<tr><td colspan="1" class="txt"><div class="tabsBint" style="height: 100%;">
-									<textarea id="code-1" name="code-1">
-									</textarea>
-								</div></td></tr>
-							</tbody>
-						
-					</table>				
+				  <div class="col card-textarea overflow-auto">
+					<!-- <div class="table-responsive"> -->
+
+						<table class="tabsB table" id="idBloques" style="overflow: scroll;">
+							<thead>
+								<tr id="idPestanas">
+									<th id="th-p-1" class="pestana" onclick="activarTabB(this, 'p-1')">Pest. 1</th>
+								</tr>
+							</thead>
+								<tbody id="p-1">
+									<tr><td colspan="1" class="txt"><div class="tabsBint" style="height: 100%;">
+										<textarea id="code-1" name="code-1">
+										</textarea>
+									</div></td></tr>
+								</tbody>
+							
+						</table>				
+					<!-- </div> -->
 					
 				  </div>
 				  <div class="col card-textarea">

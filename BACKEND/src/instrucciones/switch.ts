@@ -1,3 +1,5 @@
+import { Break } from './break';
+import { CaseSwitch } from './caseswitch';
 import { Environment } from './../symbols/enviroment';
 import { Expression } from "../abstract/express";
 import { Instruccion } from "../abstract/instruccion";
@@ -9,10 +11,10 @@ export class Switch extends Instruccion {
 
     constructor(
         public condicion: Expression,
-        public bloqueCase: Instruccion[],
+        public bloqueCase: CaseSwitch[],
         line: number, 
         column : number,
-        public bloqueDefault?:Instruccion,
+        public bloqueDefault?:CaseSwitch,
     ) {
         super(line,column);
         
@@ -22,43 +24,59 @@ export class Switch extends Instruccion {
         var nodoDec = new nodo("SWITCH");
         // nodoDec.agregarHijo(this.tipo + "");
         // nodoDec.agregarHijo(this.nombre[0]);
-        // nodoDec.agregarHijo2(this.expresion.getNodo());
+        nodoDec.agregarHijo_nodo(this.condicion.getNodo());
+        for (const elemento  of this.bloqueCase) {
+            nodoDec.agregarHijo_nodo(elemento.getNodo())
+        }
         return nodoDec;
     }
 
     public executar(env:Environment) {
         const condicion = this.condicion.executar(env);
-        console.log("------ HOLA HOLA ------")
+        var breakCondition = false;
+        var aceptacion = false;
+        var contador = 0;
+        var contadorDefault = 0;
         for (const elemento  of this.bloqueCase) {
-            console.log(elemento)
+            if (elemento.getTipoCaso() == "case") {
+                if (elemento.getExpresion().value == condicion.value || (!breakCondition && aceptacion)) {
+                    for(const inst of elemento.getInstrucciones()) {
+                        const res = inst.executar(env)
+                        res instanceof Break ? breakCondition = true: null;
+                    }
+                    aceptacion = true;                   
+                }
+            } else if (elemento.getTipoCaso() == "default" && (this.bloqueDefault == undefined || null)) {
+                if (!breakCondition && aceptacion) {
+                    for(const inst of elemento.getInstrucciones()) {
+                        const res = inst.executar(env)
+                        res instanceof Break ? breakCondition = true: null;
+                    }             
+                } else {
+                    this.bloqueDefault = elemento;
+                    contadorDefault = contador + 1;
+                }
+            }
+            contador++;
         }
-        console.log("------ HOLA HOLA ------")
-        // console.log("----- EVALUACION SWITCH -----")
-        // console.log(condicion)
-        // console.log("----- BLOQUE CASE -----")
-        // console.log(this.bloqueCase)
-        // console.log("----- BLOQUE DEFAULT -----")
-        // console.log(this.bloqueDefault)
 
-
-        // if (condicion.type == Type.BOOLEAN) {
-        //     if (condicion.value) {
-        //         const env_if = new Environment(env);
-        //         console.log(this.bloqueIf)
-        //         for(let instrucciones of this.bloqueIf) {
-        //             var if_instruc = instrucciones.executar(env_if);
-        //         }
-        //     } else {
-        //         if(this.bloqueElseIf != undefined) {
-        //             var elseif_intruc = this.bloqueElseIf.executar(env)
-        //         } else if(this.bloqueElse != undefined) {
-        //             const env_else = new Environment(env);
-        //             for(let instrucciones of this.bloqueElse) {
-        //                 var else_intruc = instrucciones.executar(env_else);
-        //             }
-        //         }
-        //     }
-        // }
+        if ((this.bloqueDefault !=undefined && !aceptacion ) && (!breakCondition || !aceptacion)) {
+            for(const inst of this.bloqueDefault.getInstrucciones()) {
+                const res = inst.executar(env)
+                res instanceof Break ? breakCondition = true: null;
+            }
+            if (!breakCondition) {
+                for (let i = contadorDefault; i < this.bloqueCase.length; i++) {
+                    if (!breakCondition) {
+                        const element = this.bloqueCase[i];    
+                        for(const inst of element.getInstrucciones()) {
+                            const res = inst.executar(env)
+                            res instanceof Break ? breakCondition = true: null;
+                        }     
+                    }
+                }                
+            }
+        }
     }
 
 }

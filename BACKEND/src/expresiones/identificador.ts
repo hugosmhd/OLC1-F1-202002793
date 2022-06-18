@@ -11,10 +11,8 @@ export class Identificador extends Instruccion {
     }
 
     public getNodo() {
-        var nodoDec = new nodo("IDENTIFICADOR");
-        // nodoDec.agregarHijo(this.tipo + "");
-        // nodoDec.agregarHijo(this.nombre[0]);
-        // nodoDec.agregarHijo2(this.expresion.getNodo());
+        var nodoDec = new nodo(this.nombre);
+        // nodoDec.agregarHijo(this.nombre)
         return nodoDec;
     }
 

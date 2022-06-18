@@ -5,10 +5,10 @@ import { Environment } from "../symbols/enviroment";
 import { Break } from "./break"
 
 
-export class Bloque extends Instruccion {
+export class BloqueBreak extends Instruccion {
     constructor(
         
-        public instrucciones : Instruccion[],
+        public instrucciones : any[],
         line: number, 
         column : number
     ) {
@@ -17,10 +17,9 @@ export class Bloque extends Instruccion {
 
     public getNodo() {
             
-        var nodoDec = new nodo("BLOQUE");
-        for (const elemento  of this.instrucciones) {
-            nodoDec.agregarHijo_nodo(elemento.getNodo())
-        }
+        var nodoDec = new nodo("");
+        // nodoDec.agregarHijo(this.l);
+        // nodoDec.agregarHijo(this.nombre[0]);
         return nodoDec;
     }
 

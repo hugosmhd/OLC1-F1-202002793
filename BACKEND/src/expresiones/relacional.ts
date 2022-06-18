@@ -5,7 +5,7 @@ import { Retorno } from "../abstract/retorno";
 import nodo from "../grafo/nodo";
 import { Environment } from "../symbols/enviroment";
 import { Type } from "../symbols/type";
-import { RelacionalOption } from "./relacionalOption";
+import { RelacionalOption, tipoString } from "./relacionalOption";
 
 export class Relacional extends Expression {
   constructor(
@@ -19,7 +19,13 @@ export class Relacional extends Expression {
   }
 
   public getNodo() {
-    var nodoDec = new nodo("RELACIONAL");
+    var tipoStr = tipoString(this.type);
+        var nodoDec = new nodo(tipoStr);
+        nodoDec.agregarHijo_nodo(this.left.getNodo());
+        if (this.right != undefined) {
+            nodoDec.agregarHijo_nodo(this.right.getNodo());            
+        }
+
     // nodoDec.agregarHijo(this.tipo + "");
     // nodoDec.agregarHijo(this.nombre[0]);
     // nodoDec.agregarHijo2(this.expresion.getNodo());
