@@ -1,6 +1,6 @@
 import { Metodo } from './../instrucciones/metodo';
 import { Symbol } from "./symbols";
-import { Type } from "./type";
+import { tipoString, Type } from "./type";
 
 export class Environment {
   
@@ -12,8 +12,39 @@ export class Environment {
     this.tablaSimbolos_metodos = new Map();
   }
 
+  /**
+   * limpiarTablas
+   */
+  public limpiarTablas() {
+    this.tablaSimbolos.clear();
+    this.tablaSimbolos_metodos.clear();
+  }
+
   public getEnv(){
     return this.tablaSimbolos
+  }
+
+  public getEnvVariables() {
+    var ts_variables = []
+    for (let entry of Array.from(this.tablaSimbolos.entries())) {
+      ts_variables.push({
+        id: entry[1].id,
+        value: entry[1].value,
+        type: tipoString(entry[1].type),
+        editable: entry[1].editable
+      })
+    }
+    return ts_variables
+
+  }
+
+  public getEnvMetodos(){
+    var ts_metodos = []
+    for (let entry of Array.from(this.tablaSimbolos_metodos.entries())) {
+      ts_metodos.push(entry[0])
+    }
+    return ts_metodos
+
   }
 
   public guardar_variable(nombre: string, valor: any, type: Type, editable: boolean): boolean {

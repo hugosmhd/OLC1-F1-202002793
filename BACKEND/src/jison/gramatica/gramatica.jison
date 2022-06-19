@@ -100,7 +100,8 @@
 "!="				return 'diferente';
 "!"					return 'not';
 
-\"[^\"]*\"	                { yytext = yytext.substr(1,yyleng-2); return 'cadena'; }
+
+[\"]([^\"]|[\\\"])*[\"] 	                { yytext = yytext.substr(1,yyleng-2); return 'cadena'; }
 "'"[^']"'"				    { yytext = yytext.substr(1,yyleng-2); return 'caracter'; }
 [0-9]+("."[0-9]+)\b  		return 'decimal';
 [0-9]+\b					return 'entero';

@@ -7,7 +7,7 @@ export enum Type {
     error,
   }
 
-export function tipoString(tipo: number): string | null {
+export function tipoString(tipo: number): string {
     if (tipo == 0) {
       return "int" 
   } else if (tipo == 1) {
@@ -19,6 +19,6 @@ export function tipoString(tipo: number): string | null {
   } else if (tipo == 4) {
       return "char" 
   }
-  return null
+  return ""
 }
   

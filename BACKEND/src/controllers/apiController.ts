@@ -105,7 +105,7 @@ class ApiController {
         }
         var grafo = '';
         grafo = getDot(instrucciones);
-        // console.log(grafo)
+        console.log(grafo)
         const array = singleton.get_errores()
         console.log("---- ERRORES ----")
         // console.log(new Issue("Lexico", "Caracter que lo proboco", 2, 3))
@@ -117,9 +117,14 @@ class ApiController {
 
         response.send({
           traduccion : singleton.get_consola(),
-          arbol : grafo
+          arbol : grafo,
+          errores: singleton.get_errores(),
+          ts_variables: env_padre.getEnvVariables(),
+          ts_metodos: env_padre.getEnvMetodos()
       });
       singleton.limpiar_consola()
+      singleton.limpiar_errores()
+      env_padre.limpiarTablas()
       grafo = "";
         
     
@@ -149,7 +154,7 @@ class ApiController {
         for(let hijo of nPadre.getHijos())
         {
             var nombreHijo = "nodo" + c;
-            dot += nombreHijo + "[label=\"" + hijo.getValor().replace("\"", "\\\"") + "\"];\n";
+            dot += nombreHijo + "[label=\"" + hijo.getValor() + "\"];\n";
             dot += padre + "->" + nombreHijo + ";\n";
             c++;
             recorrerAST(nombreHijo,hijo);

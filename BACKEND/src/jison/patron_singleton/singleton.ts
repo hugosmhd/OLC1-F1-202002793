@@ -33,6 +33,10 @@ export class Singleton {
         this.consola = "";
     }
 
+    public limpiar_errores() {
+        this.errores = [];
+    }
+
     public add_errores(data: any) {
         this.errores.push(data)
     }
