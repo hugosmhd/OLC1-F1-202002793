@@ -48,11 +48,11 @@ valor: boolea     */
                 // console.log(this.tipo)
 
                 if (expresion.type == this.tipo) {
-                    console.log("Declarando nueva variable: "+ elemento);
+                    // console.log("Declarando nueva variable: "+ elemento);
                     // console.log(this);
 
 
-                    console.log(expresion);
+                    // console.log(expresion);
                     
 
                     //preguntar si la variable esta libre

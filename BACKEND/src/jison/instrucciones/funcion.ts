@@ -18,6 +18,7 @@ export class Funcion extends Instruccion {
 
     public getNodo() {
         var nodoDec = new nodo("FUNCION");
+        nodoDec.agregarHijo_nodo(this.bloque.getNodo())
         // nodoDec.agregarHijo(this.tipo + "");
         // nodoDec.agregarHijo(this.nombre[0]);
         // nodoDec.agregarHijo2(this.expresion.getNodo());

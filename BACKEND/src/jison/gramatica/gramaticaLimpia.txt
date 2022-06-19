@@ -1,0 +1,284 @@
+%lex
+
+%options case-insensitive
+
+%%
+\s+											// se ignoran espacios en blanco
+"//".*										// comentario simple línea
+[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]			// comentario multiple líneas
+
+"int"			    return 'pr_int';
+"double"			return 'pr_double';
+"char"				return 'pr_char';
+"boolean"			return 'pr_boolean';
+"string"			return 'pr_string';
+"print"				return 'pr_print';
+"println"			return 'pr_println';
+"const"				return 'pr_const';
+"if"				return 'pr_if';
+"else"				return 'pr_else';
+"true"				return 'pr_true';
+"false"				return 'pr_false';
+"do"                return 'pr_do';
+"while"             return 'pr_while';
+"switch"            return 'pr_switch'
+"case"              return 'pr_case'
+"default"           return 'pr_default'
+"break"             return 'pr_break'
+"void"              return 'pr_void'
+"call"              return 'pr_call'
+"return"            return 'pr_return'
+"typeof"            return 'pr_typeof'
+
+
+
+","					return 'coma';
+";"					return 'ptcoma';
+":"					return 'dospts';
+"{"					return 'llabre';
+"}"					return 'llcierra';
+"("					return 'pabre';
+")"					return 'pcierra';
+
+
+"**"				return 'pot';
+"%"				    return 'modulo';
+"++"				return 'masmas';
+"+"					return 'mas';
+"--"				return 'menosmenos';
+"-"					return 'menos';
+"*"					return 'por';
+"/"					return 'div';
+
+"&&"				return 'and';
+"||"				return 'or';
+"^"				    return 'xor';
+"<="				return 'menorigual';
+"<"					return 'menorque';
+">="				return 'mayorigual';
+">"					return 'mayorque';
+"=="				return 'igualigual';
+"="					return 'igual';
+"!="				return 'diferente';
+"!"					return 'not';
+
+
+\"[^\"]*\"		                { yytext = yytext.substr(1,yyleng-2); return 'cadena'; }
+"'"[^']"'"				    { yytext = yytext.substr(1,yyleng-2); return 'caracter'; }
+[0-9]+("."[0-9]+)\b  		return 'decimal';
+[0-9]+\b					return 'entero';
+([a-zA-Z])[a-zA-Z0-9'_']*	    return 'identificador';
+
+<<EOF>>				return 'EOF';
+
+.					{ 
+                        // console.log('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);
+                        const singleton = Singleton.getInstance();
+                        const error = new Issue("Lexico", "Caracter que lo proboco: " + yytext, yylloc.first_line, yylloc.first_column + 1); 
+                        singleton.add_errores(error);
+                        
+                    }
+
+/lex
+
+%left 'or'
+%left 'and'
+%left 'xor'
+%left 'mayorque' 'menorque' 'mayorigual' 'menorigual' 'igualigual' 'diferente'
+%left 'mas' 'menos'
+%left 'por' 'div' 'modulo'
+%left 'pot'
+%left 'UMENOS' 'UNOT'
+%left 'pabre' 'pcierra'
+
+%start INIT
+
+%%
+
+INIT
+	: INSTRUCCIONES EOF     
+;
+
+INSTRUCCIONES
+	: INSTRUCCIONES INSTRUCCION         
+	| INSTRUCCION	                    
+;
+
+INSTRUCCION
+	: DECLARACION ptcoma        
+	| ASIGNACION ptcoma         
+    | IF	                    
+    | SWITCH                    
+    | FUNCIONES		
+    | WHILE					    
+    | DOWHILE ptcoma		    
+    | PRINT ptcom
+    | INCREMENT ptcoma          
+    | DECREMENT ptcoma          
+    | BLOQUEINSTRUCCIONES       
+    | METODOS                   
+    | LLAMADA_METODO ptcoma     
+    | pr_break ptcoma           
+    | RETURN ptcoma             
+    | error ptcoma { 
+        const singleton = Singleton.getInstance();
+        var errors = new Issue("Sintactico", "Error sintactico, verificar entrada", this._$.first_line, this._$.first_column + 1); 
+        singleton.add_errores(errors); }
+;
+
+RETURN
+    : pr_return EXPRESION   
+    | pr_return             
+;
+
+LLAMADA_METODO: 'pr_call' 'identificador' 'pabre' LISTA_PASO_PARAMETROS 'pcierra' 
+;
+
+LISTA_PASO_PARAMETROS
+    : LISTA_PASO_PARAMETROS coma EXPRESION      
+    | EXPRESION     
+    | 
+;
+
+DECLARACION
+    : 'pr_const' TIPODATO IDS igual EXPRESION
+    | TIPODATO IDS 'igual' EXPRESION
+;
+
+FUNCIONES: TIPODATO  'identificador' 'pabre' LISTA_PARAMETROS 'pcierra' BLOQUE 
+;
+
+IDS
+    : IDS coma identificador        
+    | identificador                 
+;
+
+ASIGNACION
+    : identificador igual EXPRESION     
+;
+
+METODOS:  'pr_void' 'identificador' 'pabre' LISTA_PARAMETROS 'pcierra' BLOQUE 
+;
+
+LISTA_PARAMETROS
+    : LISTA_PARAMETROS coma TIPODATO 'identificador'    
+    | TIPODATO 'identificador'          
+    | 
+;
+
+IF
+    : pr_if pabre EXPRESION pcierra IF_INSTRUCCIONES    
+    | pr_if pabre EXPRESION pcierra IF_INSTRUCCIONES pr_else IF_INSTRUCCIONES     
+    | pr_if pabre EXPRESION pcierra IF_INSTRUCCIONES pr_else IF      
+;
+
+IF_INSTRUCCIONES
+    : DECLARACION ptcoma       
+	| ASIGNACION ptcoma        
+    | PRINT ptcoma
+    | INCREMENT ptcoma         
+    | DECREMENT ptcoma         
+    | BLOQUEINSTRUCCIONES      
+    | LLAMADA_METODO ptcoma    
+    | pr_break ptcoma          
+    | RETURN ptcoma            
+    | error ptcoma { 
+        const singleton = Singleton.getInstance();
+        var errors = new Issue("Sintactico", "Error sintactico, verificar entrada", this._$.first_line, this._$.first_column + 1); 
+        singleton.add_errores(errors); }
+;
+
+SWITCH
+    : pr_switch pabre EXPRESION pcierra llabre LISTACASE llcierra 
+;
+
+LISTACASE
+    : LISTACASE CASEBLOQUE     
+    | CASEBLOQUE               
+;
+
+CASEBLOQUE
+    : pr_case EXPRESION dospts INSTRUCCIONES    
+    | pr_default dospts INSTRUCCIONES           
+;
+
+
+
+PRINT
+    : pr_print pabre EXP_PRINT pcierra      
+    | pr_println pabre EXP_PRINT pcierra    
+;
+
+EXP_PRINT
+    : EXPRESION    
+    |
+;
+
+WHILE
+    : pr_while pabre EXPRESION pcierra BLOQUEINSTRUCCIONES  
+;
+
+DOWHILE
+    : pr_do BLOQUEINSTRUCCIONES pr_while pabre EXPRESION pcierra   
+;
+
+TIPODATO
+    : pr_int 	        
+    | pr_double 	    
+    | pr_boolean 	    
+    | pr_char 	        
+    | pr_string 	    
+;
+
+BLOQUEINSTRUCCIONES
+    : llabre INSTRUCCIONES llcierra 
+    | llabre llcierra   
+;
+
+
+BLOQUE
+: llabre INSTRUCCIONES llcierra 
+    | llabre llcierra       
+;
+
+INCREMENT
+    : masmas identificador      
+    | identificador masmas      
+;
+
+DECREMENT
+    : menosmenos identificador      
+    | identificador menosmenos      
+;
+
+EXPRESION
+	: EXPRESION mas EXPRESION       
+    | EXPRESION menos EXPRESION     
+    | EXPRESION por EXPRESION       
+    | EXPRESION div EXPRESION       
+    | EXPRESION pot EXPRESION       
+    | EXPRESION modulo EXPRESION    
+    | menos EXPRESION %prec UMENOS	
+    | entero                
+    | decimal               
+    | caracter              
+    | cadena                
+    | pr_true               
+    | pr_false              
+    | identificador         
+    | EXPRESION igualigual EXPRESION    
+    | EXPRESION diferente EXPRESION     
+    | EXPRESION menorque EXPRESION      
+    | EXPRESION mayorque EXPRESION      
+    | EXPRESION menorigual EXPRESION    
+    | EXPRESION mayorigual EXPRESION    
+    | EXPRESION and EXPRESION           
+    | EXPRESION or EXPRESION            
+    | EXPRESION xor EXPRESION           
+    | not EXPRESION %prec UNOT          
+    | INCREMENT                         
+    | DECREMENT                         
+    | pabre EXPRESION pcierra           
+    | identificador pabre LISTA_PASO_PARAMETROS pcierra    
+    | pr_typeof pabre EXPRESION pcierra                    
+;   

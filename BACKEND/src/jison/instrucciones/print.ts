@@ -38,9 +38,6 @@ export class Print extends Instruccion {
                 instr = instr.replace('\\n', '\n')
                 instr = instr.replace('\\r', '\r')
                 instr = instr.replace('\\t', '\t')
-                // instruccion.value = instr
-                
-                console.log(instr);
                 this.saltoLinea? s.add_consola(instr+"\n") : s.add_consola(instr)                  
             } else {
                 this.saltoLinea? s.add_consola(instruccion.value+"\n") : s.add_consola(instruccion.value)  

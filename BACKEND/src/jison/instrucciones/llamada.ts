@@ -16,6 +16,9 @@ export class Llamada extends Instruccion {
 
     public getNodo(): nodo {
         var nodoDec = new nodo("LLAMADA");
+        this.parametros.forEach(param => {
+            nodoDec.agregarHijo_nodo(param.getNodo())
+        });
         // nodoDec.agregarHijo(this.nombre)
         // nodoDec.agregarHijo_nodo(this.expresion.getNodo())
 

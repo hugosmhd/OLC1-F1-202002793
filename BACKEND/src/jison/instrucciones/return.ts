@@ -14,6 +14,9 @@ export class Return extends Instruccion {
 
   public getNodo() {
     var nodoDec = new nodo("return");
+    if (this.express != null) {
+      nodoDec.agregarHijo_nodo(this.express.getNodo())
+    }
     // nodoDec.agregarHijo(this.tipo + "");
     // nodoDec.agregarHijo(this.nombre[0]);
     // nodoDec.agregarHijo2(this.expresion.getNodo());
