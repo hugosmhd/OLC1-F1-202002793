@@ -4,6 +4,7 @@ import { Expression } from "../abstract/express";
 import { Instruccion } from "../abstract/instruccion";
 import { Type } from '../symbols/type';
 import nodo from '../grafo/nodo';
+import { Continue } from './continue';
 
 export class If extends Instruccion {
 
@@ -68,7 +69,11 @@ export class If extends Instruccion {
             if (condicion.value) {
                 const env_if = new Environment(env);
                 var res = this.bloqueIf.executar(env_if)
-                if (res instanceof Break ) {
+                if (res instanceof Break || res instanceof Continue) {
+                    console.log("///// IF");
+                    console.log(res);
+                    console.log("///// IF");
+                    
                     return res
                 }
             } else {

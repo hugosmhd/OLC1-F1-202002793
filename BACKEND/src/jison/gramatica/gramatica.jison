@@ -9,11 +9,13 @@
     const {Bloque} = require('../instrucciones/bloque')
     const {BloqueBreak} = require('../instrucciones/bloquebreak')
     const {While} = require('../instrucciones/while')
+    const {For} = require('../instrucciones/for')
     const {DoWhile} = require('../instrucciones/dowhile')
     const {Metodo} = require('../instrucciones/metodo')
     const {Funcion} = require('../instrucciones/funcion')
     const {CaseSwitch} = require('../instrucciones/caseswitch')
     const {Break} = require('../instrucciones/break')
+    const {Continue} = require('../instrucciones/continue')
     const {Return} = require('../instrucciones/return')
     const {Llamada} = require('../instrucciones/llamada')
 
@@ -67,10 +69,12 @@
 "case"              return 'pr_case'
 "default"           return 'pr_default'
 "break"             return 'pr_break'
+"continue"          return 'pr_continue'
 "void"              return 'pr_void'
 "call"              return 'pr_call'
 "return"            return 'pr_return'
 "typeof"            return 'pr_typeof'
+"for"               return 'pr_for'
 
 
 
@@ -156,6 +160,7 @@ INSTRUCCION
     | SWITCH                    { $$=$1; }		
     | FUNCIONES			
     | WHILE					    { $$=$1; }
+    | FOR					    { $$=$1; }
     | DOWHILE ptcoma		    { $$=$1; }
     | PRINT ptcoma
     | INCREMENT ptcoma          { $$=$1; }
@@ -163,13 +168,34 @@ INSTRUCCION
     | BLOQUEINSTRUCCIONES       { $$=$1; } 
     | METODOS                   { $$=$1; } 
     | LLAMADA_METODO ptcoma     { $$=$1; } 
-    | pr_break ptcoma           { $$= new Break(@1.first_line, @1.first_column); }     
+    | pr_break ptcoma           { $$= new Break(@1.first_line, @1.first_column); }   
+    | pr_continue ptcoma        { $$= new Continue(@1.first_line, @1.first_column); }   
     | RETURN ptcoma             { $$=$1; }      
     | error ptcoma { 
         const singleton = Singleton.getInstance();
         var errors = new Issue("Sintactico", "Error sintactico, verificar entrada", this._$.first_line, this._$.first_column + 1); 
         singleton.add_errores(errors); }
 ;
+
+FOR
+    : pr_for pabre INICIALIZACION CONDICION ACTUALIZACION pcierra BLOQUEINSTRUCCIONES
+    {$$ = new For($3, $4, $5, $7, @1.first_line, @1.first_column);}
+;
+
+INICIALIZACION
+    : DECLARACION       {$$ = $1}
+    | ASIGNACION        {$$ = $1}
+;
+
+CONDICION
+    : ptcoma EXPRESION         {$$ = $2}
+;
+
+ACTUALIZACION
+    : ptcoma INCREMENT          {$$ = $2}
+    | ptcoma DECREMENT          {$$ = $2}
+    | ptcoma ASIGNACION         {$$ = $2}
+;    
 
 RETURN
     : pr_return EXPRESION   { $$= new Return($2, @1.first_line, @1.first_column); }
@@ -227,7 +253,8 @@ IF_INSTRUCCIONES
     | DECREMENT ptcoma          { $$=$1; }
     | BLOQUEINSTRUCCIONES       { $$=$1; } 
     | LLAMADA_METODO ptcoma     { $$=$1; } 
-    | pr_break ptcoma              { $$= new Break(@1.first_line, @1.first_column); } 
+    | pr_break ptcoma           { $$= new Break(@1.first_line, @1.first_column); } 
+    | pr_continue ptcoma        { $$= new Continue(@1.first_line, @1.first_column); } 
     | RETURN ptcoma             { $$=$1; }      
     | error ptcoma { 
         const singleton = Singleton.getInstance();
@@ -328,4 +355,4 @@ EXPRESION
     | pabre EXPRESION pcierra           {$$ = $2} 
     | identificador pabre LISTA_PASO_PARAMETROS pcierra     {$$= new Llamada($1,$3,@1.first_line, @1.first_column )}
     | pr_typeof pabre EXPRESION pcierra                    { $$= new Typeof($3, @1.first_line, @1.first_column); } 
-;   
+;  

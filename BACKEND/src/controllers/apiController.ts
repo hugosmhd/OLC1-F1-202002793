@@ -113,7 +113,7 @@ class ApiController {
         }
         var grafo = '';
         grafo = getDot(instrucciones);
-        // console.log(grafo)
+        console.log(grafo)
         const array = singleton.get_errores()
         console.log("---- ERRORES ----")
         // console.log(new Issue("Lexico", "Caracter que lo proboco", 2, 3))
@@ -133,7 +133,7 @@ class ApiController {
       singleton.limpiar_consola()
       singleton.limpiar_errores()
       env_padre.limpiarTablas()
-      grafo = "";
+    //   grafo = "";
         
     
     

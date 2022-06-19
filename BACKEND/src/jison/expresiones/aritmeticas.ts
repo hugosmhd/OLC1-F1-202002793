@@ -45,19 +45,22 @@ export class Arithmetic extends Expression {
    
             if (nodoDer.type == Type.INT && nodoIzq.type == Type.INT) {
                 result = { 
-                    value: (nodoIzq.value + nodoDer.value), 
+                    value: (Number(nodoIzq.value) + Number(nodoDer.value)), 
                     type: Type.INT 
                 }
             } else if (nodoDer.type == Type.INT && nodoIzq.type == Type.DOUBLE
                 ||nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.INT) {
-                result = { 
-                    value: (nodoIzq.value + nodoDer.value), 
-                    type: Type.DOUBLE 
-                }
+                    console.log("DEBERIA ENTRAR AQUI JAJAJA");
+                    console.log(nodoIzq.value);
+                    console.log(nodoDer.value);
+                    result = { 
+                        value: (Number(nodoIzq.value) + Number(nodoDer.value)).toFixed(2), 
+                        type: Type.DOUBLE 
+                    }     
             } else if (nodoDer.type == Type.INT && nodoIzq.type == Type.CHAR
                 ||nodoDer.type == Type.CHAR && nodoIzq.type == Type.INT) {
                 const valorChar = nodoIzq.type == Type.CHAR ? String(nodoIzq.value).charCodeAt(0): String(nodoDer.value).charCodeAt(0)
-                const valorFinal = nodoDer.type == Type.INT ? valorChar + nodoDer.value: nodoIzq.value + valorChar
+                const valorFinal = nodoDer.type == Type.INT ? valorChar + Number(nodoDer.value): Number(nodoIzq.value) + valorChar
                 result = { 
                     value: valorFinal, 
                     type: Type.INT 
@@ -70,15 +73,15 @@ export class Arithmetic extends Expression {
                 }
             } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.DOUBLE) {
                 result = { 
-                    value: (nodoIzq.value + nodoDer.value), 
+                    value: (Number(nodoIzq.value) + Number(nodoDer.value)).toFixed(2), 
                     type: Type.DOUBLE 
                 }
             } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.CHAR
                 ||nodoDer.type == Type.CHAR && nodoIzq.type == Type.DOUBLE) {
                 const valorChar = nodoIzq.type == Type.CHAR ? String(nodoIzq.value).charCodeAt(0): String(nodoDer.value).charCodeAt(0)
-                const valorFinal = nodoDer.type == Type.DOUBLE ? nodoDer.value + valorChar: nodoIzq.value + valorChar
+                const valorFinal = nodoDer.type == Type.DOUBLE ? Number(nodoDer.value )+ valorChar: Number(nodoIzq.value) + valorChar
                 result = { 
-                    value: valorFinal, 
+                    value: valorFinal.toFixed(2), 
                     type: Type.DOUBLE 
                 }
             } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.STRING
@@ -112,34 +115,34 @@ export class Arithmetic extends Expression {
         } else if (this.type == ArithmeticOption.MENOS && nodoDer != null) {   
             if (nodoIzq.type == Type.INT && nodoDer.type == Type.INT) {
                 result = { 
-                    value: (nodoIzq.value - nodoDer.value), 
+                    value: (Number(nodoIzq.value) - Number(nodoDer.value)), 
                     type: Type.INT 
                 }
             } else if (nodoIzq.type == Type.INT && nodoDer.type == Type.DOUBLE
                 || nodoIzq.type == Type.DOUBLE && nodoDer.type == Type.INT) {
                 result = { 
-                    value: (nodoIzq.value - nodoDer.value), 
+                    value: (Number(nodoIzq.value) - Number(nodoDer.value)).toFixed(2), 
                     type: Type.DOUBLE 
                 }
             } else if (nodoDer.type == Type.INT && nodoIzq.type == Type.CHAR
                 || nodoDer.type == Type.CHAR && nodoIzq.type == Type.INT) {
                 const valorChar = nodoIzq.type == Type.CHAR ? String(nodoIzq.value).charCodeAt(0): String(nodoDer.value).charCodeAt(0)
-                const valorFinal = nodoDer.type == Type.INT ? valorChar - nodoDer.value: nodoIzq.value - valorChar
+                const valorFinal = nodoDer.type == Type.INT ? valorChar - Number(nodoDer.value): Number(nodoIzq.value) - valorChar
                 result = { 
                     value: valorFinal, 
                     type: Type.INT 
                 }
             } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.DOUBLE) {
                 result = { 
-                    value: (nodoIzq.value - nodoDer.value), 
+                    value: (Number(nodoIzq.value) - Number(nodoDer.value)).toFixed(2), 
                     type: Type.DOUBLE 
                 }
             } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.CHAR
                 || nodoDer.type == Type.CHAR && nodoIzq.type == Type.DOUBLE) {
                 const valorChar = nodoIzq.type == Type.CHAR ? String(nodoIzq.value).charCodeAt(0): String(nodoDer.value).charCodeAt(0)
-                const valorFinal = nodoDer.type == Type.DOUBLE ? valorChar - nodoDer.value: nodoIzq.value - valorChar
+                const valorFinal = nodoDer.type == Type.DOUBLE ? valorChar - Number(nodoDer.value): Number(nodoIzq.value) - valorChar
                 result = { 
-                    value: valorFinal, 
+                    value: valorFinal.toFixed(2), 
                     type: Type.DOUBLE 
                 }
             } else if (nodoDer.type == Type.CHAR && nodoIzq.type == Type.CHAR) {
@@ -154,34 +157,34 @@ export class Arithmetic extends Expression {
         } else if (this.type == ArithmeticOption.POR && nodoDer != null) {   
             if (nodoIzq.type == Type.INT && nodoDer.type == Type.INT) {
                 result = { 
-                    value: (nodoIzq.value * nodoDer.value), 
+                    value: (Number(nodoIzq.value) * Number(nodoDer.value)), 
                     type: Type.INT 
                 }
             } else if (nodoIzq.type == Type.INT && nodoDer.type == Type.DOUBLE
                 || nodoIzq.type == Type.DOUBLE && nodoDer.type == Type.INT) {
                 result = { 
-                    value: (nodoIzq.value * nodoDer.value), 
+                    value: (Number(nodoIzq.value) * Number(nodoDer.value)).toFixed(2), 
                     type: Type.DOUBLE 
                 }
             } else if (nodoDer.type == Type.INT && nodoIzq.type == Type.CHAR
                 || nodoDer.type == Type.CHAR && nodoIzq.type == Type.INT) {
                 const valorChar = nodoIzq.type == Type.CHAR ? String(nodoIzq.value).charCodeAt(0): String(nodoDer.value).charCodeAt(0)
-                const valorFinal = nodoDer.type == Type.INT ? valorChar * nodoDer.value: nodoIzq.value * valorChar
+                const valorFinal = nodoDer.type == Type.INT ? valorChar * Number(nodoDer.value): Number(nodoIzq.value) * valorChar
                 result = { 
                     value: valorFinal, 
                     type: Type.INT 
                 }
             } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.DOUBLE) {
                 result = { 
-                    value: (nodoIzq.value * nodoDer.value), 
+                    value: (Number(nodoIzq.value) * Number(nodoDer.value)).toFixed(2), 
                     type: Type.DOUBLE 
                 }
             } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.CHAR
                 || nodoDer.type == Type.CHAR && nodoIzq.type == Type.DOUBLE) {
                 const valorChar = nodoIzq.type == Type.CHAR ? String(nodoIzq.value).charCodeAt(0): String(nodoDer.value).charCodeAt(0)
-                const valorFinal = nodoDer.type == Type.DOUBLE ? valorChar * nodoDer.value: nodoIzq.value * valorChar
+                const valorFinal = nodoDer.type == Type.DOUBLE ? valorChar * Number(nodoDer.value): Number(nodoIzq.value) * valorChar
                 result = { 
-                    value: valorFinal, 
+                    value: valorFinal.toFixed(2), 
                     type: Type.DOUBLE 
                 }
             } else if (nodoDer.type == Type.CHAR && nodoIzq.type == Type.CHAR) {
@@ -196,34 +199,34 @@ export class Arithmetic extends Expression {
         } else if (this.type == ArithmeticOption.DIV && nodoDer != null) {   
             if (nodoIzq.type == Type.INT && nodoDer.type == Type.INT) {
                 result = { 
-                    value: Math.trunc(nodoIzq.value / nodoDer.value), 
+                    value: Math.trunc(Number(nodoIzq.value) / Number(nodoDer.value)), 
                     type: Type.INT 
                 }
             } else if (nodoIzq.type == Type.INT && nodoDer.type == Type.DOUBLE
                 || nodoIzq.type == Type.DOUBLE && nodoDer.type == Type.INT) {
                 result = { 
-                    value: (nodoIzq.value / nodoDer.value), 
+                    value: (Number(nodoIzq.value) / Number(nodoDer.value)).toFixed(2), 
                     type: Type.DOUBLE 
                 }
             } else if (nodoDer.type == Type.INT && nodoIzq.type == Type.CHAR
                 || nodoDer.type == Type.CHAR && nodoIzq.type == Type.INT) {
                 const valorChar = nodoIzq.type == Type.CHAR ? String(nodoIzq.value).charCodeAt(0): String(nodoDer.value).charCodeAt(0)
-                const valorFinal = nodoDer.type == Type.INT ? Math.trunc(valorChar / nodoDer.value): Math.trunc(nodoIzq.value / valorChar)
+                const valorFinal = nodoDer.type == Type.INT ? Math.trunc(valorChar / Number(nodoDer.value)): Math.trunc(Number(nodoIzq.value) / valorChar)
                 result = { 
                     value: valorFinal, 
                     type: Type.INT 
                 }
             } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.DOUBLE) {
                 result = { 
-                    value: (nodoIzq.value / nodoDer.value), 
+                    value: (Number(nodoIzq.value) / Number(nodoDer.value)).toFixed(2), 
                     type: Type.DOUBLE 
                 }
             } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.CHAR
                 || nodoDer.type == Type.CHAR && nodoIzq.type == Type.DOUBLE) {
                 const valorChar = nodoIzq.type == Type.CHAR ? String(nodoIzq.value).charCodeAt(0): String(nodoDer.value).charCodeAt(0)
-                const valorFinal = nodoDer.type == Type.DOUBLE ? valorChar / nodoDer.value: nodoIzq.value / valorChar
+                const valorFinal = nodoDer.type == Type.DOUBLE ? valorChar / Number(nodoDer.value): Number(nodoIzq.value) / valorChar
                 result = { 
-                    value: valorFinal, 
+                    value: valorFinal.toFixed(2), 
                     type: Type.DOUBLE 
                 }
             } else if (nodoDer.type == Type.CHAR && nodoIzq.type == Type.CHAR) {
@@ -238,39 +241,39 @@ export class Arithmetic extends Expression {
         } else if (this.type == ArithmeticOption.POT && nodoDer != null) {   
             if (nodoIzq.type == Type.INT && nodoDer.type == Type.INT) {
                 result = { 
-                    value: (Math.pow(nodoIzq.value, nodoDer.value)), 
+                    value: (Math.pow(Number(nodoIzq.value), Number(nodoDer.value)).toFixed(2)), 
                     type: Type.DOUBLE 
                 }
             } else if (nodoIzq.type == Type.INT && nodoDer.type == Type.DOUBLE
                 || nodoIzq.type == Type.DOUBLE && nodoDer.type == Type.INT) {
                 result = { 
-                    value: (Math.pow(nodoIzq.value, nodoDer.value)), 
+                    value: (Math.pow(Number(nodoIzq.value), Number(nodoDer.value)).toFixed(2)), 
                     type: Type.DOUBLE 
                 }
             } else if (nodoDer.type == Type.INT && nodoIzq.type == Type.CHAR
                 || nodoDer.type == Type.CHAR && nodoIzq.type == Type.INT) {
                 const valorChar = nodoIzq.type == Type.CHAR ? String(nodoIzq.value).charCodeAt(0): String(nodoDer.value).charCodeAt(0)
-                const valorFinal = nodoDer.type == Type.INT ? Math.pow(valorChar, nodoDer.value): Math.pow(nodoIzq.value, valorChar)
+                const valorFinal = nodoDer.type == Type.INT ? Math.pow(valorChar, Number(nodoDer.value)): Math.pow(Number(nodoIzq.value), valorChar)
                 result = { 
-                    value: valorFinal, 
+                    value: valorFinal.toFixed(2), 
                     type: Type.DOUBLE 
                 }
             } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.DOUBLE) {
                 result = { 
-                    value: Math.pow(nodoIzq.value, nodoDer.value), 
+                    value: Math.pow(Number(nodoIzq.value), Number(nodoDer.value)).toFixed(2), 
                     type: Type.DOUBLE 
                 }
             } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.CHAR
                 || nodoDer.type == Type.CHAR && nodoIzq.type == Type.DOUBLE) {
                 const valorChar = nodoIzq.type == Type.CHAR ? String(nodoIzq.value).charCodeAt(0): String(nodoDer.value).charCodeAt(0)
-                const valorFinal = nodoDer.type == Type.DOUBLE ? Math.pow(valorChar, nodoDer.value): Math.pow(nodoIzq.value, valorChar)
+                const valorFinal = nodoDer.type == Type.DOUBLE ? Math.pow(valorChar, Number(nodoDer.value)): Math.pow(Number(nodoIzq.value), valorChar)
                 result = { 
-                    value: valorFinal, 
+                    value: valorFinal.toFixed(2), 
                     type: Type.DOUBLE 
                 }
             } else if (nodoDer.type == Type.CHAR && nodoIzq.type == Type.CHAR) {
                 result = { 
-                    value: Math.pow((nodoIzq.value).charCodeAt(0),(nodoDer.value).charCodeAt(0)), 
+                    value: Math.pow((nodoIzq.value).charCodeAt(0),(nodoDer.value).charCodeAt(0)).toFixed(2), 
                     type: Type.DOUBLE 
                 }
             } else {
@@ -280,48 +283,46 @@ export class Arithmetic extends Expression {
         } else if (this.type == ArithmeticOption.MODULO && nodoDer != null) {   
             if (nodoIzq.type == Type.INT && nodoDer.type == Type.INT) {
                 result = { 
-                    value: (nodoIzq.value % nodoDer.value), 
+                    value: (Number(nodoIzq.value) % Number(nodoDer.value)).toFixed(2), 
                     type: Type.DOUBLE 
                 }
             } else if (nodoIzq.type == Type.INT && nodoDer.type == Type.DOUBLE
                 || nodoIzq.type == Type.DOUBLE && nodoDer.type == Type.INT) {
                 result = { 
-                    value: (nodoIzq.value % nodoDer.value), 
+                    value: (Number(nodoIzq.value) % Number(nodoDer.value)).toFixed(2), 
                     type: Type.DOUBLE 
                 }
             } else if (nodoDer.type == Type.INT && nodoIzq.type == Type.CHAR
                 || nodoDer.type == Type.CHAR && nodoIzq.type == Type.INT) {
                 const valorChar = nodoIzq.type == Type.CHAR ? String(nodoIzq.value).charCodeAt(0): String(nodoDer.value).charCodeAt(0)
-                const valorFinal = nodoDer.type == Type.INT ? (valorChar % nodoDer.value): (nodoIzq.value % valorChar)
+                const valorFinal = nodoDer.type == Type.INT ? (valorChar % Number(nodoDer.value)): (Number(nodoIzq.value) % valorChar)
                 result = { 
-                    value: valorFinal, 
+                    value: valorFinal.toFixed(2), 
                     type: Type.DOUBLE 
                 }
             } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.DOUBLE) {
                 result = { 
-                    value: (nodoIzq.value % nodoDer.value), 
+                    value: (Number(nodoIzq.value) % Number(nodoDer.value)).toFixed(2), 
                     type: Type.DOUBLE 
                 }
             } else if (nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.CHAR
                 || nodoDer.type == Type.CHAR && nodoIzq.type == Type.DOUBLE) {
                 const valorChar = nodoIzq.type == Type.CHAR ? String(nodoIzq.value).charCodeAt(0): String(nodoDer.value).charCodeAt(0)
-                const valorFinal = nodoDer.type == Type.DOUBLE ? (valorChar % nodoDer.value): (nodoIzq.value % valorChar)
+                const valorFinal = nodoDer.type == Type.DOUBLE ? (valorChar % Number(nodoDer.value)): (Number(nodoIzq.value) % valorChar)
                 result = { 
-                    value: valorFinal, 
+                    value: valorFinal.toFixed(2), 
                     type: Type.DOUBLE 
                 }
             } else if (nodoDer.type == Type.CHAR && nodoIzq.type == Type.CHAR) {
                 result = { 
-                    value: ((nodoIzq.value).charCodeAt(0) % (nodoDer.value).charCodeAt(0)), 
+                    value: ((nodoIzq.value).charCodeAt(0) % (nodoDer.value).charCodeAt(0)).toFixed(2), 
                     type: Type.DOUBLE 
                 }
             } else {
                 Singleton.getInstance().add_errores(new Issue("Semantico", "El tipo de dato de los operandos no son validos para el modulo(%)", this.line, this.column))
             }
             
-        }
-
-        else if (this.type == ArithmeticOption.MENOSUNARIO && nodoIzq != null) {
+        } else if (this.type == ArithmeticOption.MENOSUNARIO && nodoIzq != null) {
             if (nodoIzq.type == Type.INT) {
                 result = { 
                     value: Number(-1*nodoIzq.value), 
@@ -336,9 +337,9 @@ export class Arithmetic extends Expression {
                 Singleton.getInstance().add_errores(new Issue("Semantico", "El operador unario menos(-) no es valido para el tipo de dato " + nodoIzq.type, this.line, this.column))
             }
         } 
-        // else {
-        //     Singleton.getInstance().add_errores(new Issue("Semantico", "Verifique su entrada, en las lineas y columnas indicadas " + nodoIzq.type, this.line, this.column))
-        // }
+        else {
+            Singleton.getInstance().add_errores(new Issue("Semantico", "Verifique su entrada, en las lineas y columnas indicadas " + nodoIzq.type, this.line, this.column))
+        }
         return result
     }
 

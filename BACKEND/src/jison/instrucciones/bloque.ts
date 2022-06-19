@@ -1,3 +1,4 @@
+import { Continue } from './continue';
 import { Return } from './return';
 
 import { Break } from "./break"
@@ -48,11 +49,10 @@ export class Bloque extends Instruccion {
                 try {
                     
                     var res = elemento.executar(new_env)
-                    if (res instanceof Break ) {
+                    if (res instanceof Break || res instanceof Continue) {
                         return res
                     }
                     if (res instanceof Return ) {
-                        console.log("RETORNAMOS AQUI XD");
                         
                         return res.express?.executar(new_env);
                     }

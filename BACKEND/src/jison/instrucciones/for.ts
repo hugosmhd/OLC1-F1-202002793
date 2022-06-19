@@ -1,3 +1,4 @@
+import { Continue } from './continue';
 import { Bloque } from './bloque';
 import { Environment } from './../symbols/enviroment';
 import { Expression } from "../abstract/express";
@@ -26,6 +27,7 @@ export class For extends Instruccion {
         column : number,
     ) {
         super(line,column);
+        
         this.inicializacion = inicializacion;
         this.condicion = condicion;
         this.actualizacion = actualizacion;
@@ -36,6 +38,9 @@ export class For extends Instruccion {
 
     public getNodo() {
         var nodoDec = new nodo("FOR");
+        nodoDec.agregarHijo_nodo(this.inicializacion.getNodo())
+        nodoDec.agregarHijo_nodo(this.condicion.getNodo())
+        nodoDec.agregarHijo_nodo(this.actualizacion.getNodo())
         // nodoDec.agregarHijo(this.tipo + "");
         // nodoDec.agregarHijo(this.nombre[0]);
         nodoDec.agregarHijo_nodo(this.instrucciones.getNodo());
@@ -43,10 +48,34 @@ export class For extends Instruccion {
     }
 
     public executar(env:Environment) {
-        // console.log("CONDICION -----");
-        // console.log(this.condicion);
-        // console.log("INSTRUCCIONES -----");
-        // console.log(this.instrucciones);
+        
+
+        const env_incializacion= new Environment(env);
+        const ini = this.inicializacion.executar(env_incializacion);
+        
+        var condicion = this.condicion.executar(env_incializacion);
+        if (condicion.type == Type.BOOLEAN) {
+            while (condicion) {                
+                if (condicion.value) {
+                    const env_for = new Environment(env_incializacion);
+                    const instruccion = this.instrucciones.executar(env_for)
+                                            
+                    if (instruccion instanceof Continue) {
+                        
+                        this.actualizacion.executar(env_incializacion);
+                        condicion = this.condicion.executar(env_incializacion);
+                        continue;
+                    }
+                } else {
+                    break
+                }
+                this.actualizacion.executar(env_incializacion);
+                condicion = this.condicion.executar(env_incializacion);
+                
+            }     
+        }
+        
+
         
         
     }
