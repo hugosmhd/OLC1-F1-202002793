@@ -1,15 +1,17 @@
 import { Metodo } from './../instrucciones/metodo';
-import { Symbol } from "./symbols";
+import { Symbol, Symbol_vector } from "./symbols";
 import { tipoString, Type } from "./type";
 
 export class Environment {
   
   private tablaSimbolos: Map<string, Symbol>; //unicamente para variables, tienes q guardar funciones en otro map 
   private tablaSimbolos_metodos: Map<string, any>; //unicamente para metodos o funciones
+  private tablaSimbolos_vectores: Map<string, any>;
   
   constructor(public anterior: Environment | null) {
     this.tablaSimbolos = new Map();
     this.tablaSimbolos_metodos = new Map();
+    this.tablaSimbolos_vectores = new Map();
   }
 
   /**
@@ -57,6 +59,25 @@ export class Environment {
     return false
   }
 
+  public guardar_array(nombre: string, valor: any, type: Type): boolean {
+    
+    if(!this.buscar_variable(nombre)){
+      this.tablaSimbolos_vectores.set(nombre, new Symbol_vector(valor, nombre, type));
+      return true
+    }
+    console.log("este vector | array ["+nombre+"] ya existe...");
+    return false
+  }
+
+  public get_array(nombre: string): Symbol_vector | undefined {
+    let env: Environment | null = this
+    while (env != null) {
+        if (env.tablaSimbolos_vectores.has(nombre)) return env.tablaSimbolos_vectores.get(nombre)
+        env = env.anterior
+    }
+    return undefined
+}
+
   public buscar_variable(nombre: string): boolean {
     for (let entry of Array.from(this.tablaSimbolos.entries())) {
         if (entry[0] == nombre) return true;
@@ -74,6 +95,7 @@ export class Environment {
     let env: Environment | null = this;
     while (env != null) {
         if (env.tablaSimbolos.has(nombre)) return env.tablaSimbolos.get(nombre);
+        if (env.tablaSimbolos_vectores.has(nombre)) return env.tablaSimbolos_vectores.get(nombre);
         env = env.anterior;
     }
     return null;

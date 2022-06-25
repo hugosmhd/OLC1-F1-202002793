@@ -18,14 +18,19 @@
     const {Continue} = require('../instrucciones/continue')
     const {Return} = require('../instrucciones/return')
     const {Llamada} = require('../instrucciones/llamada')
+    const {Declaracion_array} = require('../instrucciones/array_declaracion')
+    const {Asignacion_array} = require('../instrucciones/array_asignacion')
 
     const {Type} = require('../symbols/type');
 
     const {Literal} = require('../expresiones/literal')
+    const {ArrayRetorno} = require('../expresiones/arrayRetorno')
     const {Arithmetic} = require('../expresiones/aritmeticas');
     const {ArithmeticOption} = require('../expresiones/aritmeticOption');
     const {Identificador} = require('../expresiones/identificador');
     const {Typeof} = require('../expresiones/typeof')
+    const {Length} = require('../expresiones/length')
+    const {ToCharArray} = require('../expresiones/toCharArray')
     const {Relacional} = require('../expresiones/relacional');
     const {RelacionalOption} = require('../expresiones/relacionalOption');
     const {Logical} = require('../expresiones/logical');
@@ -74,7 +79,10 @@
 "call"              return 'pr_call'
 "return"            return 'pr_return'
 "typeof"            return 'pr_typeof'
+"length"            return 'pr_length'
+"toCharArray"            return 'pr_toCharArray'
 "for"               return 'pr_for'
+"new"               return 'pr_new'
 
 
 
@@ -85,6 +93,8 @@
 "}"					return 'llcierra';
 "("					return 'pabre';
 ")"					return 'pcierra';
+"["					return 'cabre';
+"]"					return 'ccierra';
 
 
 "**"				return 'pot';
@@ -171,11 +181,38 @@ INSTRUCCION
     | pr_break ptcoma           { $$= new Break(@1.first_line, @1.first_column); }   
     | pr_continue ptcoma        { $$= new Continue(@1.first_line, @1.first_column); }   
     | RETURN ptcoma             { $$=$1; }      
+    | DECLARACIONARRAY ptcoma   { $$=$1; }      
+    | ARRAYEXPRES ptcoma        { $$=$1; }      
     | error ptcoma { 
         const singleton = Singleton.getInstance();
         var errors = new Issue("Sintactico", "Error sintactico, verificar entrada", this._$.first_line, this._$.first_column + 1); 
         singleton.add_errores(errors); }
 ;
+
+ARRAYEXPRES
+    : identificador cabre EXPRESION ccierra igual EXPRESION 
+    {$$ = new Asignacion_array($1, $3, null, $6, 1, @1.first_line, @1.first_column)}
+    | identificador cabre EXPRESION ccierra cabre EXPRESION ccierra igual EXPRESION 
+    {$$ = new Asignacion_array($1, $3, $6, $9, 2, @1.first_line, @1.first_column)}
+;
+
+DECLARACIONARRAY
+    : TIPODATO identificador cabre ccierra igual pr_new TIPODATO cabre EXPRESION ccierra
+    {$$ = new Declaracion_array($1, $7, $2, 1, $9, null, @1.first_line, @1.first_column)}
+    | TIPODATO identificador cabre ccierra igual cabre ARRAY_VALORES ccierra
+    {$$ = new Declaracion_array($1, null, $2, 1, $7, null, @1.first_line, @1.first_column)}
+
+    | TIPODATO identificador cabre ccierra cabre ccierra igual pr_new TIPODATO cabre EXPRESION ccierra cabre EXPRESION ccierra
+    {$$ = new Declaracion_array($1, $9, $2, 2, $11, $14, @1.first_line, @1.first_column)}
+    | TIPODATO identificador cabre ccierra cabre ccierra igual cabre cabre ARRAY_VALORES ccierra coma cabre ARRAY_VALORES ccierra ccierra
+    {$$ = new Declaracion_array($1, null, $2, 2, $10, $14, @1.first_line, @1.first_column)}
+;
+
+ARRAY_VALORES 
+    : ARRAY_VALORES coma EXPRESION  { $1.push($3); $$ = $1; }
+    | EXPRESION  { $$ = [$1]; }
+;    
+
 
 FOR
     : pr_for pabre INICIALIZACION CONDICION ACTUALIZACION pcierra BLOQUEINSTRUCCIONES
@@ -355,4 +392,8 @@ EXPRESION
     | pabre EXPRESION pcierra           {$$ = $2} 
     | identificador pabre LISTA_PASO_PARAMETROS pcierra     {$$= new Llamada($1,$3,@1.first_line, @1.first_column )}
     | pr_typeof pabre EXPRESION pcierra                    { $$= new Typeof($3, @1.first_line, @1.first_column); } 
+    | pr_length pabre EXPRESION pcierra                    { $$= new Length($3, @1.first_line, @1.first_column); } 
+    | pr_toCharArray pabre EXPRESION pcierra               { $$= new ToCharArray($3, @1.first_line, @1.first_column); } 
+    | identificador cabre  EXPRESION ccierra           { $$= new ArrayRetorno($1, $3, null, 1, @1.first_line, @1.first_column); }
+    | identificador cabre  EXPRESION ccierra cabre  EXPRESION ccierra   { $$= new ArrayRetorno($1, $3, $6, 2, @1.first_line, @1.first_column); }
 ;  

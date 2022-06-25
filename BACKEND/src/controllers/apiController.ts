@@ -7,43 +7,6 @@ import { Metodo } from "../jison/instrucciones/metodo";
 import { Singleton } from "../jison/patron_singleton/singleton";
 import { Environment } from "../jison/symbols/enviroment";
 
-// class ApiController {
-//   public async funcion1(req: Request, res: Response) {
-//     try {
-//       await res.json({ msg: "hola mundo!" });
-//     } catch (error) {
-//       res.status(400).send({ msg: "error en funcion" });
-//     }
-//   }
-
-//   public async funcion2(req: Request, res: Response) {
-//     try {
-//       res.json({ msg: "hola mundo " + req.body.nombre });
-//     } catch (error) {
-//       res.status(400).send({ msg: "error en funcion" });
-//     }
-//   }
-
-//   public async funcion3(req: Request, res: Response) {
-//     try {
-//       res.json({ msg: "hola mundo " + req.params.nombre });
-//     } catch (error) {
-//       res.status(400).send({ msg: "error en funcion" });
-//     }
-//   }
-
-//   public async funcion4(req: Request, res: Response) {
-//     try {
-//       res.json({ msg: "hola mundo " + req.headers.nombre });
-//     } catch (error) {
-//       res.status(400).send({ msg: "error en funcion" });
-//     }
-//   }
-// }
-
-// export const apiController = new ApiController();
-
-
 class ApiController {
   public ejecutar (requ:Request,response:Response) {
     const singleton = Singleton.getInstance()
@@ -51,8 +14,8 @@ class ApiController {
     const fs = require("fs");
     
     try {
-        const entrada = requ.body.entrada;
-        // const entrada = fs.readFileSync("src/entrada.txt");
+        // const entrada = requ.body.entrada;
+        const entrada = fs.readFileSync("src/entrada.txt");
         const ast = parser.parse(entrada.toString());
         const env_padre = new Environment(null);
         //aqui analisis semantico
