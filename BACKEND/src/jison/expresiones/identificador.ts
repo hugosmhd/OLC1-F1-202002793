@@ -28,6 +28,10 @@ export class Identificador extends Instruccion {
             //errores semaintics
             return
         }
+        console.log("--- ID");
+        console.log(variable_ts);
+        console.log("--- ID");
+        
         
         return {
             value: variable_ts.value,

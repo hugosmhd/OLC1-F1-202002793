@@ -1,10 +1,27 @@
-int vector_dos[] = [3,9,98,15];
+/*boolean caracteres[] = [true, false, false, false, true];
+string caracteres_dos[] = new string[9];
+int hola = length("caracteres");
+println(hola);
+
+int doble[][] = new int[3][2];
+int vectordos[][] = [[2,3], [4,20,36,50]];*/
+
+int vector2[] = [12,16,18,96];
+
+// vector2.splice(1, 6);
+// println(vector2.indexOf(6));
+println(vector2);
+
+
+// println(caracteres[0]);
+
+/*int vector_dos[] = [3,9,98,15];
 string vaca = "vaca dos";
 println(length(vector_dos));
 int hola = length(vaca);
 println(hola);
 
-/*int vector[] = new int[3];
+int vector[] = new int[3];
 int vector_dos[] = [3,9,98,15];
 vector[1] = 15;
 vector_dos[3] = 108;

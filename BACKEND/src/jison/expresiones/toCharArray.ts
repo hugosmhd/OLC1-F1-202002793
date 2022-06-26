@@ -10,7 +10,8 @@ export class ToCharArray extends Expression {
     line: number,
     column: number
   ) {
-    super(line, column);    
+    super(line, column); 
+    console.log("hola desde tochararray");   
   }
 
   public getNodo() {
@@ -19,8 +20,7 @@ export class ToCharArray extends Expression {
     return nodoDec;
 }
 
-  public executar(env: Environment): Retorno {  
-
+  public executar(env: Environment): Retorno {
     let result = {
         value: null,
         type: Type.error
@@ -28,17 +28,22 @@ export class ToCharArray extends Expression {
 
     var express = this.expresion.executar(env)
 
-    console.log("---- *** TOCHARARRAY");
-    console.log(express);    
-    console.log("---- *** TOCHARARRAY");
     
-
+    
     if (express.type == Type.STRING) {
-        result = {
-            value: express.value.length,
-            type: Type.INT
-        }        
-    }
+      const array: any = []
+      // console.log("---- *** TOCHARARRAY");
+      // console.log(express);    
+      for (let i = 0; i < express.value.length; i++) {
+        // console.log(express.value.charAt(i));
+        array.push(express.value.charAt(i))
+      }
+      // console.log("---- *** TOCHARARRAY");
+      result = {
+        value: array,
+        type: Type.CHAR
+      }        
+  }
     
     return result
   }

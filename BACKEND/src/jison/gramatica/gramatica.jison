@@ -20,10 +20,13 @@
     const {Llamada} = require('../instrucciones/llamada')
     const {Declaracion_array} = require('../instrucciones/array_declaracion')
     const {Asignacion_array} = require('../instrucciones/array_asignacion')
+    const {Pop} = require('../instrucciones/pop')
+    const {Splice} = require('../instrucciones/splice')
 
     const {Type} = require('../symbols/type');
 
     const {Literal} = require('../expresiones/literal')
+    const {ArrayValues} = require('../expresiones/arrayValues')
     const {ArrayRetorno} = require('../expresiones/arrayRetorno')
     const {Arithmetic} = require('../expresiones/aritmeticas');
     const {ArithmeticOption} = require('../expresiones/aritmeticOption');
@@ -31,11 +34,13 @@
     const {Typeof} = require('../expresiones/typeof')
     const {Length} = require('../expresiones/length')
     const {ToCharArray} = require('../expresiones/toCharArray')
+    const {IndexOf} = require('../expresiones/indexOf')
     const {Relacional} = require('../expresiones/relacional');
     const {RelacionalOption} = require('../expresiones/relacionalOption');
     const {Logical} = require('../expresiones/logical');
     const {LogicalOption} = require('../expresiones/logicalOptions');
     const {Incremento} = require('../expresiones/incremento');
+    const {Push} = require('../expresiones/push');
     const {IncrementOption} = require('../expresiones/incrementOptions');
     const {Decremento} = require('../expresiones/decremento');
     const {DecrementOption} = require('../expresiones/decrementOptions');
@@ -80,13 +85,18 @@
 "return"            return 'pr_return'
 "typeof"            return 'pr_typeof'
 "length"            return 'pr_length'
-"toCharArray"            return 'pr_toCharArray'
+"toCharArray"       return 'pr_toCharArray'
+"indexOf"           return 'pr_indexOf'
 "for"               return 'pr_for'
 "new"               return 'pr_new'
+"push"              return 'pr_push'
+"pop"               return 'pr_pop'
+"splice"            return 'pr_splice'
 
 
 
 ","					return 'coma';
+"."					return 'punto';
 ";"					return 'ptcoma';
 ":"					return 'dospts';
 "{"					return 'llabre';
@@ -174,6 +184,9 @@ INSTRUCCION
     | DOWHILE ptcoma		    { $$=$1; }
     | PRINT ptcoma
     | INCREMENT ptcoma          { $$=$1; }
+    | PUSH ptcoma               { $$=$1; }
+    | POP ptcoma                { $$=$1; }
+    | SPLICE ptcoma             { $$=$1; }
     | DECREMENT ptcoma          { $$=$1; }
     | BLOQUEINSTRUCCIONES       { $$=$1; } 
     | METODOS                   { $$=$1; } 
@@ -197,15 +210,13 @@ ARRAYEXPRES
 ;
 
 DECLARACIONARRAY
-    : TIPODATO identificador cabre ccierra igual pr_new TIPODATO cabre EXPRESION ccierra
-    {$$ = new Declaracion_array($1, $7, $2, 1, $9, null, @1.first_line, @1.first_column)}
-    | TIPODATO identificador cabre ccierra igual cabre ARRAY_VALORES ccierra
-    {$$ = new Declaracion_array($1, null, $2, 1, $7, null, @1.first_line, @1.first_column)}
+    : TIPODATO identificador cabre ccierra igual EXPRESIONES_ARRAY
+    {$$ = new Declaracion_array($1, null, $2, 1, $6, null, @1.first_line, @1.first_column)}
 
-    | TIPODATO identificador cabre ccierra cabre ccierra igual pr_new TIPODATO cabre EXPRESION ccierra cabre EXPRESION ccierra
-    {$$ = new Declaracion_array($1, $9, $2, 2, $11, $14, @1.first_line, @1.first_column)}
-    | TIPODATO identificador cabre ccierra cabre ccierra igual cabre cabre ARRAY_VALORES ccierra coma cabre ARRAY_VALORES ccierra ccierra
-    {$$ = new Declaracion_array($1, null, $2, 2, $10, $14, @1.first_line, @1.first_column)}
+    | TIPODATO identificador cabre ccierra cabre ccierra igual EXPRESIONES_ARRAY
+    {$$ = new Declaracion_array($1, null, $2, 2, $8, null, @1.first_line, @1.first_column)}
+    // | TIPODATO identificador cabre ccierra cabre ccierra igual cabre cabre ARRAY_VALORES ccierra coma cabre ARRAY_VALORES ccierra ccierra
+    // {$$ = new Declaracion_array($1, null, $2, 2, $10, $14, @1.first_line, @1.first_column)}
 ;
 
 ARRAY_VALORES 
@@ -348,13 +359,25 @@ BLOQUEINSTRUCCIONES
 
 
 BLOQUE
-: llabre INSTRUCCIONES llcierra { $$= new Bloque($2,@1.first_line, @1.first_column) }
+    : llabre INSTRUCCIONES llcierra { $$= new Bloque($2,@1.first_line, @1.first_column) }
     | llabre llcierra       { $$= new Bloque(null,@1.first_line, @1.first_column) }
 ;
 
 INCREMENT
     : masmas identificador      {$$ = new Incremento($2, IncrementOption.MASMAS_PRE, @1.first_line, @1.first_column);}             
     | identificador masmas      {$$ = new Incremento($1, IncrementOption.MASMAS_POST, @1.first_line, @1.first_column);}             
+;
+
+PUSH
+    : identificador punto pr_push pabre EXPRESION pcierra   { $$ = new Push($1, $5, @1.first_line, @1.first_column); }
+;
+
+POP
+    : identificador punto pr_pop pabre pcierra   { $$ = new Pop($1, @1.first_line, @1.first_column); }
+;
+
+SPLICE
+    : identificador punto pr_splice pabre EXPRESION coma EXPRESION pcierra   { $$ = new Splice($1, $5, $7, @1.first_line, @1.first_column); }
 ;
 
 DECREMENT
@@ -388,12 +411,22 @@ EXPRESION
     | EXPRESION xor EXPRESION           {$$ = new Logical($1, $3, LogicalOption.XOR, @1.first_line, @1.first_column);}    
     | not EXPRESION %prec UNOT          {$$ = new Logical($2, null, LogicalOption.NOT, @1.first_line, @1.first_column);}             
     | INCREMENT                         {$$ = $1}
+    | PUSH                              {$$ = $1}
     | DECREMENT                         {$$ = $1}
     | pabre EXPRESION pcierra           {$$ = $2} 
     | identificador pabre LISTA_PASO_PARAMETROS pcierra     {$$= new Llamada($1,$3,@1.first_line, @1.first_column )}
     | pr_typeof pabre EXPRESION pcierra                    { $$= new Typeof($3, @1.first_line, @1.first_column); } 
     | pr_length pabre EXPRESION pcierra                    { $$= new Length($3, @1.first_line, @1.first_column); } 
     | pr_toCharArray pabre EXPRESION pcierra               { $$= new ToCharArray($3, @1.first_line, @1.first_column); } 
+    | identificador punto pr_indexOf pabre EXPRESION pcierra    { $$= new IndexOf($1, $5, @1.first_line, @1.first_column); } 
+    | pr_new TIPODATO cabre EXPRESION ccierra cabre EXPRESION ccierra   { $$ = new ArrayValues($2, $4, $7, 2, @1.first_line, @1.first_column); }
     | identificador cabre  EXPRESION ccierra           { $$= new ArrayRetorno($1, $3, null, 1, @1.first_line, @1.first_column); }
     | identificador cabre  EXPRESION ccierra cabre  EXPRESION ccierra   { $$= new ArrayRetorno($1, $3, $6, 2, @1.first_line, @1.first_column); }
-;  
+;
+
+EXPRESIONES_ARRAY
+    : pr_new TIPODATO cabre EXPRESION ccierra cabre EXPRESION ccierra     { $$ = new ArrayValues($2, $4, $7, 2, @1.first_line, @1.first_column); }
+    | pr_new TIPODATO cabre EXPRESION ccierra       { $$ = new ArrayValues($2, $4, null, 1, @1.first_line, @1.first_column); }
+    | cabre ARRAY_VALORES ccierra                   { $$ = new ArrayValues(null, $2, null, 1, @1.first_line, @1.first_column); }
+    | cabre cabre ARRAY_VALORES ccierra coma cabre ARRAY_VALORES ccierra ccierra    { $$ = new ArrayValues(null, $3, $7, 2, @1.first_line, @1.first_column); }    
+;
