@@ -1,3 +1,7 @@
+int c = (5+5 == 16) ? 15 : 66;
+println(c);
+
+
 /*boolean caracteres[] = [true, false, false, false, true];
 string caracteres_dos[] = new string[9];
 int hola = length("caracteres");
@@ -6,11 +10,11 @@ println(hola);
 int doble[][] = new int[3][2];
 int vectordos[][] = [[2,3], [4,20,36,50]];*/
 
-int vector2[] = [12,16,18,96];
+// int vector2[] = [12,16,18,96];
 
 // vector2.splice(1, 6);
 // println(vector2.indexOf(6));
-println(vector2);
+// println(vector2);
 
 
 // println(caracteres[0]);

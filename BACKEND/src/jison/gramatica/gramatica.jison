@@ -26,6 +26,7 @@
     const {Type} = require('../symbols/type');
 
     const {Literal} = require('../expresiones/literal')
+    const {Ternario} = require('../expresiones/ternario')
     const {ArrayValues} = require('../expresiones/arrayValues')
     const {ArrayRetorno} = require('../expresiones/arrayRetorno')
     const {Arithmetic} = require('../expresiones/aritmeticas');
@@ -105,6 +106,7 @@
 ")"					return 'pcierra';
 "["					return 'cabre';
 "]"					return 'ccierra';
+"?"					return 'icierra';
 
 
 "**"				return 'pot';
@@ -147,6 +149,7 @@
 
 /lex
 
+%right 'icierra'
 %left 'or'
 %left 'and'
 %left 'xor'
@@ -155,6 +158,7 @@
 %left 'por' 'div' 'modulo'
 %left 'pot'
 %left 'UMENOS' 'UNOT'
+%left 'masmas' 'menosmenos'
 %left 'pabre' 'pcierra'
 
 %start INIT
@@ -196,10 +200,23 @@ INSTRUCCION
     | RETURN ptcoma             { $$=$1; }      
     | DECLARACIONARRAY ptcoma   { $$=$1; }      
     | ARRAYEXPRES ptcoma        { $$=$1; }      
+    | TERNARIO_INST ptcoma        { $$=$1; }  
     | error ptcoma { 
         const singleton = Singleton.getInstance();
         var errors = new Issue("Sintactico", "Error sintactico, verificar entrada", this._$.first_line, this._$.first_column + 1); 
         singleton.add_errores(errors); }
+;
+
+TERNARIO_INST
+    : pabre EXPRESION pcierra icierra TERNARIO_OP dospts TERNARIO_OP  { $$ = new Ternario($2, $5, $7, @1.first_line, @1.first_column) }
+;
+
+TERNARIO_OP
+    : PRINT             { $$ = $1 }
+    | LLAMADA_METODO    { $$ = $1 }
+    | ASIGNACION    { $$ = $1 }
+    | INCREMENT    { $$ = $1 }
+    | DECREMENT    { $$ = $1 }
 ;
 
 ARRAYEXPRES
@@ -324,8 +341,6 @@ CASEBLOQUE
     | pr_default dospts INSTRUCCIONES           {$$ = new CaseSwitch("default", null, $3, @1.first_line, @1.first_column)}
 ;
 
-
-
 PRINT
     : pr_print pabre EXP_PRINT pcierra      {$$ = new Print(false, $3, @1.first_line, @1.first_column);}	
     | pr_println pabre EXP_PRINT pcierra      {$$ = new Print(true, $3, @1.first_line, @1.first_column);}			
@@ -422,6 +437,8 @@ EXPRESION
     | pr_new TIPODATO cabre EXPRESION ccierra cabre EXPRESION ccierra   { $$ = new ArrayValues($2, $4, $7, 2, @1.first_line, @1.first_column); }
     | identificador cabre  EXPRESION ccierra           { $$= new ArrayRetorno($1, $3, null, 1, @1.first_line, @1.first_column); }
     | identificador cabre  EXPRESION ccierra cabre  EXPRESION ccierra   { $$= new ArrayRetorno($1, $3, $6, 2, @1.first_line, @1.first_column); }
+    | TERNARIO_EXP      { $$ = $1 }
+
 ;
 
 EXPRESIONES_ARRAY
@@ -430,3 +447,8 @@ EXPRESIONES_ARRAY
     | cabre ARRAY_VALORES ccierra                   { $$ = new ArrayValues(null, $2, null, 1, @1.first_line, @1.first_column); }
     | cabre cabre ARRAY_VALORES ccierra coma cabre ARRAY_VALORES ccierra ccierra    { $$ = new ArrayValues(null, $3, $7, 2, @1.first_line, @1.first_column); }    
 ;
+
+TERNARIO_EXP
+    : pabre EXPRESION pcierra icierra EXPRESION dospts EXPRESION  { $$ = new Ternario($2, $5, $7, @1.first_line, @1.first_column) }
+;
+
