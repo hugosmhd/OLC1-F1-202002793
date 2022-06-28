@@ -32,8 +32,6 @@ export class For extends Instruccion {
         this.condicion = condicion;
         this.actualizacion = actualizacion;
         this.instrucciones = instrucciones;     
-        // console.log(this.instrucciones);
-           
     }
 
     public getNodo() {
@@ -41,8 +39,6 @@ export class For extends Instruccion {
         nodoDec.agregarHijo_nodo(this.inicializacion.getNodo())
         nodoDec.agregarHijo_nodo(this.condicion.getNodo())
         nodoDec.agregarHijo_nodo(this.actualizacion.getNodo())
-        // nodoDec.agregarHijo(this.tipo + "");
-        // nodoDec.agregarHijo(this.nombre[0]);
         nodoDec.agregarHijo_nodo(this.instrucciones.getNodo());
         return nodoDec;
     }

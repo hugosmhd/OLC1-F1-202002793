@@ -11,7 +11,6 @@ export class ToCharArray extends Expression {
     column: number
   ) {
     super(line, column); 
-    console.log("hola desde tochararray");   
   }
 
   public getNodo() {
@@ -25,25 +24,20 @@ export class ToCharArray extends Expression {
         value: null,
         type: Type.error
     };  
-
+    
     var express = this.expresion.executar(env)
-
     
     
     if (express.type == Type.STRING) {
       const array: any = []
-      // console.log("---- *** TOCHARARRAY");
-      // console.log(express);    
       for (let i = 0; i < express.value.length; i++) {
-        // console.log(express.value.charAt(i));
         array.push(express.value.charAt(i))
       }
-      // console.log("---- *** TOCHARARRAY");
       result = {
         value: array,
         type: Type.CHAR
       }        
-  }
+    }
     
     return result
   }

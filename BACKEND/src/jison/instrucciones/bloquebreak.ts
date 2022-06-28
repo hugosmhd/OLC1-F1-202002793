@@ -39,7 +39,6 @@ export class BloqueBreak extends Instruccion {
 
 
         for (const elemento  of this.instrucciones) {
-            // console.log("DESDE EL BLOQUE JAJAJ")
             try {
                 
                 var res = elemento.executar(new_env)

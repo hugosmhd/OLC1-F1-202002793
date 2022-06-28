@@ -44,16 +44,10 @@ valor: boolea     */
             try {
                 //codigo analisis semantico
                 const expresion= this.expresion.executar(env);
-                // console.log(expresion.type)
-                // console.log(this.tipo)
 
                 if (expresion.type == this.tipo) {
-                    // console.log("Declarando nueva variable: "+ elemento);
-                    // console.log(this);
 
 
-                    // console.log(expresion);
-                    
 
                     //preguntar si la variable esta libre
                     //si los tipos son correctos o hacen match
@@ -69,7 +63,6 @@ valor: boolea     */
                     
                 } else {
                     Singleton.getInstance().add_errores(new Issue("Semantico", "El tipo de dato declarado no coincide con la expresion", this.line, this.column))
-                    // console.log("Error semantico no coinciden los tipos")
                 }
                 
             } catch (error) {

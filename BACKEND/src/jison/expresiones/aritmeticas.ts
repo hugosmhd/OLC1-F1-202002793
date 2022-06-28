@@ -50,9 +50,6 @@ export class Arithmetic extends Expression {
                 }
             } else if (nodoDer.type == Type.INT && nodoIzq.type == Type.DOUBLE
                 ||nodoDer.type == Type.DOUBLE && nodoIzq.type == Type.INT) {
-                    console.log("DEBERIA ENTRAR AQUI JAJAJA");
-                    console.log(nodoIzq.value);
-                    console.log(nodoDer.value);
                     result = { 
                         value: (Number(nodoIzq.value) + Number(nodoDer.value)).toFixed(2), 
                         type: Type.DOUBLE 

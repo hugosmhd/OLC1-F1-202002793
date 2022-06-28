@@ -37,15 +37,6 @@ export class Funcion extends Instruccion {
         //semantica
 
         //asignacion parecida a la de varibles, envez de guardar variables, estoy guardando funciones/metodods
-        // console.log("hola que hace");
-        // console.log("--- PARAMETROS ---");
-        
-        // console.log(this.parametros)
-        
-        // this.parametros.forEach(element => {
-            // console.log(element);            
-        // });
-        // console.log("--- PARAMETROS ---");
         
         env.guardar_funcion(this.id, this);
 

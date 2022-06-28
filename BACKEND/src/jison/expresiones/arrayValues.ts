@@ -42,12 +42,8 @@ export class ArrayValues extends Expression {
             }
         });            
     } else if (this.dimension == 1) {
-        // console.log("DESDE LA DIMENSION UNO");
-        // console.log(this.tipo);                
         const tamano = this.expresion.executar(env)
-        // console.log(tamano);
         for (let i = 0; i < tamano.value; i++) {
-            // console.log("HOLA DESDE EL INT");
             if (this.tipo == Type.INT) {                
                 array.push(0);
             } else if (this.tipo == Type.STRING) {
@@ -60,15 +56,12 @@ export class ArrayValues extends Expression {
                 array.push(false);
             }    
         }
-        // console.log(array);
         
         
     } else if (this.dimension == 2 && Array.isArray(this.expresion) && Array.isArray(this.expresionDos)) {
         const arreglo_uno: any[] = []
         const arreglo_dos: any[] = []
-        // console.log("DESDE EL SEGUNDO JAJAJA");
         this.tipo = this.expresion[0].executar(env).type
-        // console.log(this.tipo);
         
         this.expresion.forEach((element: any) => {
             const tipoValor = element.executar(env);
@@ -89,7 +82,6 @@ export class ArrayValues extends Expression {
     } else if (this.dimension == 2) {
         const tamano_uno = this.expresion.executar(env);
         const tamano_dos = this.expresionDos.executar(env);
-        // console.log("DESDE DOBLE SIMPLE");
         
         const arreglo_uno = []
         const arreglo_dos = []
@@ -135,13 +127,6 @@ export class ArrayValues extends Expression {
     //         type: express.type
     //     }
     // }
-    // console.log("--- DESDE ARRAY VALUES");    
-    // console.log(express);
-    // console.log("--- DESDE ARRAY VALUES");
-    
-    
-
-    // console.log(result);
     
     result = {
         value: array,

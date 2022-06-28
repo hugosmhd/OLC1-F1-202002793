@@ -27,17 +27,10 @@ export class Print extends Instruccion {
     }
 
     public executar(env:Environment) {
-        // console.log("print jajaj");
         const s= Singleton.getInstance()
         if (this.expresion != null) {
             const instruccion = this.expresion.executar(env);
-            // console.log("LOG");
-            // console.log(instruccion.value);
-            // console.log(Array.isArray(instruccion.value));
-            // console.log("LOG");
             if (instruccion.type == Type.STRING && !Array.isArray(instruccion.value)) {
-                // console.log("HOLA DESDE EL STRING");
-                
                 var instr = instruccion.value.replace('\\"', '"')
                 instr = instr.replace('\\\\', '\\')
                 instr = instr.replace('\\n', '\n')

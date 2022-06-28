@@ -44,10 +44,6 @@ export class ArrayRetorno extends Expression {
                     value: arreglo.value[expre.value][expreDos.value], 
                     type: arreglo.type 
                 }
-                // console.log("**********************************");
-                
-                // console.log(expre.value);
-                // console.log(expreDos.value);
                 
 
             }

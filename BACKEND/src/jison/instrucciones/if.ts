@@ -54,14 +54,6 @@ export class If extends Instruccion {
     }
 
     public executar(env:Environment) {
-        // console.log("SENTENCIA IF BLOQUES");
-        // console.log("IF");        
-        // console.log(this.bloqueIf);
-        // console.log("ELSE IF");        
-        // console.log(this.bloqueElseIf);
-        // console.log("ELSE");        
-        // console.log(this.bloqueElse);
-        
         const condicion = this.condicion.executar(env);
 
         if (condicion.type == Type.BOOLEAN) {
@@ -70,16 +62,10 @@ export class If extends Instruccion {
                 const env_if = new Environment(env);
                 var res = this.bloqueIf.executar(env_if)
                 if (res instanceof Break || res instanceof Continue) {
-                    console.log("///// IF");
-                    console.log(res);
-                    console.log("///// IF");
-                    
                     return res
                 }
             } else {
                 if(this.bloqueElseIf != undefined) {
-                    
-                    // console.log("BLOQUE ELSE");
                     var elseif_intruc = this.bloqueElseIf.executar(env)
                     if (elseif_intruc instanceof Break ) {
                         return elseif_intruc

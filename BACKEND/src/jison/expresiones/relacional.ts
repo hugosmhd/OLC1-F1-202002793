@@ -247,8 +247,6 @@ export class Relacional extends Expression {
                 type: Type.BOOLEAN 
             }
         } else if (nodoDer.type == Type.STRING && nodoIzq.type == Type.STRING) {
-            console.log("DEBERIA ENTRAR AQUI AJAJA");
-            
             result = { 
                 value: (nodoIzq.value) != (nodoDer.value), 
                 type: Type.BOOLEAN 

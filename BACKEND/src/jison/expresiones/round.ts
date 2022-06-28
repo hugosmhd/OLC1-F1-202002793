@@ -4,37 +4,36 @@ import { Expression } from '../abstract/express';
 import { tipoString, Type } from '../symbols/type';
 import { Retorno } from '../abstract/retorno';
 
-export class Length extends Expression {
+export class Round extends Expression {
   constructor(
     public expresion: Expression,
     line: number,
     column: number
   ) {
-    super(line, column);    
+    super(line, column); 
   }
 
   public getNodo() {
-    var nodoDec = new nodo("LENGTH");
+    var nodoDec = new nodo("ROUND");
     nodoDec.agregarHijo_nodo(this.expresion.getNodo())
     return nodoDec;
 }
 
-  public executar(env: Environment): Retorno {  
+  public executar(env: Environment): Retorno {
 
     let result = {
-        value: null,
+        value: 0,
         type: Type.error
     };  
 
     var express = this.expresion.executar(env)
 
-
-    if (express.type == Type.STRING || Array.isArray(express.value)) {
-        result = {
-            value: express.value.length,
-            type: Type.INT
-        }        
-    }
+    if (express.type == Type.DOUBLE) {      
+      result = {
+        value: Math.round(express.value),
+        type: Type.INT
+      }        
+  }
     
     return result
   }

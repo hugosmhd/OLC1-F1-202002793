@@ -22,6 +22,7 @@
     const {Asignacion_array} = require('../instrucciones/array_asignacion')
     const {Pop} = require('../instrucciones/pop')
     const {Splice} = require('../instrucciones/splice')
+    const {GraficarTS} = require('../instrucciones/graficarTS')
 
     const {Type} = require('../symbols/type');
 
@@ -33,8 +34,11 @@
     const {ArithmeticOption} = require('../expresiones/aritmeticOption');
     const {Identificador} = require('../expresiones/identificador');
     const {Typeof} = require('../expresiones/typeof')
+    const {Round} = require('../expresiones/round')
     const {Length} = require('../expresiones/length')
     const {ToCharArray} = require('../expresiones/toCharArray')
+    const {ToLower} = require('../expresiones/toLower')
+    const {ToUpper} = require('../expresiones/toUpper')
     const {IndexOf} = require('../expresiones/indexOf')
     const {Relacional} = require('../expresiones/relacional');
     const {RelacionalOption} = require('../expresiones/relacionalOption');
@@ -87,12 +91,16 @@
 "typeof"            return 'pr_typeof'
 "length"            return 'pr_length'
 "toCharArray"       return 'pr_toCharArray'
+"toLower"           return 'pr_toLower'
+"toUpper"           return 'pr_toUpper'
+"round"             return 'pr_round'
 "indexOf"           return 'pr_indexOf'
 "for"               return 'pr_for'
 "new"               return 'pr_new'
 "push"              return 'pr_push'
 "pop"               return 'pr_pop'
 "splice"            return 'pr_splice'
+"graficar_ts"       return 'pr_graficar_ts'
 
 
 
@@ -140,7 +148,6 @@
 <<EOF>>				return 'EOF';
 
 .					{ 
-                        // console.log('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);
                         const singleton = Singleton.getInstance();
                         const error = new Issue("Lexico", "Caracter que lo proboco: " + yytext, yylloc.first_line, yylloc.first_column + 1); 
                         singleton.add_errores(error);
@@ -201,10 +208,15 @@ INSTRUCCION
     | DECLARACIONARRAY ptcoma   { $$=$1; }      
     | ARRAYEXPRES ptcoma        { $$=$1; }      
     | TERNARIO_INST ptcoma        { $$=$1; }  
+    | GRAFICAR_TS ptcoma        { $$=$1; }  
     | error ptcoma { 
         const singleton = Singleton.getInstance();
         var errors = new Issue("Sintactico", "Error sintactico, verificar entrada", this._$.first_line, this._$.first_column + 1); 
         singleton.add_errores(errors); }
+;
+
+GRAFICAR_TS
+    : pr_graficar_ts pabre pcierra { $$= new GraficarTS(@1.first_line, @1.first_column); }
 ;
 
 TERNARIO_INST
@@ -432,7 +444,9 @@ EXPRESION
     | identificador pabre LISTA_PASO_PARAMETROS pcierra     {$$= new Llamada($1,$3,@1.first_line, @1.first_column )}
     | pr_typeof pabre EXPRESION pcierra                    { $$= new Typeof($3, @1.first_line, @1.first_column); } 
     | pr_length pabre EXPRESION pcierra                    { $$= new Length($3, @1.first_line, @1.first_column); } 
-    | pr_toCharArray pabre EXPRESION pcierra               { $$= new ToCharArray($3, @1.first_line, @1.first_column); } 
+    | pr_round pabre EXPRESION pcierra                     { $$= new Round($3, @1.first_line, @1.first_column); }     
+    | pr_toLower pabre EXPRESION pcierra                   { $$= new ToLower($3, @1.first_line, @1.first_column); } 
+    | pr_toUpper pabre EXPRESION pcierra                   { $$= new ToUpper($3, @1.first_line, @1.first_column); } 
     | identificador punto pr_indexOf pabre EXPRESION pcierra    { $$= new IndexOf($1, $5, @1.first_line, @1.first_column); } 
     | pr_new TIPODATO cabre EXPRESION ccierra cabre EXPRESION ccierra   { $$ = new ArrayValues($2, $4, $7, 2, @1.first_line, @1.first_column); }
     | identificador cabre  EXPRESION ccierra           { $$= new ArrayRetorno($1, $3, null, 1, @1.first_line, @1.first_column); }
@@ -446,6 +460,7 @@ EXPRESIONES_ARRAY
     | pr_new TIPODATO cabre EXPRESION ccierra       { $$ = new ArrayValues($2, $4, null, 1, @1.first_line, @1.first_column); }
     | cabre ARRAY_VALORES ccierra                   { $$ = new ArrayValues(null, $2, null, 1, @1.first_line, @1.first_column); }
     | cabre cabre ARRAY_VALORES ccierra coma cabre ARRAY_VALORES ccierra ccierra    { $$ = new ArrayValues(null, $3, $7, 2, @1.first_line, @1.first_column); }    
+    | pr_toCharArray pabre EXPRESION pcierra               { $$= new ToCharArray($3, @1.first_line, @1.first_column); } 
 ;
 
 TERNARIO_EXP

@@ -30,8 +30,6 @@ export class Ternario extends Expression {
     };
 
     const evaluar = this.condicion.executar(env);
-    console.log("evaluar");
-    console.log(evaluar);
     
     if (evaluar.value) {        
         const v = this.verdadero.executar(env);

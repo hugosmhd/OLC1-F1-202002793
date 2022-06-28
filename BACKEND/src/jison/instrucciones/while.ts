@@ -20,8 +20,6 @@ export class While extends Instruccion {
         super(line,column);
         this.condicion = condicion;
         this.instrucciones = instrucciones;     
-        console.log(this.instrucciones);
-           
     }
 
     public getNodo() {
@@ -33,19 +31,12 @@ export class While extends Instruccion {
     }
 
     public executar(env:Environment) {
-        // console.log("CONDICION -----");
-        // console.log(this.condicion);
-        // console.log("INSTRUCCIONES -----");
-        // console.log(this.instrucciones);
-        
         while (true) {
             const condicion = this.condicion.executar(env);
             if (condicion.type == Type.BOOLEAN) {
                 if (condicion.value) {
                     const env_while = new Environment(env);
                     var instruccion = this.instrucciones.executar(env_while)
-                    // console.log(instruccion);
-                    
                     if (instruccion instanceof Break) {
                         return;
                     }

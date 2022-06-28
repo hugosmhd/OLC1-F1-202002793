@@ -38,11 +38,6 @@ export class CaseSwitch {
     }
 
     public getNodo() {
-        // console.log("---- CASE ----");
-        
-        // console.log(this.expresion);
-        // console.log("---- CASE ----");
-        
         var nodoDec = new nodo(this.tipoCaso);
         if (this.expresion != null) {
             nodoDec.agregarHijo_nodo(this.expresion.getNodo())
@@ -51,21 +46,7 @@ export class CaseSwitch {
         for(const inst of this.getInstrucciones()) {
             nodoDec.agregarHijo_nodo(inst.getNodo());
         }
-        // nodoDec.agregarHijo(this.tipo + "");
-        // nodoDec.agregarHijo(this.nombre[0]);
-        // nodoDec.agregarHijo_nodo(this.condicion.getNodo());
         return nodoDec;
     }
 
-    // public getDesc():String {
-    //     return this.descripcion;
-    // }
-
-    // public getFila():Number {
-    //     return this.fila;
-    // }
-
-    // public getColumna():Number {
-    //     return this.columna;
-    // }
 }

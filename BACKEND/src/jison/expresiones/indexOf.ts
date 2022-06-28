@@ -32,14 +32,12 @@ export class IndexOf extends Expression {
 
     if (vector != null) {
         const index = vector.value.indexOf(elem.value)
-        // console.log(index);
         
         result = {
             value: index,
             type: Type.INT
         }
     }
-    // console.log(vector);
     
     
     return result

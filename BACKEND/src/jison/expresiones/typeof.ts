@@ -11,8 +11,6 @@ export class Typeof extends Expression {
     column: number
   ) {
     super(line, column);
-    console.log("hola desde typeof");
-    
   }
 
   public getNodo() {
@@ -25,11 +23,7 @@ export class Typeof extends Expression {
 }
 
   public executar(env: Environment): Retorno {    
-    // console.log("ejecutando el break");
     var valor = this.expresion.executar(env)
-    console.log("DESDE TYPEOF");
-    console.log(valor);    
-    console.log("DESDE TYPEOF");
     
     return {
       value: tipoString(valor.type),

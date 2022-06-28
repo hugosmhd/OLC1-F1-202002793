@@ -6,6 +6,8 @@ export class Singleton {
 
     private consola: string = ""
     private errores: any[] = []
+    private grafica_ts: string = "" 
+    private no_grafica_ts: number = 0 
 
     
     constructor() {
@@ -37,12 +39,33 @@ export class Singleton {
         this.errores = [];
     }
 
+    public limpiar_grafica_ts() {
+        this.grafica_ts = "";
+    }
+
     public add_errores(data: any) {
         this.errores.push(data)
     }
 
     public get_errores():any[] {
         return this.errores
+    }
+
+    public add_grafica_ts(data: string) {
+        this.grafica_ts += data;
+    }
+
+    public get_grafica_ts() {
+        return this.grafica_ts;
+    }
+
+    public get_ts() {
+        this.no_grafica_ts++   
+        return this.no_grafica_ts     
+    }
+
+    public limpiar_ts() {
+        this.no_grafica_ts = 0
     }
 
 }

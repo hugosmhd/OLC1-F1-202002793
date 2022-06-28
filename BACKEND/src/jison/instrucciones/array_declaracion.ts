@@ -29,15 +29,7 @@ export class Declaracion_array extends Instruccion {
     }
 
     public executar(env: Environment) {
-        console.log("----- DECLARACION JAJA ----");
-        const express = this.valor.executar();
-        console.log(express);        
-        console.log("----- DECLARACION JAJA ----");
-        
-        // ------------------------------------------------
-   
-        // console.log(this);
-        // console.log(array);
+        const express = this.valor.executar(env);
         env.guardar_array(this.nombre, express.value, this.tipo)
     }
 

@@ -22,8 +22,6 @@ export class Literal extends Expression {
 
     public executar(): Retorno {
         
-        // console.log(this.value)
-        // console.log(Number.isInteger(Number(this.value)))
         if (this.type == Type.INT && Number.isInteger(Number(this.value))) {
             return { value: Number(this.value), type: Type.INT }
         }
@@ -36,8 +34,6 @@ export class Literal extends Expression {
             else return { value: Boolean(false), type: Type.BOOLEAN }
         }
         else if (this.type == Type.DOUBLE) {
-            // console.log("----ENTRO EN EL DOUBLE------")
-            // console.log(this.value)
             return { value: parseFloat(this.value), type: Type.DOUBLE }
         }
         else return { value: this.value, type: Type.error }

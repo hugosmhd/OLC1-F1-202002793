@@ -1,40 +1,38 @@
-int c = (5+5 == 16) ? 15 : 66;
-println(c);
+double calificacion=0.0;
+char global1= 'a';
+int iterador= 1;
+{
+    string curso="olc1";
+    int a1=10*iterador;
+    int a2=a1+1;
+    int a3=a1+2;
+    graficar_ts();
+    {
+        int a1=100*iterador;
+        int a2=a1+1;
+        int a3=a1+2;
+        graficar_ts();
+        {
+            int a1=(5>10*5+2-30+1-(10*2))? 30 : 0;
 
+            int a2=(a1==30)?a1+1 : 0;
+            int a3=(a1==30)?a1+2 : 0;
+            (curso=="ipc")? println("OPEADOR TERMARIO COMO INSTRUCCION ... NO!"): println ("OPEADOR TERMARIO COMO INSTRUCCION ... SI!");
+            (curso+"_june"=="olc1_june")? println("OPEADOR TERMARIO COMO INSTRUCCION ... SI!"): println ("OPEADOR TERMARIO COMO INSTRUCCION ... NO!");
+            global1 = (a1==((10+5)*(1+1)))?  'm' :'f';
 
-/*boolean caracteres[] = [true, false, false, false, true];
-string caracteres_dos[] = new string[9];
-int hola = length("caracteres");
-println(hola);
+            if(global1=='m'){
+                println("OPEADOR TERMARIO COMO EXPRESION... SI! ");
+            }else{
+                println("OPEADOR TERMARIO COMO EXPRESION... NO! ");
+            }
 
-int doble[][] = new int[3][2];
-int vectordos[][] = [[2,3], [4,20,36,50]];*/
-
-// int vector2[] = [12,16,18,96];
-
-// vector2.splice(1, 6);
-// println(vector2.indexOf(6));
-// println(vector2);
-
-
-// println(caracteres[0]);
-
-/*int vector_dos[] = [3,9,98,15];
-string vaca = "vaca dos";
-println(length(vector_dos));
-int hola = length(vaca);
-println(hola);
-
-int vector[] = new int[3];
-int vector_dos[] = [3,9,98,15];
-vector[1] = 15;
-vector_dos[3] = 108;
-println(vector[1]);
-println(vector_dos[3]);
-
-string vectordos[][] = new string[2][6];
-int vectordos[][] = [[2,3], [4,20,36,50]];
-println(vectordos[1][3]);
-vectordos[1][3] = vector_dos[2];
-int vec = vectordos[1][3];
-println(vec);*/
+            if(a1+2==30+2 && a2==31 && a3==32){
+                println("OPEADOR TERMARIO COMO EXPRESION... SI! ");
+            }else{
+                println("OPEADOR TERMARIO COMO EXPRESION... NO! ");
+            }
+            graficar_ts();
+        }
+    }
+}

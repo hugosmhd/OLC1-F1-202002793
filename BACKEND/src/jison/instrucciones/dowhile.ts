@@ -22,8 +22,6 @@ export class DoWhile extends Instruccion {
 
     public getNodo() {
         var nodoDec = new nodo("DO");
-        // nodoDec.agregarHijo(this.tipo + "");
-        // nodoDec.agregarHijo(this.nombre[0]);
         nodoDec.agregarHijo_nodo(this.instrucciones.getNodo());
         var nodoWhile = new nodo("WHILE")
         nodoWhile.agregarHijo_nodo(this.condicion.getNodo())
@@ -32,10 +30,6 @@ export class DoWhile extends Instruccion {
     }
 
     public executar(env:Environment) {
-        // console.log("CONDICION -----");
-        // console.log(this.condicion);
-        // console.log("INSTRUCCIONES -----");
-        // console.log(this.instrucciones);
         
         const env_dowhile = new Environment(env);
         this.instrucciones.executar(env_dowhile);

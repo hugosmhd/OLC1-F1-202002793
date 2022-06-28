@@ -31,21 +31,18 @@ export class Decremento extends Expression {
   public executar(env: Environment): Retorno {
     const variable = env.get_variable(this.identificador)
     const envVar = env.get_env(this.identificador)
-    // console.log(variable)
     let result: Retorno = {
         value: null,
         type: Type.error,
     };
 
     if (this.type == DecrementOption.MENOSMENOS_POST && variable != null && envVar != null) {
-        // console.log("POST") 
         result = {
             value: variable.value,
             type: Type.INT,
         }; 
         envVar.actualizar_variable(variable.id, variable.value - 1)      
     } else if(this.type == DecrementOption.MENOSMENOS_PRE && variable != null && envVar != null) {
-        // console.log("PRE")   
         envVar.actualizar_variable(variable.id, variable.value - 1)      
         result = {
             value: variable.value,
@@ -53,7 +50,6 @@ export class Decremento extends Expression {
         };     
         
     }
-    // console.log(env)
     
     
     return result;

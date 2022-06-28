@@ -17,16 +17,11 @@ export class Return extends Instruccion {
     if (this.express != null) {
       nodoDec.agregarHijo_nodo(this.express.getNodo())
     }
-    // nodoDec.agregarHijo(this.tipo + "");
-    // nodoDec.agregarHijo(this.nombre[0]);
-    // nodoDec.agregarHijo2(this.expresion.getNodo());
     return nodoDec;
 }
 
   public executar(env: Environment): Return {    
     // if (this.express != null) {
-    //     console.log("DESDE EL RETURN");        
-    //     console.log(this.express.executar(env));    
     //     return this.express.executar(env);        
     // }
     return this;

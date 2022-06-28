@@ -25,13 +25,6 @@ export class Asignacion extends Instruccion {
     }
 
     public executar(env:Environment) {
-       
-    
-        //env.getTipo_variable()
-        // console.log("---- DESDE ASIGNAR ----");
-        // console.log(env);        
-        // console.log("---- DESDE ASIGNAR ----");
-        
         const valor = this.expresion.executar(env);
         const variable = env.get_variable(this.nombre);
         if (variable != undefined && variable != null && valor.type == variable.type) {

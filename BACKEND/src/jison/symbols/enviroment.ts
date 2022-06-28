@@ -1,3 +1,4 @@
+import { Singleton } from '../patron_singleton/singleton';
 import { Metodo } from './../instrucciones/metodo';
 import { Symbol, Symbol_vector } from "./symbols";
 import { tipoString, Type } from "./type";
@@ -27,16 +28,67 @@ export class Environment {
   }
 
   public getEnvVariables() {
-    var ts_variables = []
-    for (let entry of Array.from(this.tablaSimbolos.entries())) {
-      ts_variables.push({
-        id: entry[1].id,
-        value: entry[1].value,
-        type: tipoString(entry[1].type),
-        editable: entry[1].editable
-      })
+    const single = Singleton.getInstance()
+    var tabla = `<h4>TABLA DE SIMBOLOS DE VARIABLES No.${single.get_ts()}</h4> ` +
+    "<table class=\"table\">"
+    tabla += 
+    "<thead class=\"thead-dark\" style=\"background: #2C3E50; color: white\">" +
+      "<tr>" +
+        "<th scope=\"col\">ID</th>" + 
+        "<th scope=\"col\">Tipo</th>" + 
+        "<th scope=\"col\">Valor</th>" +
+        "<th scope=\"col\">Editable</th>" +
+      "</tr>" + 
+    "</thead>" +
+    "<tbody>"
+    var ts_variables: any = []
+    let env: Environment | null = this;
+    var contador = 0; 
+    while (env != null) {
+      var ts_bloque: any = []
+      contador++
+      var bloque = {
+        noBloque: contador,
+        data: []
+      }
+      for (let entry of Array.from(env.tablaSimbolos.entries())) {
+        tabla += 
+        "<tr>" +
+          `<th scope=\"row\">${entry[1].id}</th>` +
+          `<td>${tipoString(entry[1].type)}</td>` +
+          `<td>${entry[1].value}</td>` +
+          `<td>${entry[1].editable}</td>` +
+        `</tr>`
+        ts_bloque.push({
+          id: entry[1].id,
+          value: entry[1].value,
+          type: tipoString(entry[1].type),
+          editable: entry[1].editable
+        })
+      }
+      bloque.data = ts_bloque
+      ts_variables.push(bloque)
+      
+      env = env.anterior;
+      if (env != null) {
+        tabla += 
+        "<thead class=\"thead-light\" style=\"background: #EAEDED; color: #566573\">" +
+          "<tr>" +
+            "<th scope=\"col\">ID</th>" + 
+            "<th scope=\"col\">Tipo</th>" + 
+            "<th scope=\"col\">Valor</th>" +
+            "<th scope=\"col\">Editable</th>" +
+          "</tr>" + 
+        "</thead>"
+      }
     }
-    return ts_variables
+    tabla += "</tbody>"
+    tabla += "</table>"
+    tabla += "<br>"
+    // console.log(tabla);
+    
+    return tabla
+    
 
   }
 
@@ -114,22 +166,16 @@ export class Environment {
     
     //verificar que no existan duplicados
     this.tablaSimbolos_metodos.set(nombre, valor);
-    // console.log(this.tablaSimbolos_metodos);
     
   }
 
 
 
   public actualizar_variable(nombre: string, new_valor: any): boolean {
-    // console.log("ES EDITABLE??");
-    // console.log("ES EDITABLE??");
-    // console.log(this.tablaSimbolos);
 
     let env: Environment | null = this;
     while (env != null) {
       for (let entry of Array.from(env.tablaSimbolos.entries())) {
-        // console.log(entry[1].editable);        
-        
         if (entry[0] == nombre && entry[1].editable) {
             entry[1].value = new_valor;
             return true

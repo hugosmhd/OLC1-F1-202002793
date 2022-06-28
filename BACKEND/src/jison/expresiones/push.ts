@@ -28,7 +28,6 @@ export class Push extends Expression {
     };  
 
     const vector = env.get_array(this.identificador)
-    console.log(vector);    
     const elem = this.expresion.executar(env);
     if (vector != null && elem.type == vector.type) {
         vector.value.push(elem.value)
