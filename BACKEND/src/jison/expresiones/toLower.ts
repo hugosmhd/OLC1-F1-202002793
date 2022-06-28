@@ -14,7 +14,7 @@ export class ToLower extends Expression {
   }
 
   public getNodo() {
-    var nodoDec = new nodo("TOLOWER");
+    var nodoDec = new nodo("TO-LOWER");
     nodoDec.agregarHijo_nodo(this.expresion.getNodo())
     return nodoDec;
 }

@@ -17,7 +17,14 @@ export class Ternario extends Expression {
   }
 
   public getNodo() {
-    var nodoDec = new nodo("PUSH");
+    var nodoDec = new nodo("TERNARIO");
+    nodoDec.agregarHijo_nodo(this.condicion.getNodo())
+    var verdadero = new nodo("TRUE")
+    var falso = new nodo("FALSO")
+    verdadero.agregarHijo_nodo(this.verdadero.getNodo())
+    falso.agregarHijo_nodo(this.falso.getNodo())
+    nodoDec.agregarHijo_nodo(verdadero)
+    nodoDec.agregarHijo_nodo(falso)
     // nodoDec.agregarHijo_nodo(this.expresion.getNodo())
     return nodoDec;
 }

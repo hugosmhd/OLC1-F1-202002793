@@ -23,7 +23,19 @@ export class Asignacion_array extends Instruccion {
 
     public getNodo() {
         var nodoDec = new nodo("ASIGNACION");
-        nodoDec.agregarHijo(this.nombre)
+        
+        if (this.dimension == 1) {
+            var name = new nodo(this.nombre + "[]")
+            name.agregarHijo_nodo(this.index.getNodo())
+            nodoDec.agregarHijo_nodo(name)
+        } else if (this.dimension == 2) {
+            var name = new nodo(this.nombre + "[][]")
+            name.agregarHijo_nodo(this.index.getNodo())
+            name.agregarHijo_nodo(this.indexDos.getNodo())
+            nodoDec.agregarHijo_nodo(name)
+        }
+
+        nodoDec.agregarHijo_nodo(this.expresion.getNodo())
 
         return nodoDec;
     }

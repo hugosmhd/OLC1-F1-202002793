@@ -5,6 +5,11 @@ import { tipoString, Type } from '../symbols/type';
 import { Retorno } from '../abstract/retorno';
 
 export class ArrayValues extends Expression {
+
+
+    private arreglo: any = [];
+
+    
   constructor(
     public tipo: Type,
     public expresion: any,
@@ -17,8 +22,8 @@ export class ArrayValues extends Expression {
   }
 
   public getNodo() {
-    var nodoDec = new nodo("TOCHARARRAY");
-    nodoDec.agregarHijo_nodo(this.expresion.getNodo())
+    var nodoDec = new nodo("[" + this.valores() + "]");
+        
     return nodoDec;
 }
 
@@ -115,23 +120,38 @@ export class ArrayValues extends Expression {
         array.push(arreglo_uno)
         array.push(arreglo_dos)
     }
-
-
-
-
-
-    // var express = this.expresion.executar(env)
-    // if (express != null) {
-    //     result = {
-    //         value: express.value,
-    //         type: express.type
-    //     }
-    // }
     
     result = {
         value: array,
         type: this.tipo
     }
+    this.arreglo = array
     return result
+  }
+
+  public valores(): string {
+
+    if (this.dimension == 1) {
+        return this.arreglo.toString()
+    } else if(this.dimension == 2) {
+        var arreglo = ""
+        for (let i = 0; i < this.arreglo.length - 1; i++) {
+            arreglo += "["
+            for (let j = 0; j < this.arreglo[0].length - 1; j++) {
+                arreglo += this.arreglo[0][j] + ", " 
+            }
+            arreglo += this.arreglo[0][this.arreglo[0].length - 1]
+            arreglo += "] ,"
+            arreglo += "["
+            for (let j = 0; j < this.arreglo[1].length - 1; j++) {
+                arreglo += this.arreglo[1][j] + ", " 
+            }
+            arreglo += this.arreglo[1][this.arreglo[1].length - 1]
+            arreglo += "]"
+        }        
+        return arreglo
+    } 
+    return ""
+
   }
 }

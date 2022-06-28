@@ -205,3 +205,80 @@
 			
     </body>
 </html>
+
+
+<!-- var tablaE = document.getElementById("dataTabla");
+				while (tablaE.firstChild) {
+					tablaE.removeChild(tablaE.firstChild);
+				}
+				var contador = 1;
+				errores.forEach(error => {
+					console.log(error);
+					const tr = document.createElement("tr");
+					const th = document.createElement("th");
+					th.setAttribute("scope", "row");
+					th.innerHTML = contador;
+					const td_Tipo = document.createElement("td");
+					td_Tipo.innerHTML = error.tipo;
+					const td_Desc = document.createElement("td");
+					td_Desc.innerHTML = error.descripcion;
+					const td_Fila = document.createElement("td");
+					td_Fila.innerHTML = error.fila;
+					const td_Col = document.createElement("td");
+					td_Col.innerHTML = error.columna;
+					tr.appendChild(th)
+					tr.appendChild(td_Tipo)
+					tr.appendChild(td_Desc)
+					tr.appendChild(td_Fila)
+					tr.appendChild(td_Col)
+					console.log(tr);
+					$("#dataTabla").appendChild(tr);
+					contador++;
+				});
+
+				var tablaV = document.getElementById("tablaSimbolosV");
+				while (tablaV.firstChild) {
+					tablaV.removeChild(tablaV.firstChild);
+				}
+
+				ts_variables.forEach(simbolo => {
+					console.log(simbolo);
+					const tr = document.createElement("tr");
+					const th = document.createElement("th");
+					th.setAttribute("scope", "row");
+					th.innerHTML = simbolo.id;
+					const td_Tipo = document.createElement("td");
+					td_Tipo.innerHTML = simbolo.type;
+					const td_Valor = document.createElement("td");
+					td_Valor.innerHTML = simbolo.value;
+					const td_Editable = document.createElement("td");
+					td_Editable.innerHTML = simbolo.editable;					
+				
+					tr.appendChild(th)
+					tr.appendChild(td_Tipo)
+					tr.appendChild(td_Valor)
+					tr.appendChild(td_Editable)
+					console.log(tr);
+					$("#tablaSimbolosV").appendChild(tr);
+				});
+
+
+
+				var tablaM = document.getElementById("tablaSimbolosM");
+				while (tablaM.firstChild) {
+					tablaM.removeChild(tablaM.firstChild);
+				}
+				var contadorM = 1;
+				ts_metodos.forEach(simbolo => {
+					const tr = document.createElement("tr");
+					const th = document.createElement("th");
+					th.setAttribute("scope", "row");
+					th.innerHTML = contador;
+					const td_Nombre = document.createElement("td");
+					td_Nombre.innerHTML = simbolo;
+				
+					tr.appendChild(th)
+					tr.appendChild(td_Nombre)
+					$("#tablaSimbolosM").appendChild(tr);
+					contadorM++;
+				}); -->

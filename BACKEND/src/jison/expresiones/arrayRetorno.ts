@@ -17,7 +17,13 @@ export class ArrayRetorno extends Expression {
         super(line, column);
     }
     public getNodo() {
-        var nodoDec = new nodo("ARREGLO");
+        var nodoDec = this.dimension == 1 ? new nodo(this.id + "[]") : new nodo(this.id + "[][]");
+        if (this.dimension == 1) {
+            nodoDec.agregarHijo_nodo(this.expresion.getNodo())
+        } else if (this.dimension == 2) {
+            nodoDec.agregarHijo_nodo(this.expresion.getNodo())
+            nodoDec.agregarHijo_nodo(this.expresionDos.getNodo())            
+        }
         return nodoDec;
     }
 

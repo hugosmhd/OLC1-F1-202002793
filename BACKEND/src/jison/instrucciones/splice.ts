@@ -17,7 +17,9 @@ export class Splice extends Instruccion {
 
   public getNodo() {
     var nodoDec = new nodo("SPLICE");
-    // nodoDec.agregarHijo_nodo(this.expresion.getNodo())
+    nodoDec.agregarHijo(this.identificador)
+    nodoDec.agregarHijo_nodo(this.index.getNodo())
+    nodoDec.agregarHijo_nodo(this.expresion.getNodo())
     return nodoDec;
 }
 

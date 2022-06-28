@@ -16,6 +16,7 @@ export class IndexOf extends Expression {
 
   public getNodo() {
     var nodoDec = new nodo("INDEXOF");
+    nodoDec.agregarHijo(this.identificador)
     nodoDec.agregarHijo_nodo(this.expresion.getNodo())
     return nodoDec;
 }

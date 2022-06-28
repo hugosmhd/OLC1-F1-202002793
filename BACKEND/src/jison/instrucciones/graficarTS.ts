@@ -16,7 +16,6 @@ export class GraficarTS extends Instruccion {
 
     public getNodo() {
         var nodoDec = new nodo("GRAFICAR-TS");
-
         return nodoDec;
     }
 

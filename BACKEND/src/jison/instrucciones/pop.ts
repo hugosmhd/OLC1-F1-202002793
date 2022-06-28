@@ -14,7 +14,7 @@ export class Pop extends Instruccion {
 
   public getNodo() {
     var nodoDec = new nodo("POP");
-    // nodoDec.agregarHijo_nodo(this.expresion.getNodo())
+    nodoDec.agregarHijo(this.identificador)
     return nodoDec;
 }
 
