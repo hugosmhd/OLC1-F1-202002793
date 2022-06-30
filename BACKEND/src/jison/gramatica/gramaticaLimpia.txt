@@ -1,3 +1,4 @@
+
 %lex
 
 %options case-insensitive
@@ -25,20 +26,37 @@
 "case"              return 'pr_case'
 "default"           return 'pr_default'
 "break"             return 'pr_break'
+"continue"          return 'pr_continue'
 "void"              return 'pr_void'
 "call"              return 'pr_call'
 "return"            return 'pr_return'
 "typeof"            return 'pr_typeof'
+"length"            return 'pr_length'
+"toCharArray"       return 'pr_toCharArray'
+"toLower"           return 'pr_toLower'
+"toUpper"           return 'pr_toUpper'
+"round"             return 'pr_round'
+"indexOf"           return 'pr_indexOf'
+"for"               return 'pr_for'
+"new"               return 'pr_new'
+"push"              return 'pr_push'
+"pop"               return 'pr_pop'
+"splice"            return 'pr_splice'
+"graficar_ts"       return 'pr_graficar_ts'
 
 
 
 ","					return 'coma';
+"."					return 'punto';
 ";"					return 'ptcoma';
 ":"					return 'dospts';
 "{"					return 'llabre';
 "}"					return 'llcierra';
 "("					return 'pabre';
 ")"					return 'pcierra';
+"["					return 'cabre';
+"]"					return 'ccierra';
+"?"					return 'icierra';
 
 
 "**"				return 'pot';
@@ -71,16 +89,10 @@
 
 <<EOF>>				return 'EOF';
 
-.					{ 
-                        // console.log('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);
-                        const singleton = Singleton.getInstance();
-                        const error = new Issue("Lexico", "Caracter que lo proboco: " + yytext, yylloc.first_line, yylloc.first_column + 1); 
-                        singleton.add_errores(error);
-                        
-                    }
 
 /lex
 
+%right 'icierra'
 %left 'or'
 %left 'and'
 %left 'xor'
@@ -89,6 +101,7 @@
 %left 'por' 'div' 'modulo'
 %left 'pot'
 %left 'UMENOS' 'UNOT'
+%left 'masmas' 'menosmenos'
 %left 'pabre' 'pcierra'
 
 %start INIT
@@ -101,30 +114,87 @@ INIT
 
 INSTRUCCIONES
 	: INSTRUCCIONES INSTRUCCION         
-	| INSTRUCCION	                    
+	| INSTRUCCION	                   
 ;
 
 INSTRUCCION
-	: DECLARACION ptcoma        
-	| ASIGNACION ptcoma         
-    | IF	                    
-    | SWITCH                    
+	: DECLARACION ptcoma       
+	| ASIGNACION ptcoma        
+    | IF	                   
+    | SWITCH                   
     | FUNCIONES		
-    | WHILE					    
-    | DOWHILE ptcoma		    
-    | PRINT ptcom
-    | INCREMENT ptcoma          
-    | DECREMENT ptcoma          
-    | BLOQUEINSTRUCCIONES       
-    | METODOS                   
-    | LLAMADA_METODO ptcoma     
-    | pr_break ptcoma           
-    | RETURN ptcoma             
-    | error ptcoma { 
-        const singleton = Singleton.getInstance();
-        var errors = new Issue("Sintactico", "Error sintactico, verificar entrada", this._$.first_line, this._$.first_column + 1); 
-        singleton.add_errores(errors); }
+    | WHILE					   
+    | FOR					   
+    | DOWHILE ptcoma		   
+    | PRINT ptcoma
+    | INCREMENT ptcoma         
+    | PUSH ptcoma              
+    | POP ptcoma               
+    | SPLICE ptcoma            
+    | DECREMENT ptcoma         
+    | BLOQUEINSTRUCCIONES      
+    | METODOS                  
+    | LLAMADA_METODO ptcoma    
+    | pr_break ptcoma          
+    | pr_continue ptcoma       
+    | RETURN ptcoma            
+    | DECLARACIONARRAY ptcoma  
+    | ARRAYEXPRES ptcoma       
+    | TERNARIO_INST ptcoma     
+    | GRAFICAR_TS ptcoma       
+    | error ptcoma
 ;
+
+GRAFICAR_TS
+    : pr_graficar_ts pabre pcierra 
+;
+
+TERNARIO_INST
+    : pabre EXPRESION pcierra icierra TERNARIO_OP dospts TERNARIO_OP  
+;
+
+TERNARIO_OP
+    : PRINT             
+    | LLAMADA_METODO    
+    | ASIGNACION    
+    | INCREMENT    
+    | DECREMENT    
+;
+
+ARRAYEXPRES
+    : identificador cabre EXPRESION ccierra igual EXPRESION 
+    | identificador cabre EXPRESION ccierra cabre EXPRESION ccierra igual EXPRESION 
+;
+
+DECLARACIONARRAY
+    : TIPODATO identificador cabre ccierra igual EXPRESIONES_ARRAY
+    | TIPODATO identificador cabre ccierra cabre ccierra igual EXPRESIONES_ARRAY
+;
+
+ARRAY_VALORES 
+    : ARRAY_VALORES coma EXPRESION  
+    | EXPRESION  
+;    
+
+
+FOR
+    : pr_for pabre INICIALIZACION CONDICION ACTUALIZACION pcierra BLOQUEINSTRUCCIONES
+;
+
+INICIALIZACION
+    : DECLARACION       
+    | ASIGNACION        
+;
+
+CONDICION
+    : ptcoma EXPRESION        
+;
+
+ACTUALIZACION
+    : ptcoma INCREMENT          
+    | ptcoma DECREMENT          
+    | ptcoma ASIGNACION         
+;    
 
 RETURN
     : pr_return EXPRESION   
@@ -149,8 +219,8 @@ FUNCIONES: TIPODATO  'identificador' 'pabre' LISTA_PARAMETROS 'pcierra' BLOQUE
 ;
 
 IDS
-    : IDS coma identificador        
-    | identificador                 
+    : IDS coma identificador         
+    | identificador                     
 ;
 
 ASIGNACION
@@ -173,23 +243,21 @@ IF
 ;
 
 IF_INSTRUCCIONES
-    : DECLARACION ptcoma       
-	| ASIGNACION ptcoma        
+    : DECLARACION ptcoma        
+	| ASIGNACION ptcoma         
     | PRINT ptcoma
-    | INCREMENT ptcoma         
-    | DECREMENT ptcoma         
-    | BLOQUEINSTRUCCIONES      
-    | LLAMADA_METODO ptcoma    
-    | pr_break ptcoma          
-    | RETURN ptcoma            
-    | error ptcoma { 
-        const singleton = Singleton.getInstance();
-        var errors = new Issue("Sintactico", "Error sintactico, verificar entrada", this._$.first_line, this._$.first_column + 1); 
-        singleton.add_errores(errors); }
+    | INCREMENT ptcoma          
+    | DECREMENT ptcoma          
+    | BLOQUEINSTRUCCIONES       
+    | LLAMADA_METODO ptcoma     
+    | pr_break ptcoma           
+    | pr_continue ptcoma        
+    | RETURN ptcoma             
+    | error ptcoma 
 ;
 
 SWITCH
-    : pr_switch pabre EXPRESION pcierra llabre LISTACASE llcierra 
+    : pr_switch pabre EXPRESION pcierra llabre LISTACASE llcierra  
 ;
 
 LISTACASE
@@ -201,8 +269,6 @@ CASEBLOQUE
     : pr_case EXPRESION dospts INSTRUCCIONES    
     | pr_default dospts INSTRUCCIONES           
 ;
-
-
 
 PRINT
     : pr_print pabre EXP_PRINT pcierra      
@@ -237,13 +303,25 @@ BLOQUEINSTRUCCIONES
 
 
 BLOQUE
-: llabre INSTRUCCIONES llcierra 
+    : llabre INSTRUCCIONES llcierra 
     | llabre llcierra       
 ;
 
 INCREMENT
     : masmas identificador      
     | identificador masmas      
+;
+
+PUSH
+    : identificador punto pr_push pabre EXPRESION pcierra   
+;
+
+POP
+    : identificador punto pr_pop pabre pcierra   
+;
+
+SPLICE
+    : identificador punto pr_splice pabre EXPRESION coma EXPRESION pcierra   
 ;
 
 DECREMENT
@@ -277,8 +355,31 @@ EXPRESION
     | EXPRESION xor EXPRESION           
     | not EXPRESION %prec UNOT          
     | INCREMENT                         
+    | PUSH                              
     | DECREMENT                         
     | pabre EXPRESION pcierra           
     | identificador pabre LISTA_PASO_PARAMETROS pcierra    
     | pr_typeof pabre EXPRESION pcierra                    
-;   
+    | pr_length pabre EXPRESION pcierra                    
+    | pr_round pabre EXPRESION pcierra                     
+    | pr_toLower pabre EXPRESION pcierra                   
+    | pr_toUpper pabre EXPRESION pcierra                   
+    | identificador punto pr_indexOf pabre EXPRESION pcierra    
+    | pr_new TIPODATO cabre EXPRESION ccierra cabre EXPRESION ccierra   
+    | identificador cabre  EXPRESION ccierra          
+    | identificador cabre  EXPRESION ccierra cabre  EXPRESION ccierra   
+    | TERNARIO_EXP     
+
+;
+
+EXPRESIONES_ARRAY
+    : pr_new TIPODATO cabre EXPRESION ccierra cabre EXPRESION ccierra     
+    | pr_new TIPODATO cabre EXPRESION ccierra       
+    | cabre ARRAY_VALORES ccierra                   
+    | cabre cabre ARRAY_VALORES ccierra coma cabre ARRAY_VALORES ccierra ccierra    
+    | pr_toCharArray pabre EXPRESION pcierra               
+;
+
+TERNARIO_EXP
+    : pabre EXPRESION pcierra icierra EXPRESION dospts EXPRESION  
+;
