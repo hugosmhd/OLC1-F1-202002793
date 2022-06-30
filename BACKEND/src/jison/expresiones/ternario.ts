@@ -4,6 +4,8 @@ import { Expression } from '../abstract/express';
 import { Type } from '../symbols/type';
 import { Retorno } from '../abstract/retorno';
 import { Instruccion } from '../abstract/instruccion';
+import { Singleton } from '../patron_singleton/singleton';
+import { Issue } from '../error/issue';
 
 export class Ternario extends Expression {
   constructor(
@@ -37,6 +39,8 @@ export class Ternario extends Expression {
     };
 
     const evaluar = this.condicion.executar(env);
+
+    if (evaluar.type != Type.BOOLEAN) throw Singleton.getInstance().add_errores(new Issue("Semantico", "La condicion debe ser de tipo boolean", this.line, this.column))
     
     if (evaluar.value) {        
         const v = this.verdadero.executar(env);

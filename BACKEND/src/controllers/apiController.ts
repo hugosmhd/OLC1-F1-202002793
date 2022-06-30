@@ -14,8 +14,8 @@ class ApiController {
     const fs = require("fs");
     
     try {
-        // const entrada = requ.body.entrada;
-        const entrada = fs.readFileSync("src/entrada.txt");
+        const entrada = requ.body.entrada;
+        // const entrada = fs.readFileSync("src/entrada.txt");
         const ast = parser.parse(entrada.toString());
         const env_padre = new Environment(null);
         //aqui analisis semantico
@@ -103,6 +103,7 @@ class ApiController {
       singleton.limpiar_consola()
       singleton.limpiar_errores()
       singleton.limpiar_grafica_ts()
+      singleton.limpiar_ts()
       env_padre.limpiarTablas()
     //   grafo = "";
         

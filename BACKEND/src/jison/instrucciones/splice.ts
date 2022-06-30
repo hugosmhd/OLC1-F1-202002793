@@ -3,6 +3,8 @@ import nodo from "../grafo/nodo";
 import { Type } from '../symbols/type';
 import { Instruccion } from '../abstract/instruccion';
 import { Expression } from '../abstract/express';
+import { Singleton } from '../patron_singleton/singleton';
+import { Issue } from '../error/issue';
 
 export class Splice extends Instruccion {
   constructor(
@@ -25,10 +27,13 @@ export class Splice extends Instruccion {
 
   public executar(env: Environment) {  
     const vector = env.get_array(this.identificador)
+    if(vector == null || vector == undefined) throw Singleton.getInstance().add_errores(new Issue("Semantico", `Error en la expresion splice no existe el vector con id ${this.identificador}`, this.line, this.column))
     const ind = this.index.executar(env)
+    if(ind == null || ind.type != Type.INT) throw Singleton.getInstance().add_errores(new Issue("Semantico", `Verifique que el indice del vector sea de tipo int`, this.line, this.column))
     const expres = this.expresion.executar(env)
-    if (vector != null && expres != null && ind != null) {
-        vector.value.splice(ind.value, 0, expres.value)
-    }
+    if(expres == null) throw Singleton.getInstance().add_errores(new Issue("Semantico", `Verifique que la expresion exista`, this.line, this.column))
+    if(expres.type != vector.type) throw Singleton.getInstance().add_errores(new Issue("Semantico", `El tipo del vector no coincide con la expresion`, this.line, this.column))
+    
+    vector.value.splice(ind.value, 0, expres.value)
   }
 }

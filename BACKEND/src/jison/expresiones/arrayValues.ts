@@ -3,6 +3,8 @@ import nodo from "../grafo/nodo";
 import { Expression } from '../abstract/express';
 import { tipoString, Type } from '../symbols/type';
 import { Retorno } from '../abstract/retorno';
+import { Singleton } from '../patron_singleton/singleton';
+import { Issue } from '../error/issue';
 
 export class ArrayValues extends Expression {
 
@@ -38,16 +40,19 @@ export class ArrayValues extends Expression {
     };
         
     if (this.dimension == 1 && Array.isArray(this.expresion)) {
-        this.tipo = this.expresion[0].executar(env).type
+        if(this.tipo == null) this.tipo = this.expresion[0].executar(env).type
         this.expresion.forEach((element: any) => {
             const tipoValor = element.executar(env);
             
             if (this.tipo == tipoValor.type) {
                 array.push(tipoValor.value);      
+            } else {
+                throw Singleton.getInstance().add_errores(new Issue("Semantico", "Los datos del array deben ser todo del mismo tipo", this.line, this.column))
             }
         });            
     } else if (this.dimension == 1) {
         const tamano = this.expresion.executar(env)
+        if(tamano.type != Type.INT) throw Singleton.getInstance().add_errores(new Issue("Semantico", "El tamaño del array debe ser un int", this.line, this.column))
         for (let i = 0; i < tamano.value; i++) {
             if (this.tipo == Type.INT) {                
                 array.push(0);
@@ -66,13 +71,15 @@ export class ArrayValues extends Expression {
     } else if (this.dimension == 2 && Array.isArray(this.expresion) && Array.isArray(this.expresionDos)) {
         const arreglo_uno: any[] = []
         const arreglo_dos: any[] = []
-        this.tipo = this.expresion[0].executar(env).type
+        if(this.tipo == null) this.tipo = this.expresion[0].executar(env).type
         
         this.expresion.forEach((element: any) => {
             const tipoValor = element.executar(env);
             if (this.tipo == tipoValor.type) {
                 arreglo_uno.push(tipoValor.value);      
                                 
+            } else {
+                throw Singleton.getInstance().add_errores(new Issue("Semantico", "Los datos del array deben ser todo del mismo tipo", this.line, this.column))
             }
         });            
         this.expresionDos.forEach((element) => {
@@ -80,6 +87,8 @@ export class ArrayValues extends Expression {
             if (this.tipo == tipoValor.type) {
                 arreglo_dos.push(tipoValor.value);      
                                 
+            } else {
+                throw Singleton.getInstance().add_errores(new Issue("Semantico", "Los datos del array deben ser todo del mismo tipo", this.line, this.column))
             }
         });      
         array.push(arreglo_uno)
@@ -87,7 +96,7 @@ export class ArrayValues extends Expression {
     } else if (this.dimension == 2) {
         const tamano_uno = this.expresion.executar(env);
         const tamano_dos = this.expresionDos.executar(env);
-        
+        if(tamano_uno.type != Type.INT || tamano_dos.type != Type.INT) throw Singleton.getInstance().add_errores(new Issue("Semantico", "El tamaño del array debe ser un int", this.line, this.column))
         const arreglo_uno = []
         const arreglo_dos = []
         for (let i = 0; i < tamano_uno.value; i++) {

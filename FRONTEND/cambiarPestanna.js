@@ -96,6 +96,55 @@ async function loadFile(file) {
 				const errores = data.errores
 				const ts_variables = data.ts_variables;
 				const ts_metodos = data.ts_metodos;
+
+				var tablaM = document.getElementById("tablaSimbolosM");
+				while (tablaM.firstChild) {
+					tablaM.removeChild(tablaM.firstChild);
+				}
+				var contadorM = 1;
+				ts_metodos.forEach(simbolo => {
+					const tr = document.createElement("tr");
+					const th = document.createElement("th");
+					th.setAttribute("scope", "row");
+					th.innerHTML = contadorM;
+					const td_Nombre = document.createElement("td");
+					td_Nombre.innerHTML = simbolo;
+				
+					tr.appendChild(th)
+					tr.appendChild(td_Nombre)
+					$("#tablaSimbolosM").appendChild(tr);
+					contadorM++;
+				});
+
+				var tablaE = document.getElementById("dataTabla");
+				while (tablaE.firstChild) {
+					tablaE.removeChild(tablaE.firstChild);
+				}
+				var contador = 1;
+				errores.forEach(error => {
+					console.log(error);
+					const tr = document.createElement("tr");
+					const th = document.createElement("th");
+					th.setAttribute("scope", "row");
+					th.innerHTML = contador;
+					const td_Tipo = document.createElement("td");
+					td_Tipo.innerHTML = error.tipo;
+					const td_Desc = document.createElement("td");
+					td_Desc.innerHTML = error.descripcion;
+					const td_Fila = document.createElement("td");
+					td_Fila.innerHTML = error.fila;
+					const td_Col = document.createElement("td");
+					td_Col.innerHTML = error.columna;
+					tr.appendChild(th)
+					tr.appendChild(td_Tipo)
+					tr.appendChild(td_Desc)
+					tr.appendChild(td_Fila)
+					tr.appendChild(td_Col)
+					console.log(tr);
+					$("#dataTabla").appendChild(tr);
+					contador++;
+				});
+
 				// console.log("---- METODOS");
 				// console.log(ts_metodos);
 				// console.log("---- METODOS");

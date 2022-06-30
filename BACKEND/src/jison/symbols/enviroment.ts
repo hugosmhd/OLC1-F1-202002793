@@ -66,6 +66,21 @@ export class Environment {
           editable: entry[1].editable
         })
       }
+      for (let entry of Array.from(env.tablaSimbolos_vectores.entries())) {
+        tabla += 
+        "<tr>" +
+          `<th scope=\"row\">${entry[1].id}</th>` +
+          `<td>${tipoString(entry[1].type)} []</td>` +
+          `<td>${entry[1].value}</td>` +
+          `<td>true</td>` +
+        `</tr>`
+        ts_bloque.push({
+          id: entry[1].id,
+          value: entry[1].value,
+          type: tipoString(entry[1].type),
+          editable: entry[1].editable
+        })
+      }
       bloque.data = ts_bloque
       ts_variables.push(bloque)
       

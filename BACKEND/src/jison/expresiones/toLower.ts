@@ -3,6 +3,8 @@ import nodo from "../grafo/nodo";
 import { Expression } from '../abstract/express';
 import { tipoString, Type } from '../symbols/type';
 import { Retorno } from '../abstract/retorno';
+import { Singleton } from '../patron_singleton/singleton';
+import { Issue } from '../error/issue';
 
 export class ToLower extends Expression {
   constructor(
@@ -34,7 +36,9 @@ export class ToLower extends Expression {
         value: express.value.toLowerCase(),
         type: Type.STRING
       }        
-  }
+    } else {
+      throw Singleton.getInstance().add_errores(new Issue("Semantico", "La expresion del metodo toLower debe ser un string", this.line, this.column))
+    }
     
     return result
   }

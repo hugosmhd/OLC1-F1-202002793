@@ -3,6 +3,8 @@ import nodo from "../grafo/nodo";
 import { Expression } from '../abstract/express';
 import { tipoString, Type } from '../symbols/type';
 import { Retorno } from '../abstract/retorno';
+import { Singleton } from '../patron_singleton/singleton';
+import { Issue } from '../error/issue';
 
 export class IndexOf extends Expression {
   constructor(
@@ -31,15 +33,14 @@ export class IndexOf extends Expression {
     const vector = env.get_array(this.identificador)
     const elem = this.expresion.executar(env);
 
-    if (vector != null) {
-        const index = vector.value.indexOf(elem.value)
-        
-        result = {
-            value: index,
-            type: Type.INT
-        }
-    }
+    if(vector == null || vector == undefined) throw Singleton.getInstance().add_errores(new Issue("Semantico", `Error en la expresion indexOf verifique el id ${this.identificador}`, this.line, this.column))
+
+    const index = vector.value.indexOf(elem.value)
     
+    result = {
+        value: index,
+        type: Type.INT
+    }
     
     return result
   }

@@ -3,6 +3,8 @@ import nodo from "../grafo/nodo";
 import { Expression } from '../abstract/express';
 import { tipoString, Type } from '../symbols/type';
 import { Retorno } from '../abstract/retorno';
+import { Singleton } from '../patron_singleton/singleton';
+import { Issue } from '../error/issue';
 
 export class Round extends Expression {
   constructor(
@@ -33,7 +35,9 @@ export class Round extends Expression {
         value: Math.round(express.value),
         type: Type.INT
       }        
-  }
+    } else {
+      throw Singleton.getInstance().add_errores(new Issue("Semantico", "La expresion del metodo round debe ser un double", this.line, this.column))
+    }
     
     return result
   }
